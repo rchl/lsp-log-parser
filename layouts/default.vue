@@ -120,7 +120,7 @@ export default {
       dialog: false,
       errorDialog: false,
       parseErrorText: '',
-      drawer: true,
+      drawer: false,
       items: [],
       logContent: '',
       parserTypes: parsers.map(p => p.name),
@@ -152,10 +152,9 @@ export default {
       this.dialog = false
       this.drawer = false
       this.selectedParserHint = ''
+
       const content = this.logContent
-
       const inputLines = content.split('\n').filter(line => Boolean(line))
-
       const parser = parsers.find(p => p.name === this.selectedParser)
 
       if (parser) {
