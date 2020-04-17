@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts">
-// @ts-nocheck
+import { Message } from '~/utils/parsers'
 
 export default {
   data () {
@@ -27,7 +27,7 @@ export default {
       iconTypes: {
         info: 'mdi-information-outline'
       },
-      openItems: []
+      openItems: [] as boolean[]
     }
   },
   computed: {
@@ -40,7 +40,8 @@ export default {
       if (!expanded) {
         this.openItems = []
       } else {
-        this.openItems = this.$store.state.parsedLog.map(line => line.children && line.id)
+        const parsedLog: Message[] = this.$store.state.parsedLog
+        this.openItems = parsedLog.map(line => Boolean(line.children && line.id))
       }
     }
   }
@@ -49,7 +50,7 @@ export default {
 
 <style lang="scss">
 .treeview {
-  padding-bottom: 90vh
+  padding-bottom: 30vh
 }
 
 .v-treeview-node__children .v-treeview-node__label {

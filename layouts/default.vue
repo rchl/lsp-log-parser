@@ -15,12 +15,6 @@
           </v-card-title>
 
           <v-card-text>
-            <v-select
-              v-model="selectedLogType"
-              :items="logTypes"
-              label="Log type"
-              solo
-            />
             <v-textarea
               v-model="logContent"
               autofocus
@@ -28,6 +22,14 @@
               filled
               spellcheck="false"
               data-gramm_editor="false"
+            />
+            <v-select
+              v-model="selectedParser"
+              :items="parserTypes"
+              label="Log type"
+              :hint="selectedParserHint"
+              persistent-hint
+              solo
             />
           </v-card-text>
 
@@ -110,18 +112,7 @@
 </template>
 
 <script lang="ts">
-// @ts-nocheck
-
-const LOG_TYPES = ['VSCode', 'Sublime LSP']
-
-type Message = {
-  id: number,
-  name: string,
-  directionIcon?: string,
-  children?: Message[]
-  tempChildren?: string[]
-  type?: string
-}
+import parsers from '~/utils/parsers'
 
 export default {
   data () {
@@ -132,118 +123,53 @@ export default {
       drawer: true,
       items: [],
       logContent: '',
-      logTypes: LOG_TYPES,
-      selectedLogType: LOG_TYPES[0],
+      parserTypes: parsers.map(p => p.name),
+      selectedParser: parsers[0].name,
+      selectedParserHint: '',
       title: 'LSP Log Parser'
+    }
+  },
+  watch: {
+    logContent (newValue) {
+      const previewChunk = newValue.substr(0, 200).split('\n')
+      const parser = parsers.find(p => p.lineRegex.test(previewChunk[0]))
+      if (parser) {
+        this.selectedParser = parser.name
+      }
+      this.$nextTick(() => (this.selectedParserHint = parser ? 'auto-detected from log content' : ''))
+    },
+    selectedParser () {
+      this.selectedParserHint = ''
+    },
+    dialog (show) {
+      if (!show) {
+        this.logContent = ''
+      }
     }
   },
   methods: {
     parseLog () {
       this.dialog = false
       this.drawer = false
+      this.selectedParserHint = ''
       const content = this.logContent
-      this.logContent = ''
 
       const inputLines = content.split('\n').filter(line => Boolean(line))
-      let lines: Message[] = []
 
-      try {
-        if (this.selectedLogType === 'VSCode') {
-          lines = this.parseVscodeLog(inputLines)
-        } else if (this.selectedLogType === 'Sublime LSP') {
-          lines = this.parseSublimeLog(inputLines)
-        }
-      } catch (error) {
-        this.parseErrorText = error.message
-        this.errorDialog = true
-      }
+      const parser = parsers.find(p => p.name === this.selectedParser)
 
-      this.$store.commit('setParsedLog', lines)
-    },
-    parseVscodeLog (inputLines: string[]) {
-      const LINE_REGEX = /^\[(Trace|Info|Error)[^\]]+\] ((\w+).+)/
-      const lines = []
-      let id = 1
-      let message: Message = { id, name: '' }
+      if (parser) {
+        let lines
 
-      for (const [i, line] of inputLines.entries()) {
-        const newHeaderMatch = line.match(LINE_REGEX)
-
-        if (newHeaderMatch) {
-          // Process completed object first.
-          if (message.name) {
-            if (message.tempChildren) {
-              message.children = [{ id: ++id, name: message.tempChildren.join('\n') }]
-            }
-
-            lines.push(message)
-            message = { id: ++id, name: '' }
-          }
-
-          message.name = newHeaderMatch[2]
-          message.type = newHeaderMatch[1].toLowerCase()
-          const direction = newHeaderMatch[3].toLowerCase()
-          if (direction === 'sending' || direction === 'received') {
-            message.directionIcon = direction === 'sending' ? 'mdi-email-send-outline' : 'mdi-email-receive'
-          }
-        } else {
-          if (!message.tempChildren) {
-            message.tempChildren = []
-          }
-
-          if (!message.name) {
-            throw new Error(`Message content with no parent (line ${i}.`)
-          }
-
-          message.tempChildren.push(line)
-        }
-      }
-
-      if (message.name) {
-        if (message.tempChildren) {
-          message.children = [{ id: ++id, name: message.tempChildren.join('\n') }]
+        try {
+          lines = parser.parse(inputLines)
+        } catch (error) {
+          this.parseErrorText = error.message
+          this.errorDialog = true
         }
 
-        lines.push(message)
+        this.$store.commit('setParsedLog', lines)
       }
-
-      return lines
-    },
-    parseSublimeLog (inputLines: string[]) {
-      const LINE_REGEX = /^::\s+([^ ]+)\s+([^ ]+)\s+([^:\n]+):?\s*(.*)/
-      const lines = []
-      let id = 1
-      let message: Message = { id, name: '' }
-
-      for (const line of inputLines) {
-        const lspMatch = line.match(LINE_REGEX)
-
-        if (lspMatch) {
-          message = { id: ++id, name: `(${lspMatch[2]}) ${lspMatch[3]}`, type: lspMatch[1] }
-
-          if (lspMatch[4]) {
-            message.children = [{
-              id: ++id,
-              name: lspMatch[4]
-            }]
-          }
-
-          const direction = lspMatch[1]
-          if (direction.includes('>') || direction === 'received') {
-            message.directionIcon = 'mdi-email-send-outline'
-          } else if (direction.includes('<')) {
-            message.directionIcon = 'mdi-email-receive'
-          } else {
-            message.directionIcon = 'mdi-sync-alert'
-          }
-
-          lines.push(message)
-        } else {
-          lines.push({ id: ++id, name: line, type: 'info' })
-        }
-      }
-
-      return lines
     }
   }
 }
