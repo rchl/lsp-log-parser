@@ -91,6 +91,8 @@
 </template>
 
 <script lang="ts">
+// @ts-nocheck
+
 const LOG_TYPES = ['VSCode', 'Sublime LSP']
 
 type Message = {
