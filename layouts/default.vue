@@ -39,6 +39,25 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+      <v-dialog v-model="errorDialog" max-width="290">
+        <v-card>
+          <v-card-title class="headline">
+            Parse error
+          </v-card-title>
+
+          <v-card-text>
+            {{ parseErrorText }}
+          </v-card-text>
+
+          <v-card-actions>
+            <v-spacer />
+
+            <v-btn color="primary" text @click="errorDialog = false">
+              Close
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
           <v-btn
@@ -108,6 +127,8 @@ export default {
   data () {
     return {
       dialog: false,
+      errorDialog: false,
+      parseErrorText: '',
       drawer: true,
       items: [],
       logContent: '',
@@ -126,21 +147,27 @@ export default {
       const inputLines = content.split('\n').filter(line => Boolean(line))
       let lines: Message[] = []
 
-      if (this.selectedLogType === 'VSCode') {
-        lines = this.parseVscodeLog(inputLines)
-      } else if (this.selectedLogType === 'Sublime LSP') {
-        lines = this.parseSublimeLog(inputLines)
+      try {
+        if (this.selectedLogType === 'VSCode') {
+          lines = this.parseVscodeLog(inputLines)
+        } else if (this.selectedLogType === 'Sublime LSP') {
+          lines = this.parseSublimeLog(inputLines)
+        }
+      } catch (error) {
+        this.parseErrorText = error.message
+        this.errorDialog = true
       }
 
       this.$store.commit('setParsedLog', lines)
     },
     parseVscodeLog (inputLines: string[]) {
+      const LINE_REGEX = /^\[(Trace|Info|Error)[^\]]+\] ((\w+).+)/
       const lines = []
       let id = 1
       let message: Message = { id, name: '' }
 
-      for (const line of inputLines) {
-        const newHeaderMatch = line.match(/^\[(Trace|Info|Error)[^\]]+\] ((\w+).+)/)
+      for (const [i, line] of inputLines.entries()) {
+        const newHeaderMatch = line.match(LINE_REGEX)
 
         if (newHeaderMatch) {
           // Process completed object first.
@@ -164,6 +191,10 @@ export default {
             message.tempChildren = []
           }
 
+          if (!message.name) {
+            throw new Error(`Message content with no parent (line ${i}.`)
+          }
+
           message.tempChildren.push(line)
         }
       }
@@ -179,12 +210,13 @@ export default {
       return lines
     },
     parseSublimeLog (inputLines: string[]) {
+      const LINE_REGEX = /^::\s+([^ ]+)\s+([^ ]+)\s+([^:\n]+):?\s*(.*)/
       const lines = []
       let id = 1
       let message: Message = { id, name: '' }
 
       for (const line of inputLines) {
-        const lspMatch = line.match(/^::\s+([^ ]+)\s+([^ ]+)\s+([^:\n]+):?\s*(.*)/)
+        const lspMatch = line.match(LINE_REGEX)
 
         if (lspMatch) {
           message = { id: ++id, name: `(${lspMatch[2]}) ${lspMatch[3]}`, type: lspMatch[1] }
