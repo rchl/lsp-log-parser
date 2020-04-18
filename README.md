@@ -2,6 +2,8 @@
 
 > Parser for LSP server logs from Sublime Text and VSCode
 
+Deployed automatically on commit to https://lsp-log-parser.netlify.app/
+
 ## Build Setup
 
 ```bash
