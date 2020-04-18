@@ -117,7 +117,7 @@
 </template>
 
 <script>
-import parsers from '~/utils/parsers'
+import parsers from '~/utils'
 
 export default {
   data () {
@@ -141,7 +141,7 @@ export default {
     parsedFilters () {
       return this.$store.state.parsedFilters
     },
-    /** @return {import('~/utils/parsers').Message[]} */
+    /** @return {import('~/utils').Message[]} */
     parsedLines () {
       return this.$store.state.parsedLines
     }

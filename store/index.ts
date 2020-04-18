@@ -1,5 +1,5 @@
 import { MutationTree } from 'vuex'
-import { ParseResults } from '~/utils/parsers'
+import { ParseResults } from '~/utils'
 
 type State = {
   expandAll: boolean

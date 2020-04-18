@@ -35,13 +35,13 @@ export default {
     expandAll () {
       return this.$store.state.expandAll
     },
-    /** @return {import('~/utils/parsers').Message[]} */
+    /** @return {import('~/utils').Message[]} */
     parsedLines () {
       return this.$store.state.parsedLines
     },
     /**
-     * @param {import('~/utils/parsers').Message} item
-     * @return {(item: import('~/utils/parsers').Message) => boolean}
+     * @param {import('~/utils').Message} item
+     * @return {(item: import('~/utils').Message) => boolean}
      */
     filter () {
       return (item) => {
