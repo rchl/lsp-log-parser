@@ -1,4 +1,5 @@
 # lsp-log-parser
+[![Netlify Status](https://api.netlify.com/api/v1/badges/09cdde69-9cde-414a-b622-1a9abb712400/deploy-status)](https://app.netlify.com/sites/lsp-log-parser/deploys)
 
 > Parser for LSP server logs from Sublime Text and VSCode
 
