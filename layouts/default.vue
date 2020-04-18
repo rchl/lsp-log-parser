@@ -64,7 +64,7 @@
         <template v-slot:activator="{ on }">
           <v-btn
             icon
-            :disabled="!$store.state.parsedLog.length"
+            :disabled="!parsedLines.length"
             v-on="on"
             @click.stop="$store.commit('toggleExpandAll')"
           >
@@ -73,6 +73,11 @@
         </template>
         <span>Expand/Collapse all</span>
       </v-tooltip>
+      <v-chip-group v-if="parsedFilters.length" v-model="selectedFilters" multiple>
+        <v-chip v-for="server in parsedFilters" :key="server" filter outlined>
+          {{ server }}
+        </v-chip>
+      </v-chip-group>
       <v-spacer />
       <v-toolbar-title v-text="title" />
     </v-app-bar>
@@ -88,7 +93,7 @@
       <v-divider />
       <v-list>
         <v-list-item
-          v-for="(item, i) in $store.state.parsedLog"
+          v-for="(item, i) in parsedLines"
           :key="item.id"
           link
           @click="$vuetify.goTo(`.treeview > div:nth-child(${i})`)"
@@ -112,7 +117,7 @@
 </template>
 
 <script lang="ts">
-import parsers from '~/utils/parsers'
+import parsers, { Message } from '~/utils/parsers'
 
 export default {
   data () {
@@ -126,10 +131,25 @@ export default {
       parserTypes: parsers.map(p => p.name),
       selectedParser: parsers[0].name,
       selectedParserHint: '',
+      selectedFilters: [] as number[],
       title: 'LSP Log Parser'
     }
   },
+  computed: {
+    parsedFilters (): string[] {
+      return this.$store.state.parsedFilters
+    },
+    parsedLines (): Message[] {
+      return this.$store.state.parsedLines
+    }
+  },
   watch: {
+    parsedFilters (servers) {
+      this.selectedFilters = []
+      for (let i = 0; i < servers.length; i++) {
+        this.selectedFilters.push(i)
+      }
+    },
     logContent (newValue) {
       const previewChunk = newValue.substr(0, 200).split('\n')
       const parser = parsers.find(p => p.lineRegex.test(previewChunk[0]))
@@ -140,6 +160,9 @@ export default {
     },
     selectedParser () {
       this.selectedParserHint = ''
+    },
+    selectedFilters (filters) {
+      this.$store.commit('setSelectedFilters', filters)
     },
     dialog (show) {
       if (!show) {
@@ -167,7 +190,7 @@ export default {
           this.errorDialog = true
         }
 
-        this.$store.commit('setParsedLog', lines)
+        this.$store.commit('setParseResults', lines)
       }
     }
   }

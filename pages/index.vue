@@ -4,7 +4,9 @@
     open-on-click
     dense
     hoverable
-    :items="$store.state.parsedLog || []"
+    :items="parsedLines"
+    :search="selectedFilters"
+    :filter="filter"
     :open="openItems"
   >
     <template v-slot:prepend="{ item }">
@@ -33,6 +35,20 @@ export default {
   computed: {
     expandAll () {
       return this.$store.state.expandAll
+    },
+    parsedLines (): Message[] {
+      return this.$store.state.parsedLines
+    },
+    filter (): (item: Message) => boolean {
+      return (item) => {
+        return Boolean(this.enabledFilters.length === 0 || !item.filter || this.enabledFilters.includes(item.filter))
+      }
+    },
+    selectedFilters () {
+      return this.$store.state.selectedFilters.join()
+    },
+    enabledFilters () {
+      return this.$store.state.selectedFilters.map((index: number) => this.$store.state.parsedFilters[index])
     }
   },
   watch: {
@@ -40,7 +56,7 @@ export default {
       if (!expanded) {
         this.openItems = []
       } else {
-        const parsedLog: Message[] = this.$store.state.parsedLog
+        const parsedLog: Message[] = this.parsedLines
         this.openItems = parsedLog.map(line => Boolean(line.children && line.id))
       }
     }

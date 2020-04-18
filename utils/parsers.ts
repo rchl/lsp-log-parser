@@ -5,19 +5,26 @@ export interface Message {
   children?: Message[]
   tempChildren?: string[]
   type?: string
+  filter?: string
+}
+
+export interface ParseResults {
+  lines: Message[]
+  filters: string[]
 }
 
 interface Parser {
-    name: string;
-    lineRegex: RegExp;
-    parse(inputLines: string[]): Message[];
+  name: string;
+  lineRegex: RegExp;
+  parse(inputLines: string[]): ParseResults;
 }
 
-const SublimeParser: Parser = {
+export const SublimeParser: Parser = {
   name: 'Sublime LSP',
   lineRegex: /^::\s+([^ ]+)\s+([^ ]+)\s+([^:\n]+):?\s*(.*)/,
   parse (inputLines) {
     const lines = []
+    const filters: string[] = []
     let id = 1
     let message: Message = { id, name: '' }
 
@@ -25,16 +32,24 @@ const SublimeParser: Parser = {
       const lspMatch = line.match(this.lineRegex)
 
       if (lspMatch) {
-        message = { id: ++id, name: `(${lspMatch[2]}) ${lspMatch[3]}`, type: lspMatch[1] }
+        const direction = lspMatch[1]
+        const serverName = lspMatch[2]
+        const type = lspMatch[3]
+        const params = lspMatch[4]
+        message = { id: ++id, name: `(${serverName}) ${type}`, type, filter: serverName }
 
-        if (lspMatch[4]) {
+        if (params) {
           message.children = [{
             id: ++id,
-            name: lspMatch[4]
+            name: params,
+            filter: serverName
           }]
         }
 
-        const direction = lspMatch[1]
+        if (!filters.includes(serverName)) {
+          filters.push(serverName)
+        }
+
         if (direction.includes('>') || direction === 'received') {
           message.directionIcon = 'mdi-email-send-outline'
         } else if (direction.includes('<')) {
@@ -45,15 +60,36 @@ const SublimeParser: Parser = {
 
         lines.push(message)
       } else {
-        lines.push({ id: ++id, name: line, type: 'info' })
+        const infoMessageMatch = line.match(/^([^:]+)?: (.+)/)
+
+        if (infoMessageMatch) {
+          const serverName = infoMessageMatch[1]
+          const text = infoMessageMatch[2]
+
+          lines.push({
+            id: ++id,
+            name: `(${serverName}) ${text}`,
+            type: 'info',
+            filter: serverName
+          })
+        } else {
+          lines.push({
+            id: ++id,
+            name: line,
+            type: 'info'
+          })
+        }
       }
     }
 
-    return lines
+    return {
+      filters,
+      lines
+    }
   }
 }
 
-const VSCodeParser: Parser = {
+export const VSCodeParser: Parser = {
   name: 'VSCode',
   lineRegex: /^\[(Trace|Info|Error) - ([0-9:APM ]+)\] (Sending|Received) (\w+) (.+)/,
   parse (inputLines) {
@@ -102,7 +138,10 @@ const VSCodeParser: Parser = {
       lines.push(message)
     }
 
-    return lines
+    return {
+      filters: [],
+      lines
+    }
   }
 }
 
