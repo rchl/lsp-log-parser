@@ -116,8 +116,8 @@
   </v-app>
 </template>
 
-<script lang="ts">
-import parsers, { Message } from '~/utils/parsers'
+<script>
+import parsers from '~/utils/parsers'
 
 export default {
   data () {
@@ -131,25 +131,30 @@ export default {
       parserTypes: parsers.map(p => p.name),
       selectedParser: parsers[0].name,
       selectedParserHint: '',
-      selectedFilters: [] as number[],
+      /** @type {number[]} */
+      selectedFilters: [],
       title: 'LSP Log Parser'
     }
   },
   computed: {
-    parsedFilters (): string[] {
+    /** @return {string[]} */
+    parsedFilters () {
       return this.$store.state.parsedFilters
     },
-    parsedLines (): Message[] {
+    /** @return {import('~/utils/parsers').Message[]} */
+    parsedLines () {
       return this.$store.state.parsedLines
     }
   },
   watch: {
+    /** @type {import('vue').WatchHandler<string[]>} */
     parsedFilters (servers) {
       this.selectedFilters = []
       for (let i = 0; i < servers.length; i++) {
         this.selectedFilters.push(i)
       }
     },
+    /** @type {import('vue').WatchHandler<string>} */
     logContent (newValue) {
       const previewChunk = newValue.substr(0, 200).split('\n')
       const parser = parsers.find(p => p.lineRegex.test(previewChunk[0]))
@@ -161,9 +166,11 @@ export default {
     selectedParser () {
       this.selectedParserHint = ''
     },
+    /** @type {import('vue').WatchHandler<string[]>} */
     selectedFilters (filters) {
       this.$store.commit('setSelectedFilters', filters)
     },
+    /** @param {boolean} show */
     dialog (show) {
       if (!show) {
         this.logContent = ''

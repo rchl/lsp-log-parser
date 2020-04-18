@@ -20,35 +20,41 @@
   </v-treeview>
 </template>
 
-<script lang="ts">
-import { Message } from '~/utils/parsers'
-
+<script>
 export default {
   data () {
     return {
       iconTypes: {
         info: 'mdi-information-outline'
       },
-      openItems: [] as boolean[]
+      /** @type {boolean[]} */
+      openItems: []
     }
   },
   computed: {
     expandAll () {
       return this.$store.state.expandAll
     },
-    parsedLines (): Message[] {
+    /** @return {import('~/utils/parsers').Message[]} */
+    parsedLines () {
       return this.$store.state.parsedLines
     },
-    filter (): (item: Message) => boolean {
+    /**
+     * @param {import('~/utils/parsers').Message} item
+     * @return {(item: import('~/utils/parsers').Message) => boolean}
+     */
+    filter () {
       return (item) => {
         return Boolean(this.enabledFilters.length === 0 || !item.filter || this.enabledFilters.includes(item.filter))
       }
     },
+    /** @return {string} */
     selectedFilters () {
       return this.$store.state.selectedFilters.join()
     },
+    /** @reutrn {string[]} */
     enabledFilters () {
-      return this.$store.state.selectedFilters.map((index: number) => this.$store.state.parsedFilters[index])
+      return this.$store.state.selectedFilters.map(/** @type {number} */index => this.$store.state.parsedFilters[index])
     }
   },
   watch: {
@@ -56,7 +62,7 @@ export default {
       if (!expanded) {
         this.openItems = []
       } else {
-        const parsedLog: Message[] = this.parsedLines
+        const parsedLog = this.parsedLines
         this.openItems = parsedLog.map(line => Boolean(line.children && line.id))
       }
     }
