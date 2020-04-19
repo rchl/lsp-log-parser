@@ -11,7 +11,7 @@
         </v-list-item-content>
       </v-list-item>
       <v-divider />
-      <v-list>
+      <v-list dense>
         <v-list-item
           v-for="(item, i) in parsedLines"
           :key="item.id"
@@ -19,7 +19,10 @@
           @click="$vuetify.goTo(`.treeview > div:nth-child(${i})`)"
         >
           <v-list-item-icon>
-            <v-icon dense>
+            <v-icon v-if="iconTypes[item.type]">
+              {{ iconTypes[item.type] }}
+            </v-icon>
+            <v-icon v-else>
               {{ item.directionIcon }}
             </v-icon>
           </v-list-item-icon>
@@ -44,6 +47,13 @@ export default {
   components: {
     appBar,
     logTreeView
+  },
+  data () {
+    return {
+      iconTypes: {
+        info: 'mdi-information-outline'
+      }
+    }
   },
   computed: {
     /** @return {import('~/utils').Message[]} */
