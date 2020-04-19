@@ -34,7 +34,7 @@
     </v-navigation-drawer>
 
     <v-content>
-      <div><log-tree-view /></div>
+      <log-tree-view />
     </v-content>
   </v-app>
 </template>

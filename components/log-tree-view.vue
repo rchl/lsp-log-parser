@@ -61,7 +61,9 @@ export default {
         this.openItems = []
       } else {
         const parsedLog = this.parsedLines
-        this.openItems = parsedLog.map(line => Boolean(line.children && line.id !== undefined))
+        this.openItems = parsedLog
+          .filter(line => Boolean(line.children))
+          .map(line => line.id)
       }
     }
   }
