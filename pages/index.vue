@@ -1,81 +1,55 @@
 <template>
-  <v-treeview
-    class="treeview"
-    open-on-click
-    dense
-    hoverable
-    :items="parsedLines"
-    :search="selectedFilters"
-    :filter="filter"
-    :open="openItems"
-  >
-    <template v-slot:prepend="{ item }">
-      <v-icon v-if="iconTypes[item.type]">
-        {{ iconTypes[item.type] }}
-      </v-icon>
-      <v-icon v-else>
-        {{ item.directionIcon }}
-      </v-icon>
-    </template>
-  </v-treeview>
+  <v-app>
+    <app-bar :drawer="$store.state.drawerVisible" />
+
+    <v-navigation-drawer v-model="$store.state.drawerVisible" absolute>
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title class="title">
+            Messages
+          </v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+      <v-divider />
+      <v-list>
+        <v-list-item
+          v-for="(item, i) in parsedLines"
+          :key="item.id"
+          link
+          @click="$vuetify.goTo(`.treeview > div:nth-child(${i})`)"
+        >
+          <v-list-item-icon>
+            <v-icon dense>
+              {{ item.directionIcon }}
+            </v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title v-text="item.name" />
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+
+    <v-content>
+      <div><log-tree-view /></div>
+    </v-content>
+  </v-app>
 </template>
 
 <script>
+import appBar from '~/components/app-bar.vue'
+import logTreeView from '~/components/log-tree-view.vue'
+
 export default {
-  data () {
-    return {
-      iconTypes: {
-        info: 'mdi-information-outline'
-      },
-      /** @type {boolean[]} */
-      openItems: []
-    }
+  components: {
+    appBar,
+    logTreeView
   },
   computed: {
-    /** @return {boolean} */
-    expandAll () {
-      return this.$store.state.expandAll
-    },
     /** @return {import('~/utils').Message[]} */
     parsedLines () {
       return this.$store.state.parsedLines
-    },
-    /** @return {(item: import('~/utils').Message) => boolean} */
-    filter () {
-      return (item) => {
-        return Boolean(this.enabledFilters.length === 0 || !item.filter || this.enabledFilters.includes(item.filter))
-      }
-    },
-    /** @return {string} */
-    selectedFilters () {
-      return this.$store.state.selectedFilters.join()
-    },
-    /** @reutrn {string[]} */
-    enabledFilters () {
-      return this.$store.state.selectedFilters.map(/** @type {number} */index => this.$store.state.parsedFilters[index])
-    }
-  },
-  watch: {
-    expandAll (expanded) {
-      if (!expanded) {
-        this.openItems = []
-      } else {
-        const parsedLog = this.parsedLines
-        this.openItems = parsedLog.map(line => Boolean(line.children && line.id !== undefined))
-      }
     }
   }
 }
 </script>
-
-<style lang="scss">
-.treeview {
-  padding-bottom: 30vh
-}
-
-.v-treeview-node__children .v-treeview-node__label {
-  font-family: monospace !important;
-  font-size: small !important;
-  white-space: pre-wrap !important;
-}
-</style>

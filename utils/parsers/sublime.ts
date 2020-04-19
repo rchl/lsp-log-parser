@@ -17,7 +17,7 @@ const parser: Parser = {
         const serverName = lspMatch[2]
         const type = lspMatch[3]
         const params = lspMatch[4]
-        message = { id: ++id, name: `(${serverName}) ${type}`, type, filter: serverName }
+        message = { id: ++id, name: `[${serverName}] ${type}`, type, filter: serverName }
 
         if (params) {
           message.children = [{
