@@ -117,7 +117,7 @@
 </template>
 
 <script>
-import parsers from '~/utils'
+import { parsers } from '~/utils'
 
 export default {
   data () {

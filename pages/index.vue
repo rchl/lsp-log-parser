@@ -32,6 +32,7 @@ export default {
     }
   },
   computed: {
+    /** @return {boolean} */
     expandAll () {
       return this.$store.state.expandAll
     },
@@ -39,10 +40,7 @@ export default {
     parsedLines () {
       return this.$store.state.parsedLines
     },
-    /**
-     * @param {import('~/utils').Message} item
-     * @return {(item: import('~/utils').Message) => boolean}
-     */
+    /** @return {(item: import('~/utils').Message) => boolean} */
     filter () {
       return (item) => {
         return Boolean(this.enabledFilters.length === 0 || !item.filter || this.enabledFilters.includes(item.filter))
@@ -63,7 +61,7 @@ export default {
         this.openItems = []
       } else {
         const parsedLog = this.parsedLines
-        this.openItems = parsedLog.map(line => Boolean(line.children && line.id))
+        this.openItems = parsedLog.map(line => Boolean(line.children && line.id !== undefined))
       }
     }
   }
