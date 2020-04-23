@@ -65,6 +65,9 @@ export default {
           .filter(line => Boolean(line.children))
           .map(line => line.id)
       }
+    },
+    parsedLines () {
+      this.openItems = []
     }
   }
 }
