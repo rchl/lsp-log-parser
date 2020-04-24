@@ -76,6 +76,16 @@
         {{ server }}
       </v-chip>
     </v-chip-group>
+    <v-text-field
+      ref="queryField"
+      v-model="queryText"
+      :disabled="!parsedLines.length"
+      placeholder="Filter by text ('/' to focus)"
+      solo-inverted
+      hide-details
+      clearable
+      clear-icon="mdi-close-circle-outline"
+    />
     <v-spacer />
     <v-toolbar-title v-text="title" />
   </v-app-bar>
@@ -99,6 +109,7 @@ export default {
       items: [],
       logContent: '',
       parserTypes: parsers.map(p => p.name),
+      queryText: '',
       selectedParser: parsers[0].name,
       selectedParserHint: '',
       /** @type {number[]} */
@@ -114,6 +125,10 @@ export default {
     /** @return {import('~/utils').Message[]} */
     parsedLines () {
       return this.$store.state.parsedLines
+    },
+    /** @return {boolean} */
+    triggerSearchFocus () {
+      return this.$store.state.triggerSearchFocus
     }
   },
   watch: {
@@ -123,6 +138,13 @@ export default {
       for (let i = 0; i < servers.length; i++) {
         this.selectedFilters.push(i)
       }
+    },
+    triggerSearchFocus () {
+      this.$refs.queryField.focus()
+      this.$store.commit('resetSearchFocus')
+    },
+    queryText (value) {
+      this.$store.commit('setQueryText', value)
     },
     /** @type {import('vue').WatchHandler<string>} */
     logContent (newValue) {

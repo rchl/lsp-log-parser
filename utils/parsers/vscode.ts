@@ -43,7 +43,10 @@ const parser: Parser = {
 
     if (message.name) {
       if (message.tempChildren) {
-        message.children = [{ id: ++id, name: message.tempChildren.join('\n') }]
+        message.children = [{
+          id: ++id,
+          name: message.tempChildren.join('\n')
+        }]
       }
 
       lines.push(message)
