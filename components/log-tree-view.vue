@@ -109,6 +109,9 @@ export default {
     },
     parsedLines () {
       this.openItems = []
+      this.bottomSheetOpen = false
+      this.selection = []
+      this.selectedItem = null
       this.$store.commit('toggleExpandAll', false)
     },
     selection (selection) {
