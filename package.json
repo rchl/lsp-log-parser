@@ -1,7 +1,7 @@
 {
   "name": "lsp-log-parser",
   "version": "1.0.0",
-  "description": "Parser for LSP server logs from VSCode",
+  "description": "Parser for LSP server logs",
   "author": "Rafał Chłodnicki",
   "private": true,
   "scripts": {
