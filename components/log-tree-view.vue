@@ -34,9 +34,7 @@
             {{ selectedItem.name }}
             <v-spacer />
           </h3>
-          <div v-if="selectedItem.children">
-            {{ selectedItem.children[0].name }}
-          </div>
+          <span v-if="selectedItem.children" class="payload">{{ selectedItem.children[0].name }}</span>
         </v-card-text>
       </v-card>
     </v-bottom-sheet>
@@ -140,7 +138,8 @@ export default {
   padding-bottom: 30vh
 }
 
-.v-treeview-node__children .v-treeview-node__label {
+.v-treeview-node__children .v-treeview-node__label,
+.payload {
   font-family: monospace !important;
   font-size: small !important;
   white-space: pre-wrap !important;
