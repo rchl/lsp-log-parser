@@ -15,7 +15,11 @@ const parser: Parser = {
         // Process completed object first.
         if (message.name) {
           if (message.tempChildren) {
-            message.children = [{ id: ++id, name: message.tempChildren.join('\n') }]
+            message.children = [{
+              id: ++id,
+              isChild: true,
+              name: message.tempChildren.join('\n')
+            }]
           }
 
           lines.push(message)
@@ -45,6 +49,7 @@ const parser: Parser = {
       if (message.tempChildren) {
         message.children = [{
           id: ++id,
+          isChild: true,
           name: message.tempChildren.join('\n')
         }]
       }

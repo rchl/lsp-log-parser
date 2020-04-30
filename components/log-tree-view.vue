@@ -19,6 +19,9 @@
         <v-icon v-else>
           {{ item.directionIcon }}
         </v-icon>
+        <v-chip v-if="item.filter && !item.isChild" outlined>
+          {{ item.filter }}
+        </v-chip>
       </template>
     </v-treeview>
     <v-bottom-sheet v-model="bottomSheetOpen" persistent scrollable hide-overlay>

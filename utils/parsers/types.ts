@@ -1,5 +1,6 @@
 export interface Message {
   id: number
+  isChild?: boolean
   name: string
   directionIcon?: string
   children?: Message[]
