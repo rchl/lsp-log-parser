@@ -2,7 +2,7 @@ import { Message, Parser } from './types'
 
 const parser: Parser = {
   name: 'VSCode',
-  lineRegex: /^\[(Trace|Info|Error) - ([0-9:APM ]+)\] (Sending|Received) (\w+) (.+)/,
+  lineRegex: /^\[(Trace|Info|Error)\s+-\s+([0-9:APM ]+)\] (?:(Sending|Received) (\w+) |)(.+)/,
   parse (inputLines) {
     const lines = []
     let id = 1
@@ -26,11 +26,16 @@ const parser: Parser = {
           message = { id: ++id, name: '' }
         }
 
-        message.name = `[${newHeaderMatch[2]}] ${newHeaderMatch[5]} (${newHeaderMatch[4]})`
+        const direction = newHeaderMatch[3] ? newHeaderMatch[3].toLowerCase() : null
+        const messageType = newHeaderMatch[4]
+        const remainder = newHeaderMatch[5]
+        const messageText = direction ? `${remainder} (${messageType})` : remainder
+        message.name = `[${newHeaderMatch[2]}] ${messageText}`
         message.type = newHeaderMatch[1].toLowerCase()
-        const direction = newHeaderMatch[3].toLowerCase()
         if (direction === 'sending' || direction === 'received') {
           message.directionIcon = direction === 'sending' ? 'mdi-email-send-outline' : 'mdi-email-receive'
+        } else {
+          message.directionIcon = 'mdi-sync-alert'
         }
       } else {
         if (!message.tempChildren) {
