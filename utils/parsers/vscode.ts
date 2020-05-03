@@ -35,7 +35,7 @@ const parser: Parser = {
         if (direction === 'sending' || direction === 'received') {
           message.directionIcon = direction === 'sending' ? 'mdi-email-send-outline' : 'mdi-email-receive'
         } else {
-          message.directionIcon = 'mdi-sync-alert'
+          message.directionIcon = 'mdi-information-outline'
         }
       } else {
         if (!message.tempChildren) {
