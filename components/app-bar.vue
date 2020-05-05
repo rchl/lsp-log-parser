@@ -1,6 +1,6 @@
 <template>
   <v-app-bar app>
-    <v-app-bar-nav-icon class="mr-2" @click.stop="$store.commit('setDrawerVisible', !drawer)" />
+    <!-- <v-app-bar-nav-icon class="mr-2" @click.stop="$store.commit('setDrawerVisible', !drawer)" /> -->
     <v-dialog v-model="dialog" max-width="600px">
       <template v-slot:activator="{ on }">
         <v-btn color="primary mr-2" v-on="on">

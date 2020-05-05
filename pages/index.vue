@@ -2,7 +2,7 @@
   <v-app>
     <app-bar :drawer="$store.state.drawerVisible" />
 
-    <v-navigation-drawer v-model="$store.state.drawerVisible" absolute>
+    <!-- <v-navigation-drawer v-model="$store.state.drawerVisible" absolute>
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="title">
@@ -31,7 +31,7 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
-    </v-navigation-drawer>
+    </v-navigation-drawer> -->
 
     <v-content>
       <log-tree-view />
