@@ -6,7 +6,11 @@ const parser: Parser = {
   parse (inputLines) {
     const lines = []
     let id = 1
-    let message: Message = { id, name: '' }
+    let message: Message = {
+      id,
+      name: '',
+      toServer: true
+    }
 
     for (const [i, line] of inputLines.entries()) {
       const newHeaderMatch = line.match(this.lineRegex)
@@ -15,28 +19,25 @@ const parser: Parser = {
         // Process completed object first.
         if (message.name) {
           if (message.tempChildren) {
-            message.children = [{
+            message.child = {
               id: ++id,
               isChild: true,
-              name: message.tempChildren.join('\n')
-            }]
+              name: message.tempChildren.join('\n'),
+              toServer: message.toServer
+            }
           }
 
           lines.push(message)
-          message = { id: ++id, name: '' }
+          message = { id: ++id, name: '', toServer: true }
         }
 
         const direction = newHeaderMatch[3] ? newHeaderMatch[3].toLowerCase() : null
-        const messageType = newHeaderMatch[4]
-        const remainder = newHeaderMatch[5]
-        const messageText = direction ? `${remainder} (${messageType})` : remainder
-        message.name = `[${newHeaderMatch[2]}] ${messageText}`
+        // const messageType = newHeaderMatch[4]
+        const messageText = newHeaderMatch[5].trim().replace(/(^'|'\.?$)/g, '')
+        message.name = messageText
+        message.time = newHeaderMatch[2]
         message.type = newHeaderMatch[1].toLowerCase()
-        if (direction === 'sending' || direction === 'received') {
-          message.directionIcon = direction === 'sending' ? 'mdi-email-send-outline' : 'mdi-email-receive'
-        } else {
-          message.directionIcon = 'mdi-information-outline'
-        }
+        message.toServer = direction === 'sending'
       } else {
         if (!message.tempChildren) {
           message.tempChildren = []
@@ -52,11 +53,12 @@ const parser: Parser = {
 
     if (message.name) {
       if (message.tempChildren) {
-        message.children = [{
+        message.child = {
           id: ++id,
           isChild: true,
-          name: message.tempChildren.join('\n')
-        }]
+          name: message.tempChildren.join('\n'),
+          toServer: message.toServer
+        }
       }
 
       lines.push(message)

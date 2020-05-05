@@ -1,29 +1,52 @@
 <template>
-  <div>
-    <v-treeview
-      class="treeview"
-      open-on-click
-      dense
-      hoverable
-      activatable
-      :active.sync="selection"
-      :items="parsedLines"
-      :search="searchModel"
-      :filter="filter"
-      :open="openItems"
-    >
-      <template v-slot:prepend="{ item }">
-        <v-icon v-if="iconTypes[item.type]">
-          {{ iconTypes[item.type] }}
-        </v-icon>
-        <v-icon v-else>
-          {{ item.directionIcon }}
-        </v-icon>
-        <v-chip v-if="item.filter && !item.isChild" outlined>
-          {{ item.filter }}
-        </v-chip>
+  <div class="pa-6">
+    <v-container class="d-flex flex-column">
+      <div v-if="parsedLines.length" class="d-flex justify-space-between mb-6">
+        <h2 class="headline">
+          Client
+        </h2>
+        <h2 class="headline">
+          Server
+        </h2>
+      </div>
+
+      <template v-for="line in filteredLines">
+        <div
+          v-if="line.time"
+          :key="line.id + 't'"
+          class="caption"
+          :class="{ 'text-right': !line.toServer }"
+        >
+          {{ line.time }}
+        </div>
+        <v-alert
+          :key="line.id"
+          :border="line.toServer ? 'left' : 'right'"
+          :class="[line.toServer ? 'mr-auto' : 'ml-auto text-right', 'd-inline-block', { 'selected': line === selectedItem }]"
+          :color="line.toServer ? 'blue lighten-1' : 'brown'"
+          :icon="iconTypes[line.type]"
+          dark
+          dense
+          max-width="70vw"
+          @click.native="selectItem(line)"
+        >
+          <v-chip v-if="line.filter && line.toServer" color="blue darken-3 mr-2">
+            {{ line.filter }}
+          </v-chip>
+          <span class="font-weight-medium">{{ line.name }}</span>
+          <v-chip v-if="line.filter && !line.toServer" color="brown darken-3 ml-2">
+            {{ line.filter }}
+          </v-chip>
+          <div
+            v-if="line.child"
+            class="text-no-wrap inline-payload my-2"
+          >
+            {{ line.child.name }}
+          </div>
+        </v-alert>
       </template>
-    </v-treeview>
+    </v-container>
+
     <v-bottom-sheet v-model="bottomSheetOpen" scrollable>
       <v-card v-if="selectedItem" class="pt-3">
         <v-card-text class="bottom-sheet-text-container">
@@ -31,13 +54,10 @@
             <v-icon v-if="iconTypes[selectedItem.type]">
               {{ iconTypes[selectedItem.type] }}
             </v-icon>
-            <v-icon v-else>
-              {{ selectedItem.directionIcon }}
-            </v-icon>
             {{ selectedItem.name }}
             <v-spacer />
           </h3>
-          <span v-if="selectedItem.children" class="payload">{{ selectedItem.children[0].name }}</span>
+          <span v-if="selectedItem.child" class="payload">{{ selectedItem.child.name }}</span>
         </v-card-text>
       </v-card>
     </v-bottom-sheet>
@@ -51,23 +71,25 @@ export default {
       iconTypes: {
         info: 'mdi-information-outline'
       },
-      /** @type {boolean[]} */
-      openItems: [],
-      /** @type {number[]} */
-      selection: [],
       /** @type {import('~/utils').Message | null} */
       selectedItem: null,
       bottomSheetOpen: false
     }
   },
   computed: {
-    /** @return {boolean} */
-    expandAll () {
-      return this.$store.state.expandAll
-    },
     /** @return {import('~/utils').Message[]} */
     parsedLines () {
       return this.$store.state.parsedLines
+    },
+    filteredLines () {
+      return this.parsedLines.filter((line) => {
+        const matchesFilter = this.parsedFilters.length === 0 || !line.filter || this.enabledFilters.includes(line.filter)
+        if (!matchesFilter) {
+          return false
+        }
+
+        return !this.queryText || line.name.toLowerCase().includes(this.queryText.toLowerCase())
+      })
     },
     /** @return {string} */
     queryText () {
@@ -100,55 +122,45 @@ export default {
     }
   },
   watch: {
-    expandAll (expanded) {
-      if (!expanded) {
-        this.openItems = []
-      } else {
-        const parsedLog = this.parsedLines
-        this.openItems = parsedLog
-          .filter(line => Boolean(line.children))
-          .map(line => line.id)
-      }
-    },
     parsedLines () {
       this.openItems = []
       this.bottomSheetOpen = false
-      this.selection = []
       this.selectedItem = null
-      this.$store.commit('toggleExpandAll', false)
-    },
-    selection (selection) {
-      if (selection.length) {
-        const selectedId = selection[0]
-        for (const parent of this.parsedLines) {
-          if (parent.children) {
-            for (const child of parent.children) {
-              if (child.id === selectedId) {
-                this.selectedItem = parent
-                this.bottomSheetOpen = true
-              }
-            }
-          }
-        }
-      } else {
-        this.selectedItem = null
-        this.bottomSheetOpen = false
-      }
+    }
+  },
+  methods: {
+    /** @param {Message} */
+    selectItem (line) {
+      this.selectedItem = line
+      this.bottomSheetOpen = true
     }
   }
 }
 </script>
 
 <style lang="scss">
-.treeview {
-  padding-bottom: 30vh
+.v-alert {
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+
+  * {
+    overflow: hidden;
+  }
 }
 
-.v-treeview-node__children .v-treeview-node__label,
+.inline-payload {
+  font-family: monospace;
+  font-size: smaller;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .payload {
-  font-family: monospace !important;
-  font-size: small !important;
-  white-space: pre-wrap !important;
+  white-space: pre-wrap;
 }
 
 .bottom-sheet-text-container {

@@ -7,37 +7,41 @@ const parser: Parser = {
     const lines = []
     const filters: string[] = []
     let id = 1
-    let message: Message = { id, name: '' }
+    let message: Message = {
+      id,
+      name: '',
+      toServer: false
+    }
 
     for (const line of inputLines) {
       const lspMatch = line.match(this.lineRegex)
 
       if (lspMatch) {
         const direction = lspMatch[1]
+        const toServer = direction.includes('>')
         const serverName = lspMatch[2]
         const type = lspMatch[3]
         const params = lspMatch[4]
-        message = { id: ++id, name: type, type, filter: serverName }
+        message = {
+          id: ++id,
+          name: type,
+          type,
+          filter: serverName,
+          toServer
+        }
 
         if (params) {
-          message.children = [{
+          message.child = {
             id: ++id,
             isChild: true,
             name: params,
-            filter: serverName
-          }]
+            filter: serverName,
+            toServer
+          }
         }
 
         if (!filters.includes(serverName)) {
           filters.push(serverName)
-        }
-
-        if (direction.includes('>') || direction === 'received') {
-          message.directionIcon = 'mdi-email-send-outline'
-        } else if (direction.includes('<')) {
-          message.directionIcon = 'mdi-email-receive'
-        } else {
-          message.directionIcon = 'mdi-sync-alert'
         }
 
         lines.push(message)
@@ -51,6 +55,7 @@ const parser: Parser = {
           lines.push({
             id: ++id,
             name: `(${serverName}) ${text}`,
+            toServer: false,
             type: 'info',
             filter: serverName
           })
@@ -58,6 +63,7 @@ const parser: Parser = {
           lines.push({
             id: ++id,
             name: line,
+            toServer: false,
             type: 'info'
           })
         }

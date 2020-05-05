@@ -3,7 +3,6 @@ import { ParseResults } from '~/utils'
 
 type State = {
   drawerVisible: boolean
-  expandAll: boolean
   parsedFilters: ParseResults['filters']
   parsedLines: ParseResults['lines']
   queryText: string,
@@ -13,7 +12,6 @@ type State = {
 
 export const state: () => State = () => ({
   drawerVisible: false,
-  expandAll: false,
   parsedFilters: [],
   parsedLines: [],
   queryText: '',
@@ -22,9 +20,6 @@ export const state: () => State = () => ({
 })
 
 export const mutations: MutationTree<State> = {
-  toggleExpandAll (state, expand) {
-    state.expandAll = typeof expand === 'boolean' ? expand : !state.expandAll
-  },
   setDrawerVisible (state, visible) {
     state.drawerVisible = visible
   },

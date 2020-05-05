@@ -57,20 +57,6 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-tooltip bottom>
-      <template v-slot:activator="{ on }">
-        <v-btn
-          class="mr-2"
-          icon
-          :disabled="!parsedLines.length"
-          v-on="on"
-          @click.stop="$store.commit('toggleExpandAll')"
-        >
-          <v-icon>mdi-{{ `chevron-${$store.state.expandAll ? 'down' : 'right'}` }}</v-icon>
-        </v-btn>
-      </template>
-      <span>Expand/Collapse all</span>
-    </v-tooltip>
     <v-chip-group v-model="selectedFilters" class="mr-2" multiple>
       <v-chip v-for="server in parsedFilters" :key="server" filter outlined>
         {{ server }}

@@ -2,9 +2,10 @@ export interface Message {
   id: number
   isChild?: boolean
   name: string
-  directionIcon?: string
-  children?: Message[]
+  child?: Message
   tempChildren?: string[]
+  toServer: boolean
+  time?: string
   type?: string
   filter?: string
 }
