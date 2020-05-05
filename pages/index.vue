@@ -34,19 +34,19 @@
     </v-navigation-drawer> -->
 
     <v-content>
-      <log-tree-view />
+      <log-view />
     </v-content>
   </v-app>
 </template>
 
 <script>
 import appBar from '~/components/app-bar.vue'
-import logTreeView from '~/components/log-tree-view.vue'
+import logView from '~/components/log-view.vue'
 
 export default {
   components: {
     appBar,
-    logTreeView
+    logView
   },
   data () {
     return {

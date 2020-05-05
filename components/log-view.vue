@@ -24,7 +24,7 @@
         </v-chip>
       </template>
     </v-treeview>
-    <v-bottom-sheet v-model="bottomSheetOpen" persistent scrollable hide-overlay>
+    <v-bottom-sheet v-model="bottomSheetOpen" scrollable>
       <v-card v-if="selectedItem" class="pt-3">
         <v-card-text class="bottom-sheet-text-container">
           <h3 class="pb-3">
