@@ -71,7 +71,7 @@
       </template>
       <span>Expand/Collapse all</span>
     </v-tooltip>
-    <v-chip-group v-if="parsedFilters.length" v-model="selectedFilters" class="mr-2" multiple>
+    <v-chip-group v-model="selectedFilters" class="mr-2" multiple>
       <v-chip v-for="server in parsedFilters" :key="server" filter outlined>
         {{ server }}
       </v-chip>
@@ -133,11 +133,11 @@ export default {
   },
   watch: {
     /** @type {import('vue').WatchHandler<string[]>} */
-    parsedFilters (servers) {
-      this.selectedFilters = []
-      for (let i = 0; i < servers.length; i++) {
-        this.selectedFilters.push(i)
-      }
+    async parsedFilters (servers) {
+      // This is required as we need to update v-model of v-chip-group after it does it itself
+      // after creating new chips.
+      await this.$nextTick()
+      this.selectedFilters = servers.map((_server, index) => index)
     },
     triggerSearchFocus () {
       this.$refs.queryField.focus()
@@ -160,7 +160,7 @@ export default {
     },
     /** @type {import('vue').WatchHandler<string[]>} */
     selectedFilters (filters) {
-      this.$store.commit('setSelectedFilters', filters)
+      this.$store.commit('setSelectedFilters', Array.from(filters))
     },
     /** @param {boolean} show */
     dialog (show) {
