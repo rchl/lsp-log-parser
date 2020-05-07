@@ -1,6 +1,6 @@
 <template>
   <div class="pa-6">
-    <v-container class="d-flex flex-column">
+    <v-container class="log-container d-flex flex-column">
       <div v-if="parsedLines.length" class="d-flex justify-space-between mb-6">
         <h2 class="headline">
           Client
@@ -27,7 +27,7 @@
           :icon="iconTypes[line.type]"
           dark
           dense
-          max-width="70vw"
+          max-width="70%"
           @click.native="selectItem(line)"
         >
           <v-chip v-if="line.filter && line.toServer" color="blue darken-3 mr-2">
@@ -95,26 +95,9 @@ export default {
     queryText () {
       return this.$store.state.queryText
     },
-    /** @return {(item: import('~/utils').Message) => boolean} */
-    filter () {
-      return (item, _search, textKey) => {
-        const matchesFilter = this.parsedFilters.length === 0 || !item.filter || this.enabledFilters.includes(item.filter)
-        if (!matchesFilter) {
-          return false
-        }
-
-        const matchesSearch = (!this.queryText || item[textKey].toLowerCase().includes(this.queryText))
-
-        return matchesSearch
-      }
-    },
     /** @return {number[]} */
     parsedFilters () {
       return this.$store.state.parsedFilters
-    },
-    /** @return {string} */
-    searchModel () {
-      return String(this.enabledFilters) + String(this.queryText)
     },
     /** @return {string[]} */
     enabledFilters () {
@@ -139,6 +122,10 @@ export default {
 </script>
 
 <style lang="scss">
+.log-container {
+  max-width: 900px;
+}
+
 .v-alert {
   cursor: pointer;
 
