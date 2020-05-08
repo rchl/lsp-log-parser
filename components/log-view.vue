@@ -153,6 +153,6 @@ export default {
 .bottom-sheet-text-container {
   font-family: monospace !important;
   font-size: small !important;
-  height: 30vh;
+  height: 50vh;
 }
 </style>
