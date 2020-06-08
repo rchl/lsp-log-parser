@@ -144,8 +144,20 @@ export default {
     },
     /** @type {import('vue').WatchHandler<string>} */
     logContent (newValue) {
-      const previewChunk = newValue.substr(0, 200).split('\n')
-      const parser = parsers.find(p => p.lineRegex.test(previewChunk[0]))
+      const previewChunks = newValue.substr(0, 500).split('\n')
+      let highestHits = 0
+      let highestParserIndex = -1
+      for (const [index, parser] of parsers.entries()) {
+        const hits = previewChunks.filter(chunk => parser.lineRegex.test(chunk)).length
+        if (hits > highestHits) {
+          highestHits = hits
+          highestParserIndex = index
+        }
+      }
+      let parser = null
+      if (highestParserIndex !== -1) {
+        parser = parsers[highestParserIndex]
+      }
       if (parser) {
         this.selectedParser = parser.name
       }
