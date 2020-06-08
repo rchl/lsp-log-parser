@@ -22,7 +22,7 @@
         <v-alert
           :key="line.id"
           :border="line.toServer ? 'left' : 'right'"
-          :class="[line.toServer ? 'mr-auto' : 'ml-auto text-right', 'd-inline-block', { 'selected': line === selectedItem }]"
+          :class="[line.toServer ? 'mr-auto' : 'ml-auto text-right', 'd-inline-block', { 'selected': line === selectedLine }]"
           :color="line.toServer ? 'blue lighten-1' : 'brown'"
           :icon="iconTypes[line.type]"
           dark
@@ -34,6 +34,7 @@
             {{ line.filter }}
           </v-chip>
           <span class="font-weight-medium">{{ line.name }}</span>
+          <span v-if="line.requestId">({{ line.requestId }})</span>
           <v-chip v-if="line.filter && !line.toServer" color="brown darken-3 ml-2">
             {{ line.filter }}
           </v-chip>
@@ -47,17 +48,17 @@
       </template>
     </v-container>
 
-    <v-bottom-sheet v-model="bottomSheetOpen" scrollable>
-      <v-card v-if="selectedItem" class="pt-3">
+    <v-bottom-sheet :value="bottomSheetOpen" scrollable>
+      <v-card v-if="selectedLine" class="pt-3">
         <v-card-text class="bottom-sheet-text-container">
           <h3 class="pb-3">
-            <v-icon v-if="iconTypes[selectedItem.type]">
-              {{ iconTypes[selectedItem.type] }}
+            <v-icon v-if="iconTypes[selectedLine.type]">
+              {{ iconTypes[selectedLine.type] }}
             </v-icon>
-            {{ selectedItem.name }}
+            {{ selectedLine.name }}
             <v-spacer />
           </h3>
-          <span v-if="selectedItem.child" class="payload">{{ selectedItem.child.name }}</span>
+          <span v-if="selectedLine.child" class="payload">{{ selectedLine.child.name }}</span>
         </v-card-text>
       </v-card>
     </v-bottom-sheet>
@@ -68,18 +69,24 @@
 export default {
   data () {
     return {
+      sheetInternalOpen: false,
       iconTypes: {
         info: 'mdi-information-outline'
-      },
-      /** @type {import('~/utils').Message | null} */
-      selectedItem: null,
-      bottomSheetOpen: false
+      }
     }
   },
   computed: {
     /** @return {import('~/utils').Message[]} */
     parsedLines () {
       return this.$store.state.parsedLines
+    },
+    /** @return {import('~/utils').Message | null} */
+    selectedLine () {
+      return this.$store.state.selectedLine
+    },
+    /** @return {boolean} */
+    bottomSheetOpen () {
+      return this.$store.state.bottomSheetOpen
     },
     filteredLines () {
       return this.parsedLines.filter((line) => {
@@ -105,17 +112,16 @@ export default {
     }
   },
   watch: {
-    parsedLines () {
-      this.openItems = []
-      this.bottomSheetOpen = false
-      this.selectedItem = null
+    sheetInternalOpen (open) {
+      if (!open) {
+        this.$store.commit('setSelectedLine', null)
+      }
     }
   },
   methods: {
     /** @param {Message} */
     selectItem (line) {
-      this.selectedItem = line
-      this.bottomSheetOpen = true
+      this.$store.commit('setSelectedLine', line)
     }
   }
 }

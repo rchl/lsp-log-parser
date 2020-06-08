@@ -1,6 +1,7 @@
 export interface Message {
   id: number
   isChild?: boolean
+  requestId?: number
   name: string
   child?: Message
   tempChildren?: string[]

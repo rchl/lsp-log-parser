@@ -198,6 +198,7 @@ export default {
         }
 
         this.$store.commit('setParseResults', lines)
+        this.$store.commit('resetState')
       }
     }
   }
