@@ -1,7 +1,12 @@
 <template>
   <v-app-bar app>
     <!-- <v-app-bar-nav-icon class="mr-2" @click.stop="$store.commit('setDrawerVisible', !drawer)" /> -->
-    <v-dialog v-model="dialog" max-width="600px">
+    <v-dialog
+      v-model="dialog"
+      v-shortkey="[cmdOrCtrl, 'o']"
+      max-width="600px"
+      @shortkey.native="dialog = true"
+    >
       <template v-slot:activator="{ on }">
         <v-btn color="primary mr-2" v-on="on">
           Open log
@@ -32,7 +37,12 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer />
-          <v-btn color="primary" @click="parseLog">
+          <v-btn
+            v-shortkey="[cmdOrCtrl, 'enter']"
+            color="primary"
+            @shortkey.native="dialog ? parseLog() : null"
+            @click="parseLog"
+          >
             Parse
           </v-btn>
         </v-card-actions>
