@@ -48,7 +48,7 @@
       </template>
     </v-container>
 
-    <v-bottom-sheet :value="bottomSheetOpen" scrollable>
+    <v-bottom-sheet v-model="sheetInternalOpen" scrollable>
       <v-card v-if="selectedLine" class="pt-3">
         <v-card-text class="bottom-sheet-text-container">
           <h3 class="pb-3">
@@ -112,6 +112,9 @@ export default {
     }
   },
   watch: {
+    bottomSheetOpen (open) {
+      this.sheetInternalOpen = open
+    },
     sheetInternalOpen (open) {
       if (!open) {
         this.$store.commit('setSelectedLine', null)
