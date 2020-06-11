@@ -2,10 +2,10 @@
   <v-app-bar app>
     <!-- <v-app-bar-nav-icon class="mr-2" @click.stop="$store.commit('setDrawerVisible', !drawer)" /> -->
     <v-dialog
-      v-model="dialog"
+      v-model="openLogDialog"
       v-shortkey="[cmdOrCtrl, 'o']"
       max-width="600px"
-      @shortkey.native="dialog = true"
+      @shortkey.native="openLogDialog = true"
     >
       <template v-slot:activator="{ on }">
         <v-btn color="primary mr-2" v-on="on">
@@ -40,7 +40,7 @@
           <v-btn
             v-shortkey="[cmdOrCtrl, 'enter']"
             color="primary"
-            @shortkey.native="dialog ? parseLog() : null"
+            @shortkey.native="openLogDialog ? parseLog() : null"
             @click="parseLog"
           >
             Parse
@@ -48,6 +48,25 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-tooltip bottom>
+      <template v-slot:activator="{ on }">
+        <v-btn
+          v-shortkey="[cmdOrCtrl, 'x']"
+          class="mr-2"
+          outlined
+          :disabled="parsedLines.length === 0"
+          color="primary"
+          @shortkey.native="clearLog()"
+          @click="clearLog()"
+          v-on="on"
+        >
+          <v-icon>
+            mdi-playlist-remove
+          </v-icon>
+        </v-btn>
+      </template>
+      <span>Clear log view ({{ cmdOrCtrl }}-x)</span>
+    </v-tooltip>
     <v-dialog v-model="errorDialog" max-width="290">
       <v-card>
         <v-card-title class="headline">
@@ -99,7 +118,7 @@ export default {
   },
   data () {
     return {
-      dialog: false,
+      openLogDialog: false,
       errorDialog: false,
       parseErrorText: '',
       items: [],
@@ -171,15 +190,18 @@ export default {
       this.$store.commit('setSelectedFilters', Array.from(filters))
     },
     /** @param {boolean} show */
-    dialog (show) {
+    openLogDialog (show) {
       if (!show) {
         this.logContent = ''
       }
     }
   },
   methods: {
+    clearLog () {
+      this.$store.commit('setParseResults', { filters: [], lines: [] })
+    },
     parseLog () {
-      this.dialog = false
+      this.openLogDialog = false
       this.$store.commit('setDrawerVisible', false)
       this.selectedParserHint = ''
 
