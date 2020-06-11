@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <app-bar :drawer="$store.state.drawerVisible" />
+    <app-bar :drawer="drawerVisible" />
 
     <!-- <v-navigation-drawer v-model="$store.state.drawerVisible" absolute>
       <v-list-item>
@@ -39,27 +39,30 @@
   </v-app>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent, computed } from '@vue/composition-api'
 import appBar from '~/components/app-bar.vue'
 import logView from '~/components/log-view.vue'
+import { Message } from '~/utils'
 
-export default {
+export default defineComponent({
   components: {
     appBar,
     logView
   },
-  data () {
+  setup (_props, context) {
+    const parsedLines = computed<Message[]>(() => context.root.$store.state.parsedLines)
+    const drawerVisible = computed<Boolean>(() => context.root.$store.state.drawerVisible)
+
     return {
-      iconTypes: {
-        info: 'mdi-information-outline'
-      }
+      drawerVisible,
+      parsedLines
     }
-  },
-  computed: {
-    /** @return {import('~/utils').Message[]} */
-    parsedLines () {
-      return this.$store.state.parsedLines
-    }
+    // return {
+    //   iconTypes: {
+    //     info: 'mdi-information-outline'
+    //   }
+    // }
   }
-}
+})
 </script>

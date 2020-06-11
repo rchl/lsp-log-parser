@@ -21,3 +21,8 @@ export interface Parser {
   lineRegex: RegExp;
   parse(inputLines: string[]): ParseResults;
 }
+
+export interface SelectedFilter {
+  name: string,
+  enabled: Boolean
+}

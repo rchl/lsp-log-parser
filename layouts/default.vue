@@ -4,20 +4,8 @@
   </div>
 </template>
 
-<script>
-export default {
-  mounted () {
-    document.addEventListener('keyup', this.keyHandler)
-  },
-  destroyed () {
-    document.removeEventListener('keyup', this.keyHandler)
-  },
-  methods: {
-    keyHandler (event) {
-      if (event.key === '/') {
-        this.$store.commit('triggerSearchFocus')
-      }
-    }
-  }
-}
+<script lang="ts">
+import { defineComponent } from '@vue/composition-api'
+
+export default defineComponent({})
 </script>

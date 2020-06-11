@@ -1,5 +1,5 @@
 import { MutationTree } from 'vuex'
-import { Message, ParseResults } from '~/utils'
+import { Message, ParseResults, SelectedFilter } from '~/utils'
 
 type State = {
   bottomSheetOpen: boolean
@@ -8,8 +8,7 @@ type State = {
   parsedLines: ParseResults['lines']
   queryText: string,
   selectedLine: Message | null
-  selectedFilters: string[]
-  triggerSearchFocus: boolean
+  selectedFilters: SelectedFilter[]
 }
 
 export const state: () => State = () => ({
@@ -19,8 +18,7 @@ export const state: () => State = () => ({
   parsedLines: [],
   queryText: '',
   selectedLine: null,
-  selectedFilters: [],
-  triggerSearchFocus: false
+  selectedFilters: []
 })
 
 export const mutations: MutationTree<State> = {
@@ -38,23 +36,21 @@ export const mutations: MutationTree<State> = {
   setParseResults (state, data) {
     state.parsedFilters = data.filters
     state.parsedLines = data.lines
+    state.selectedFilters = state.parsedFilters.map(filter => ({
+      name: filter,
+      enabled: true
+    }))
   },
   setParsedFilters (state, filters) {
     state.parsedFilters = filters
+  },
+  toggleFilter (_state, filter) {
+    filter.enabled = !filter.enabled
   },
   appendParsedMessage (state, message) {
     state.parsedLines.push(message)
   },
   setQueryText (state, value) {
     state.queryText = value
-  },
-  setSelectedFilters (state, filters) {
-    state.selectedFilters = filters
-  },
-  triggerSearchFocus (state) {
-    state.triggerSearchFocus = true
-  },
-  resetSearchFocus (state) {
-    state.triggerSearchFocus = false
   }
 }

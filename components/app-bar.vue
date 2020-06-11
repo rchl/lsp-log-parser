@@ -2,13 +2,13 @@
   <v-app-bar app>
     <!-- <v-app-bar-nav-icon class="mr-2" @click.stop="$store.commit('setDrawerVisible', !drawer)" /> -->
     <v-dialog
-      v-model="openLogDialog"
+      v-model="state.openLogDialog"
       v-shortkey="[cmdOrCtrl, 'o']"
       max-width="600px"
-      @shortkey.native="openLogDialog = true"
+      @shortkey.native="state.openLogDialog = true"
     >
       <template v-slot:activator="{ on }">
-        <v-btn color="primary mr-2" v-on="on">
+        <v-btn color="primary" class="mr-2" v-on="on">
           Open log
         </v-btn>
       </template>
@@ -19,7 +19,7 @@
 
         <v-card-text>
           <v-textarea
-            v-model="logContent"
+            v-model="state.logContent"
             autofocus
             no-resize
             filled
@@ -27,10 +27,10 @@
             data-gramm_editor="false"
           />
           <v-select
-            v-model="selectedParser"
-            :items="parserTypes"
+            v-model="state.selectedParser"
+            :items="state.parserTypes"
             label="Log type"
-            :hint="selectedParserHint"
+            :hint="state.selectedParserHint"
             persistent-hint
             solo
           />
@@ -40,7 +40,7 @@
           <v-btn
             v-shortkey="[cmdOrCtrl, 'enter']"
             color="primary"
-            @shortkey.native="openLogDialog ? parseLog() : null"
+            @shortkey.native="state.openLogDialog ? parseLog() : null"
             @click="parseLog"
           >
             Parse
@@ -67,103 +67,84 @@
       </template>
       <span>Clear log view ({{ cmdOrCtrl }}-x)</span>
     </v-tooltip>
-    <v-dialog v-model="errorDialog" max-width="290">
+    <v-dialog v-model="state.errorDialog" max-width="290">
       <v-card>
         <v-card-title class="headline">
           Parse error
         </v-card-title>
 
         <v-card-text>
-          {{ parseErrorText }}
+          {{ state.parseErrorText }}
         </v-card-text>
 
         <v-card-actions>
           <v-spacer />
 
-          <v-btn color="primary" text @click="errorDialog = false">
+          <v-btn color="primary" text @click="state.errorDialog = false">
             Close
           </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-chip-group v-model="selectedFilters" class="mr-2" multiple>
-      <v-chip v-for="server in parsedFilters" :key="server" filter outlined>
-        {{ server }}
-      </v-chip>
-    </v-chip-group>
+    <v-chip
+      v-for="filter in selectedFilters"
+      :key="filter.name"
+      class="mr-2"
+      :input-value="filter.enabled"
+      filter
+      outlined
+      @click="toggleFilter(filter)"
+    >
+      {{ filter.name }}
+    </v-chip>
     <v-text-field
-      ref="queryField"
-      v-model="queryText"
+      ref="filterField"
+      v-model="state.queryText"
+      v-shortkey="['/']"
       :disabled="!parsedLines.length"
       placeholder="Filter by text ('/' to focus)"
       solo-inverted
       hide-details
       clearable
       clear-icon="mdi-close-circle-outline"
+      @shortkey.native="focusSearchField()"
     />
     <v-spacer />
-    <v-toolbar-title v-text="title" />
+    <v-toolbar-title v-text="'LSP Log Parser'" />
   </v-app-bar>
 </template>
 
-<script>
-import { parsers } from '~/utils'
+<script lang="ts">
+import { defineComponent, computed, reactive, ref, toRef, watch, watchEffect } from '@vue/composition-api'
+import { Message, Parser, parsers, SelectedFilter } from '~/utils'
 
-export default {
+export default defineComponent({
   props: {
-    /** @type {import('vue').PropOptions<boolean>} */
     drawer: {
       type: Boolean
     }
   },
-  data () {
-    return {
+  setup (_props, { root }) {
+    const state = reactive({
       openLogDialog: false,
       errorDialog: false,
       parseErrorText: '',
-      items: [],
       logContent: '',
       parserTypes: parsers.map(p => p.name),
       queryText: '',
       selectedParser: parsers[0].name,
-      selectedParserHint: '',
-      /** @type {number[]} */
-      selectedFilters: [],
-      title: 'LSP Log Parser'
-    }
-  },
-  computed: {
-    /** @return {string[]} */
-    parsedFilters () {
-      return this.$store.state.parsedFilters
-    },
-    /** @return {import('~/utils').Message[]} */
-    parsedLines () {
-      return this.$store.state.parsedLines
-    },
-    /** @return {boolean} */
-    triggerSearchFocus () {
-      return this.$store.state.triggerSearchFocus
-    }
-  },
-  watch: {
-    /** @type {import('vue').WatchHandler<string[]>} */
-    async parsedFilters (servers) {
-      // This is required as we need to update v-model of v-chip-group after it does it itself
-      // after creating new chips.
-      await this.$nextTick()
-      this.selectedFilters = servers.map((_server, index) => index)
-    },
-    triggerSearchFocus () {
-      this.$refs.queryField.focus()
-      this.$store.commit('resetSearchFocus')
-    },
-    queryText (value) {
-      this.$store.commit('setQueryText', value)
-    },
-    /** @type {import('vue').WatchHandler<string>} */
-    logContent (newValue) {
-      const previewChunks = newValue.substr(0, 500).split('\n')
+      selectedParserHint: ''
+    })
+
+    const parsedLines = computed<Message[]>(() => root.$store.state.parsedLines)
+    const selectedFilters = computed<SelectedFilter[]>(() => root.$store.state.selectedFilters)
+
+    watchEffect(() => {
+      root.$store.commit('setQueryText', state.queryText)
+    })
+
+    watchEffect(() => {
+      const previewChunks = state.logContent.substr(0, 500).split('\n')
       let highestHits = 0
       let highestParserIndex = -1
       for (const [index, parser] of parsers.entries()) {
@@ -173,41 +154,51 @@ export default {
           highestParserIndex = index
         }
       }
-      let parser = null
+      let parser: Parser | null = null
       if (highestParserIndex !== -1) {
         parser = parsers[highestParserIndex]
       }
       if (parser) {
-        this.selectedParser = parser.name
+        state.selectedParser = parser.name
       }
-      this.$nextTick(() => (this.selectedParserHint = parser ? 'auto-detected from log content' : ''))
-    },
-    selectedParser () {
-      this.selectedParserHint = ''
-    },
-    /** @type {import('vue').WatchHandler<string[]>} */
-    selectedFilters (filters) {
-      this.$store.commit('setSelectedFilters', Array.from(filters))
-    },
-    /** @param {boolean} show */
-    openLogDialog (show) {
-      if (!show) {
-        this.logContent = ''
+      root.$nextTick(() => (state.selectedParserHint = parser ? 'auto-detected from log content' : ''))
+    })
+
+    const filterField = ref<any | null>(null)
+
+    function focusSearchField () {
+      const filterComponent = filterField.value
+      if (filterComponent) {
+        filterComponent.focus()
       }
     }
-  },
-  methods: {
-    clearLog () {
-      this.$store.commit('setParseResults', { filters: [], lines: [] })
-    },
-    parseLog () {
-      this.openLogDialog = false
-      this.$store.commit('setDrawerVisible', false)
-      this.selectedParserHint = ''
 
-      const content = this.logContent
+    function toggleFilter (filter: SelectedFilter) {
+      root.$store.commit('toggleFilter', filter)
+    }
+
+    watch(toRef(state, 'selectedParser'), () => {
+      state.selectedParserHint = ''
+    })
+
+    watchEffect(() => {
+      if (!state.openLogDialog) {
+        state.logContent = ''
+      }
+    })
+
+    function clearLog () {
+      root.$store.commit('setParseResults', { filters: [], lines: [] })
+    }
+
+    function parseLog () {
+      state.openLogDialog = false
+      root.$store.commit('setDrawerVisible', false)
+      state.selectedParserHint = ''
+
+      const content = state.logContent
       const inputLines = content.split('\n').filter(line => Boolean(line))
-      const parser = parsers.find(p => p.name === this.selectedParser)
+      const parser = parsers.find(p => p.name === state.selectedParser)
 
       if (parser) {
         let lines
@@ -215,14 +206,25 @@ export default {
         try {
           lines = parser.parse(inputLines)
         } catch (error) {
-          this.parseErrorText = error.message
-          this.errorDialog = true
+          state.parseErrorText = error.message
+          state.errorDialog = true
         }
 
-        this.$store.commit('setParseResults', lines)
-        this.$store.commit('resetState')
+        root.$store.commit('setParseResults', lines)
+        root.$store.commit('resetState')
       }
     }
+
+    return {
+      clearLog,
+      state,
+      filterField,
+      focusSearchField,
+      parsedLines,
+      parseLog,
+      selectedFilters,
+      toggleFilter
+    }
   }
-}
+})
 </script>

@@ -24,7 +24,7 @@
           :border="line.toServer ? 'left' : 'right'"
           :class="[line.toServer ? 'mr-auto' : 'ml-auto text-right', 'd-inline-block', { 'selected': line === selectedLine }]"
           :color="line.toServer ? 'blue lighten-1' : 'brown'"
-          :icon="iconTypes[line.type]"
+          :icon="getIconForLineType(line.type)"
           dark
           dense
           max-width="70%"
@@ -48,12 +48,12 @@
       </template>
     </v-container>
 
-    <v-bottom-sheet v-model="sheetInternalOpen" scrollable>
+    <v-bottom-sheet v-model="state.sheetInternalOpen" scrollable>
       <v-card v-if="selectedLine" class="pt-3">
         <v-card-text class="bottom-sheet-text-container">
           <h3 class="pb-3">
-            <v-icon v-if="iconTypes[selectedLine.type]">
-              {{ iconTypes[selectedLine.type] }}
+            <v-icon v-if="getIconForLineType(selectedLine.type)">
+              {{ getIconForLineType(selectedLine.type) }}
             </v-icon>
             {{ selectedLine.name }}
             <v-spacer />
@@ -65,69 +65,76 @@
   </div>
 </template>
 
-<script>
-export default {
-  data () {
-    return {
-      sheetInternalOpen: false,
-      iconTypes: {
-        info: 'mdi-information-outline'
-      }
-    }
-  },
-  computed: {
-    /** @return {import('~/utils').Message[]} */
-    parsedLines () {
-      return this.$store.state.parsedLines
-    },
-    /** @return {import('~/utils').Message | null} */
-    selectedLine () {
-      return this.$store.state.selectedLine
-    },
-    /** @return {boolean} */
-    bottomSheetOpen () {
-      return this.$store.state.bottomSheetOpen
-    },
-    filteredLines () {
-      return this.parsedLines.filter((line) => {
-        const matchesFilter = this.parsedFilters.length === 0 || !line.filter || this.enabledFilters.includes(line.filter)
+<script lang="ts">
+import { defineComponent, computed, reactive, toRef, watch, watchEffect } from '@vue/composition-api'
+import { Message, SelectedFilter } from '~/utils'
+
+export default defineComponent({
+  setup (_props, { root }) {
+    const state = reactive({
+      sheetInternalOpen: false
+    })
+
+    const bottomSheetOpen = computed<boolean>(() => root.$store.state.bottomSheetOpen)
+    const queryText = computed<string>(() => root.$store.state.queryText)
+
+    const parsedFilters = computed<number[]>(() => root.$store.state.parsedFilters)
+    const selectedFilters = computed<SelectedFilter[]>(() => root.$store.state.selectedFilters)
+    const enabledFilters = computed<string[]>(() => {
+      return selectedFilters.value
+        .filter(filter => filter.enabled)
+        .map(filter => filter.name)
+    })
+
+    const parsedLines = computed<Message[]>(() => root.$store.state.parsedLines)
+    const selectedLine = computed<Message | null>(() => root.$store.state.selectedLine)
+    const filteredLines = computed(() => {
+      return parsedLines.value.filter((line) => {
+        const matchesFilter = parsedFilters.value.length === 0 || !line.filter || enabledFilters.value.includes(line.filter)
         if (!matchesFilter) {
           return false
         }
 
-        return !this.queryText || line.name.toLowerCase().includes(this.queryText.toLowerCase())
+        return !queryText.value || line.name.toLowerCase().includes(queryText.value.toLowerCase())
       })
-    },
-    /** @return {string} */
-    queryText () {
-      return this.$store.state.queryText
-    },
-    /** @return {number[]} */
-    parsedFilters () {
-      return this.$store.state.parsedFilters
-    },
-    /** @return {string[]} */
-    enabledFilters () {
-      return this.$store.state.selectedFilters.map(/** @type {number} */index => this.parsedFilters[index])
-    }
-  },
-  watch: {
-    bottomSheetOpen (open) {
-      this.sheetInternalOpen = open
-    },
-    sheetInternalOpen (open) {
+    })
+
+    watchEffect(() => {
+      state.sheetInternalOpen = bottomSheetOpen.value
+    })
+    watch(toRef(state, 'sheetInternalOpen'), (open) => {
       if (!open) {
-        this.$store.commit('setSelectedLine', null)
+        root.$store.commit('setSelectedLine', null)
+      }
+    })
+
+    function selectItem (line: Message) {
+      root.$store.commit('setSelectedLine', line)
+    }
+
+    const iconTypes = computed<Record<string, string>>(() => ({ info: 'mdi-information-outline' }))
+
+    function getIconForLineType (type: string | undefined): string | undefined {
+      if (type && type in iconTypes.value) {
+        return iconTypes.value[type]
       }
     }
-  },
-  methods: {
-    /** @param {Message} */
-    selectItem (line) {
-      this.$store.commit('setSelectedLine', line)
+
+    return {
+      bottomSheetOpen,
+      enabledFilters,
+      filteredLines,
+      getIconForLineType,
+      iconTypes,
+      parsedFilters,
+      parsedLines,
+      queryText,
+      selectedLine,
+      selectItem,
+      state
     }
   }
-}
+})
 </script>
 
 <style lang="scss" scoped>

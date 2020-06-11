@@ -31,7 +31,8 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    { src: '~/plugins/vue-shortkey.js', mode: 'client' }
+    { src: '~/plugins/vue-shortkey', mode: 'client' },
+    '~/plugins/composition-api'
   ],
   /*
   ** Nuxt.js dev-modules

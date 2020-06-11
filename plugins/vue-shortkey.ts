@@ -1,4 +1,5 @@
 import Vue from 'vue'
+// @ts-ignore
 import vueShortkey from 'vue-shortkey'
 
 Vue.use(vueShortkey)
