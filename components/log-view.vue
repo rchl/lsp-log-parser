@@ -130,7 +130,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .log-container {
   max-width: 900px;
 }
