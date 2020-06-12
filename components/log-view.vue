@@ -46,26 +46,26 @@
           </div>
         </v-alert>
       </template>
-
-      <v-tooltip left>
-        <template v-slot:activator="{ on }">
-          <v-btn
-            v-shortkey="[cmdOrCtrl, 'x']"
-            absolute
-            :disabled="parsedLines.length === 0"
-            fab
-            bottom
-            right
-            color="primary"
-            @shortkey.native="clearLog()"
-            v-on="on"
-          >
-            <v-icon>mdi-playlist-remove</v-icon>
-          </v-btn>
-        </template>
-        <span>Clear log view ({{ cmdOrCtrl }}-x)</span>
-      </v-tooltip>
     </v-container>
+
+    <v-tooltip left>
+      <template v-slot:activator="{ on }">
+        <v-btn
+          v-shortkey="[cmdOrCtrl, 'x']"
+          fixed
+          :disabled="parsedLines.length === 0"
+          fab
+          bottom
+          right
+          color="primary"
+          @shortkey.native="clearLog()"
+          v-on="on"
+        >
+          <v-icon>mdi-playlist-remove</v-icon>
+        </v-btn>
+      </template>
+      <span>Clear log view ({{ cmdOrCtrl }}-x)</span>
+    </v-tooltip>
 
     <v-bottom-sheet v-model="state.sheetInternalOpen" scrollable>
       <v-card v-if="selectedLine" class="pt-3">
@@ -156,7 +156,7 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .log-container {
   max-width: 900px;
 }
