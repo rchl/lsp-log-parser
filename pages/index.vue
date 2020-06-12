@@ -1,8 +1,8 @@
 <template>
   <v-app>
-    <app-bar :drawer="drawerVisible" />
+    <app-bar :drawer="uiModel.drawerVisible" />
 
-    <!-- <v-navigation-drawer v-model="$store.state.drawerVisible" absolute>
+    <!-- <v-navigation-drawer v-model="uiModel.drawerVisible" absolute>
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="title">
@@ -13,7 +13,7 @@
       <v-divider />
       <v-list dense>
         <v-list-item
-          v-for="(item, i) in parsedLines"
+          v-for="(item, i) in logModel.parsedLines"
           :key="item.id"
           link
           @click="$vuetify.goTo(`.treeview > div:nth-child(${i})`)"
@@ -40,23 +40,24 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from '@vue/composition-api'
+import { defineComponent } from '@vue/composition-api'
 import appBar from '~/components/app-bar.vue'
 import logView from '~/components/log-view.vue'
-import { Message } from '~/utils'
+import { useLogModel } from '~/models/log-model'
+import { useUiModel } from '~/models/ui-model'
 
 export default defineComponent({
   components: {
     appBar,
     logView
   },
-  setup (_props, context) {
-    const parsedLines = computed<Message[]>(() => context.root.$store.state.parsedLines)
-    const drawerVisible = computed<Boolean>(() => context.root.$store.state.drawerVisible)
+  setup () {
+    const logModel = useLogModel()
+    const uiModel = useUiModel()
 
     return {
-      drawerVisible,
-      parsedLines
+      logModel,
+      uiModel
     }
     // return {
     //   iconTypes: {

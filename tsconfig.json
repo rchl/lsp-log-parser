@@ -25,7 +25,7 @@
     },
     "types": [
       "@types/node",
-      "@nuxt/types"
+      "@nuxt/types",
     ]
   },
   "exclude": [

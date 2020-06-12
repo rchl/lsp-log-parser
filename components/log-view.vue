@@ -1,7 +1,11 @@
 <template>
   <div class="pa-6">
     <v-container class="log-container d-flex flex-column">
-      <div v-if="parsedLines.length" class="d-flex justify-space-between mb-6">
+      <h1 v-if="logModel.parsedLines.length === 0" class="base-title text-center">
+        LSP Log Parser
+      </h1>
+
+      <div v-if="logModel.parsedLines.length" class="d-flex justify-space-between mb-6">
         <h2 class="headline">
           Client
         </h2>
@@ -22,13 +26,13 @@
         <v-alert
           :key="line.id"
           :border="line.toServer ? 'left' : 'right'"
-          :class="[line.toServer ? 'mr-auto' : 'ml-auto text-right', 'd-inline-block', { 'selected': line === selectedLine }]"
+          :class="[line.toServer ? 'mr-auto' : 'ml-auto text-right', 'd-inline-block', { 'selected': line === uiModel.selectedLine }]"
           :color="line.toServer ? 'blue lighten-1' : 'brown'"
           :icon="getIconForLineType(line.type)"
           dark
           dense
           max-width="70%"
-          @click.native="selectItem(line)"
+          @click.native="uiModel.setSelectedMessage(line)"
         >
           <v-chip v-if="line.filter && line.toServer" color="blue darken-3 mr-2">
             {{ line.filter }}
@@ -53,31 +57,32 @@
         <v-btn
           v-shortkey="[cmdOrCtrl, 'x']"
           fixed
-          :disabled="parsedLines.length === 0"
+          :disabled="logModel.parsedLines.length === 0"
           fab
           bottom
           right
           color="primary"
-          @shortkey.native="clearLog()"
+          @click="logModel.clearMessages()"
+          @shortkey.native="logModel.clearMessages()"
           v-on="on"
         >
           <v-icon>mdi-playlist-remove</v-icon>
         </v-btn>
       </template>
-      <span>Clear log view ({{ cmdOrCtrl }}-x)</span>
+      <span>Clear log view ({{ cmdOrCtrl }}-X)</span>
     </v-tooltip>
 
     <v-bottom-sheet v-model="state.sheetInternalOpen" scrollable>
-      <v-card v-if="selectedLine" class="pt-3">
+      <v-card v-if="uiModel.selectedLine" class="pt-3">
         <v-card-text class="bottom-sheet-text-container">
           <h3 class="pb-3">
-            <v-icon v-if="getIconForLineType(selectedLine.type)">
-              {{ getIconForLineType(selectedLine.type) }}
+            <v-icon v-if="getIconForLineType(uiModel.selectedLine.type)">
+              {{ getIconForLineType(uiModel.selectedLine.type) }}
             </v-icon>
-            {{ selectedLine.name }}
+            {{ uiModel.selectedLine.name }}
             <v-spacer />
           </h3>
-          <span v-if="selectedLine.child" class="payload">{{ selectedLine.child.name }}</span>
+          <span v-if="uiModel.selectedLine.child" class="payload">{{ uiModel.selectedLine.child.name }}</span>
         </v-card-text>
       </v-card>
     </v-bottom-sheet>
@@ -86,50 +91,43 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, toRef, watch, watchEffect } from '@vue/composition-api'
-import { Message, SelectedFilter } from '~/utils'
+import { useLogModel } from '~/models/log-model'
+import { useUiModel } from '~/models/ui-model'
 
 export default defineComponent({
-  setup (_props, { root }) {
+  setup () {
     const state = reactive({
       sheetInternalOpen: false
     })
 
-    const bottomSheetOpen = computed<boolean>(() => root.$store.state.bottomSheetOpen)
-    const queryText = computed<string>(() => root.$store.state.queryText)
+    const logModel = useLogModel()
+    const uiModel = useUiModel()
 
-    const parsedFilters = computed<number[]>(() => root.$store.state.parsedFilters)
-    const selectedFilters = computed<SelectedFilter[]>(() => root.$store.state.selectedFilters)
     const enabledFilters = computed<string[]>(() => {
-      return selectedFilters.value
+      return logModel.selectedFilters.value
         .filter(filter => filter.enabled)
         .map(filter => filter.name)
     })
 
-    const parsedLines = computed<Message[]>(() => root.$store.state.parsedLines)
-    const selectedLine = computed<Message | null>(() => root.$store.state.selectedLine)
     const filteredLines = computed(() => {
-      return parsedLines.value.filter((line) => {
-        const matchesFilter = parsedFilters.value.length === 0 || !line.filter || enabledFilters.value.includes(line.filter)
+      return logModel.parsedLines.value.filter((line) => {
+        const matchesFilter = logModel.parsedFilters.value.length === 0 || !line.filter || enabledFilters.value.includes(line.filter)
         if (!matchesFilter) {
           return false
         }
 
-        return !queryText.value || line.name.toLowerCase().includes(queryText.value.toLowerCase())
+        return !uiModel.queryText.value || line.name.toLowerCase().includes(uiModel.queryText.value.toLowerCase())
       })
     })
 
     watchEffect(() => {
-      state.sheetInternalOpen = bottomSheetOpen.value
+      state.sheetInternalOpen = uiModel.bottomSheetOpen.value
     })
     watch(toRef(state, 'sheetInternalOpen'), (open) => {
       if (!open) {
-        root.$store.commit('setSelectedLine', null)
+        uiModel.setSelectedMessage(null)
       }
     })
-
-    function selectItem (line: Message) {
-      root.$store.commit('setSelectedLine', line)
-    }
 
     const iconTypes = computed<Record<string, string>>(() => ({ info: 'mdi-information-outline' }))
 
@@ -140,23 +138,24 @@ export default defineComponent({
     }
 
     return {
-      bottomSheetOpen,
       enabledFilters,
       filteredLines,
       getIconForLineType,
       iconTypes,
-      parsedFilters,
-      parsedLines,
-      queryText,
-      selectedLine,
-      selectItem,
-      state
+      logModel,
+      state,
+      uiModel
     }
   }
 })
 </script>
 
 <style lang="scss">
+.base-title {
+  font-size: 3rem;
+  font-weight: 300;
+}
+
 .log-container {
   max-width: 900px;
 }
