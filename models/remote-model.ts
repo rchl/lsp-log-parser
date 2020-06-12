@@ -8,6 +8,14 @@ const errorText = ref('s')
 const id = ref(0)
 const socket = ref<WebSocket | null>(null)
 
+watch(enabled, (isEnabled) => {
+  if (isEnabled) {
+    initializeConnection()
+  } else {
+    closeConnection()
+  }
+})
+
 const logModel = useLogModel()
 
 function initializeConnection () {
@@ -84,14 +92,6 @@ function onMessage (event: MessageEvent) {
 }
 
 export function useRemoteModel () {
-  watch(enabled, (isEnabled) => {
-    if (isEnabled) {
-      initializeConnection()
-    } else {
-      closeConnection()
-    }
-  })
-
   return {
     connected,
     enabled,

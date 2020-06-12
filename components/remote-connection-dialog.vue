@@ -44,7 +44,7 @@ export default defineComponent({
 
     const remoteModel = useRemoteModel()
 
-    watch(remoteModel.enabled, () => {
+    watch([remoteModel.enabled, remoteModel.connected], () => {
       state.open = remoteModel.enabled.value && !remoteModel.connected.value
     })
 

@@ -40,6 +40,10 @@ function appendLogMessage (message: Message) {
 
   if (message.filter && !parsedFilters.value.includes(message.filter)) {
     parsedFilters.value.push(message.filter)
+    selectedFilters.value.push({
+      name: message.filter,
+      enabled: true
+    })
   }
 }
 

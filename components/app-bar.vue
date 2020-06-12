@@ -25,18 +25,18 @@
         <v-btn
           v-shortkey="[cmdOrCtrl, 'd']"
           class="mr-2"
-          :color="state.isRemoteConnected ? 'error' : 'primary'"
-          :outlined="!state.isRemoteConnected"
+          :color="remoteModel.connected ? 'error' : 'primary'"
+          :outlined="!remoteModel.connected"
           @shortkey.native="remoteModel.enabled = true"
           @click="remoteModel.enabled = !remoteModel.enabled"
           v-on="on"
         >
           <v-icon>
-            {{ state.isRemoteConnected ? 'mdi-lan-disconnect' : 'mdi-lan-connect' }}
+            {{ remoteModel.connected ? 'mdi-lan-disconnect' : 'mdi-lan-connect' }}
           </v-icon>
         </v-btn>
       </template>
-      <span>{{ state.isRemoteConnected ? 'Disconnect from remote' : 'Connect to remote websocket server' }} ({{ cmdOrCtrl }}-D)</span>
+      <span>{{ remoteModel.connected ? 'Disconnect from remote' : 'Connect to remote websocket server' }} ({{ cmdOrCtrl }}-D)</span>
     </v-tooltip>
     <remote-connection-dialog />
 
@@ -91,7 +91,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from '@vue/composition-api'
+import { defineComponent, ref } from '@vue/composition-api'
 import { useRemoteModel } from '~/models/remote-model'
 import { useLogModel } from '~/models/log-model'
 import { useUiModel } from '~/models/ui-model'
@@ -109,10 +109,6 @@ export default defineComponent({
     }
   },
   setup () {
-    const state = reactive({
-      isRemoteConnected: false
-    })
-
     const remoteModel = useRemoteModel()
     const logModel = useLogModel()
     const uiModel = useUiModel()
@@ -127,7 +123,6 @@ export default defineComponent({
     }
 
     return {
-      state,
       filterField,
       focusSearchField,
       logModel,
