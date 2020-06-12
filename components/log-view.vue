@@ -46,6 +46,25 @@
           </div>
         </v-alert>
       </template>
+
+      <v-tooltip left>
+        <template v-slot:activator="{ on }">
+          <v-btn
+            v-shortkey="[cmdOrCtrl, 'x']"
+            absolute
+            :disabled="parsedLines.length === 0"
+            fab
+            bottom
+            right
+            color="primary"
+            @shortkey.native="clearLog()"
+            v-on="on"
+          >
+            <v-icon>mdi-playlist-remove</v-icon>
+          </v-btn>
+        </template>
+        <span>Clear log view ({{ cmdOrCtrl }}-x)</span>
+      </v-tooltip>
     </v-container>
 
     <v-bottom-sheet v-model="state.sheetInternalOpen" scrollable>

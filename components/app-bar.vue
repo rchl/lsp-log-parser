@@ -48,25 +48,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-tooltip bottom>
-      <template v-slot:activator="{ on }">
-        <v-btn
-          v-shortkey="[cmdOrCtrl, 'x']"
-          class="mr-2"
-          outlined
-          :disabled="parsedLines.length === 0"
-          color="primary"
-          @shortkey.native="clearLog()"
-          @click="clearLog()"
-          v-on="on"
-        >
-          <v-icon>
-            mdi-playlist-remove
-          </v-icon>
-        </v-btn>
-      </template>
-      <span>Clear log view ({{ cmdOrCtrl }}-x)</span>
-    </v-tooltip>
+
     <v-dialog v-model="state.errorDialog" max-width="290">
       <v-card>
         <v-card-title class="headline">
