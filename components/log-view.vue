@@ -13,7 +13,7 @@
       <template v-for="line in filteredLines">
         <div
           v-if="line.time"
-          :key="line.id + 't'"
+          :key="`${line.id}t`"
           class="caption"
           :class="{ 'text-right': !line.toServer }"
         >

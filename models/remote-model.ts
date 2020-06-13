@@ -70,6 +70,7 @@ function onMessage (event: MessageEvent) {
   try {
     data = JSON.parse(event.data)
   } catch (error) {
+    console.error('Error parsing the message data', event.data)
     return
   }
 
