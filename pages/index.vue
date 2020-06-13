@@ -34,6 +34,9 @@
     </v-navigation-drawer> -->
 
     <v-content>
+      <h1 v-if="logModel.parsedLines.length === 0" class="base-title text-center">
+        LSP Log Parser
+      </h1>
       <log-view />
     </v-content>
   </v-app>
@@ -67,3 +70,14 @@ export default defineComponent({
   }
 })
 </script>
+
+<style lang="scss">
+.base-title {
+  display: flex;
+  flex-direction: column;
+  font-size: 3rem;
+  font-weight: 300;
+  height: 100%;
+  justify-content: center;
+}
+</style>

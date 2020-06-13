@@ -1,10 +1,6 @@
 <template>
   <div class="pa-6">
     <v-container class="log-container d-flex flex-column">
-      <h1 v-if="logModel.parsedLines.length === 0" class="base-title text-center">
-        LSP Log Parser
-      </h1>
-
       <div v-if="logModel.parsedLines.length" class="d-flex justify-space-between mb-6">
         <h2 class="headline">
           Client
@@ -151,11 +147,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-.base-title {
-  font-size: 3rem;
-  font-weight: 300;
-}
-
 .log-container {
   max-width: 900px;
 }
