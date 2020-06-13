@@ -78,6 +78,7 @@ function onMessage (event: MessageEvent) {
     requestId: data.id,
     name: data.method,
     type: data.method,
+    isError: data.isError,
     time: new Date(data.time).toLocaleTimeString(),
     toServer: data.direction === 1,
     filter: data.server

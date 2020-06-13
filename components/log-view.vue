@@ -23,7 +23,7 @@
           :key="line.id"
           :border="line.toServer ? 'left' : 'right'"
           :class="[line.toServer ? 'mr-auto' : 'ml-auto text-right', 'd-inline-block', { 'selected': line === uiModel.selectedLine }]"
-          :color="line.toServer ? 'blue lighten-1' : 'brown'"
+          :color="line.isError ? 'red' : (line.toServer ? 'blue lighten-1' : 'brown')"
           :icon="getIconForLineType(line.type)"
           dark
           dense

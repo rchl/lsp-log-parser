@@ -6,6 +6,7 @@ export interface Message {
   child?: Message
   tempChildren?: string[]
   toServer: boolean
+  isError?: boolean
   time?: string
   type?: string
   filter?: string
