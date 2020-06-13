@@ -73,11 +73,8 @@ export default defineComponent({
 
 <style lang="scss">
 .base-title {
-  display: flex;
-  flex-direction: column;
   font-size: 3rem;
   font-weight: 300;
-  height: 100%;
-  justify-content: center;
+  margin-top: auto;
 }
 </style>
