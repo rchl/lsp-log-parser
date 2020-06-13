@@ -1,6 +1,6 @@
 <template>
   <div class="pa-6">
-    <v-container class="log-container d-flex flex-column">
+    <v-container class="d-flex flex-column">
       <div v-if="logModel.parsedLines.length" class="d-flex justify-space-between mb-6">
         <h2 class="headline">
           Client
@@ -147,10 +147,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-.log-container {
-  max-width: 900px;
-}
-
 .v-alert {
   cursor: pointer;
 
