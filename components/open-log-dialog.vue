@@ -25,14 +25,20 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn
-          v-shortkey="[cmdOrCtrl, 'enter']"
-          color="primary"
-          @shortkey.native="uiModel.logDialogVisible ? parseLog() : null"
-          @click="parseLog"
-        >
-          Parse
-        </v-btn>
+        <v-tooltip left>
+          <template v-slot:activator="{ on }">
+            <v-btn
+              v-shortkey="[cmdOrCtrl, 'enter']"
+              color="primary"
+              @shortkey.native="uiModel.logDialogVisible ? parseLog() : null"
+              @click="parseLog"
+              v-on="on"
+            >
+              Parse
+            </v-btn>
+          </template>
+          <span>Parse log text ({{ cmdOrCtrl }}-ENTER)</span>
+        </v-tooltip>
       </v-card-actions>
     </v-card>
   </v-dialog>
