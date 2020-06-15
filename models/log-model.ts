@@ -1,6 +1,8 @@
 import { ref } from '@vue/composition-api'
 import { parsers, Parser, ParseResults, SelectedFilter, Message } from '~/utils'
 
+const REMOTE_MESSAGE_COUNT_LIMIT = 220
+
 const parsedFilters = ref<ParseResults['filters']>([])
 const parsedLines = ref<ParseResults['lines']>([])
 const selectedFilters = ref<SelectedFilter[]>([])
@@ -36,6 +38,10 @@ function contentSniffParser (lines: string[]): Parser | null {
 }
 
 function appendLogMessage (message: Message) {
+  if (parsedLines.value.length > REMOTE_MESSAGE_COUNT_LIMIT) {
+    parsedLines.value.splice(0, 20)
+  }
+
   parsedLines.value.push(message)
 
   if (message.filter && !parsedFilters.value.includes(message.filter)) {
@@ -60,6 +66,7 @@ export function useLogModel () {
     contentSniffParser,
     parsedFilters,
     parsedLines,
+    REMOTE_MESSAGE_COUNT_LIMIT,
     selectedFilters,
     setParseResults
   }

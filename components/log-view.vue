@@ -1,6 +1,10 @@
 <template>
   <div class="pa-6">
     <v-container>
+      <v-alert v-if="remoteModel.connected" type="info" outlined>
+        Log view is limited to {{ logModel.REMOTE_MESSAGE_COUNT_LIMIT }} latest messages
+      </v-alert>
+
       <div v-if="logModel.parsedLines.length" class="d-flex justify-space-between mb-6">
         <h2 class="headline">
           Client
@@ -95,6 +99,7 @@
 <script lang="ts">
 import { defineComponent, computed, reactive, toRef, watch, watchEffect } from '@vue/composition-api'
 import { useLogModel } from '~/models/log-model'
+import { useRemoteModel } from '~/models/remote-model'
 import { useUiModel } from '~/models/ui-model'
 
 export default defineComponent({
@@ -104,6 +109,7 @@ export default defineComponent({
     })
 
     const logModel = useLogModel()
+    const remoteModel = useRemoteModel()
     const uiModel = useUiModel()
 
     const enabledFilters = computed<string[]>(() => {
@@ -138,6 +144,7 @@ export default defineComponent({
       filteredLines,
       iconTypes,
       logModel,
+      remoteModel,
       state,
       uiModel
     }
