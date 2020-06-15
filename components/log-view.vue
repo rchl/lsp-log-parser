@@ -36,12 +36,12 @@
             max-width="70%"
             @click.native="uiModel.setSelectedMessage(line)"
           >
-            <v-chip v-if="line.filter && line.toServer" color="blue darken-3 mr-2">
+            <v-chip v-if="line.filter && line.toServer" color="blue darken-3 mr-2" label>
               {{ line.filter }}
             </v-chip>
             <span class="font-weight-medium">{{ line.name }}</span>
             <span v-if="line.requestId">({{ line.requestId }})</span>
-            <v-chip v-if="line.filter && !line.toServer" color="brown darken-3 ml-2">
+            <v-chip v-if="line.filter && !line.toServer" color="brown darken-3 ml-2" label>
               {{ line.filter }}
             </v-chip>
             <div
