@@ -112,7 +112,7 @@ export default defineComponent({
           return false
         }
 
-        return !uiModel.queryText.value || line.name.toLowerCase().includes(uiModel.queryText.value.toLowerCase())
+        return !uiModel.queryText.value || (line.name && line.name.toLowerCase().includes(uiModel.queryText.value.toLowerCase()))
       })
     })
 
