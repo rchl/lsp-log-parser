@@ -1,6 +1,6 @@
 <template>
   <div class="pa-6">
-    <v-container class="d-flex flex-column">
+    <v-container>
       <div v-if="logModel.parsedLines.length" class="d-flex justify-space-between mb-6">
         <h2 class="headline">
           Client
@@ -10,42 +10,49 @@
         </h2>
       </div>
 
-      <template v-for="line in filteredLines">
-        <div
-          v-if="line.time"
-          :key="`${line.id}t`"
-          class="caption"
-          :class="{ 'text-right': !line.toServer }"
-        >
-          {{ line.time }}
-        </div>
-        <v-alert
-          :key="`${line.id}p`"
-          :border="line.toServer ? 'left' : 'right'"
-          :class="[line.toServer ? 'mr-auto' : 'ml-auto text-right', 'd-inline-block', { 'selected': line === uiModel.selectedLine }]"
-          :color="line.isError ? 'red' : (line.toServer ? 'blue lighten-1' : 'brown')"
-          :icon="line.type && iconTypes[line.type]"
-          dark
-          dense
-          max-width="70%"
-          @click.native="uiModel.setSelectedMessage(line)"
-        >
-          <v-chip v-if="line.filter && line.toServer" color="blue darken-3 mr-2">
-            {{ line.filter }}
-          </v-chip>
-          <span class="font-weight-medium">{{ line.name }}</span>
-          <span v-if="line.requestId">({{ line.requestId }})</span>
-          <v-chip v-if="line.filter && !line.toServer" color="brown darken-3 ml-2">
-            {{ line.filter }}
-          </v-chip>
+      <v-scale-transition
+        appear
+        group
+        tag="div"
+        class="d-flex flex-column"
+      >
+        <template v-for="line in filteredLines">
           <div
-            v-if="line.child"
-            class="text-no-wrap inline-payload my-2"
+            v-if="line.time"
+            :key="`${line.id}t`"
+            class="caption"
+            :class="{ 'text-right': !line.toServer }"
           >
-            {{ line.child.name }}
+            {{ line.time }}
           </div>
-        </v-alert>
-      </template>
+          <v-alert
+            :key="`${line.id}p`"
+            :border="line.toServer ? 'left' : 'right'"
+            :class="[line.toServer ? 'mr-auto' : 'ml-auto text-right', 'd-inline-block', { 'selected': line === uiModel.selectedLine }]"
+            :color="line.isError ? 'red' : (line.toServer ? 'blue lighten-1' : 'brown')"
+            :icon="line.type && iconTypes[line.type]"
+            dark
+            dense
+            max-width="70%"
+            @click.native="uiModel.setSelectedMessage(line)"
+          >
+            <v-chip v-if="line.filter && line.toServer" color="blue darken-3 mr-2">
+              {{ line.filter }}
+            </v-chip>
+            <span class="font-weight-medium">{{ line.name }}</span>
+            <span v-if="line.requestId">({{ line.requestId }})</span>
+            <v-chip v-if="line.filter && !line.toServer" color="brown darken-3 ml-2">
+              {{ line.filter }}
+            </v-chip>
+            <div
+              v-if="line.child"
+              class="text-no-wrap inline-payload my-2"
+            >
+              {{ line.child.name }}
+            </div>
+          </v-alert>
+        </template>
+      </v-scale-transition>
     </v-container>
 
     <v-tooltip left>
