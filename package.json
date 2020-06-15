@@ -21,12 +21,12 @@
     }
   },
   "dependencies": {
-    "@vue/composition-api": "^0.6.2",
+    "@vue/composition-api": "^0.6.3",
     "nuxt": "^2.0.0",
     "vue-shortkey": "^3.1.7"
   },
   "devDependencies": {
-    "@nuxt/typescript-build": "^1.0.2",
+    "@nuxt/typescript-build": "^1.0.3",
     "@nuxtjs/eslint-config-typescript": "^2.0.0",
     "@nuxtjs/eslint-module": "^2.0.0",
     "@nuxtjs/stylelint-module": "^4.0.0",
@@ -35,7 +35,7 @@
     "eslint": "^7.2.0",
     "eslint-plugin-nuxt": "^1.0.0",
     "husky": "^4.2.5",
-    "lint-staged": "^10.2.9",
+    "lint-staged": "^10.2.10",
     "stylelint": "^13.6.0"
   }
 }
