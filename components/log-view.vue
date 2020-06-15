@@ -1,6 +1,6 @@
 <template>
   <div class="pa-6">
-    <v-container>
+    <v-container class="main">
       <v-alert v-if="remoteModel.connected" type="info" outlined>
         Log view is limited to {{ logModel.REMOTE_MESSAGE_COUNT_LIMIT }} latest messages
       </v-alert>
@@ -151,6 +151,12 @@ export default defineComponent({
   }
 })
 </script>
+
+<style lang="scss" scoped>
+.main {
+  max-width: 800px !important;
+}
+</style>
 
 <style lang="scss">
 .v-alert {

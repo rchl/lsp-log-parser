@@ -33,12 +33,12 @@
       </v-list>
     </v-navigation-drawer> -->
 
-    <v-content>
+    <v-main>
       <h1 v-if="logModel.parsedLines.length === 0" class="base-title text-center">
         LSP Log Parser
       </h1>
       <log-view v-else class="height-100" />
-    </v-content>
+    </v-main>
   </v-app>
 </template>
 
