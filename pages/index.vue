@@ -37,7 +37,7 @@
       <h1 v-if="logModel.parsedLines.length === 0" class="base-title text-center">
         LSP Log Parser
       </h1>
-      <log-view />
+      <log-view v-else class="height-100" />
     </v-content>
   </v-app>
 </template>
@@ -73,8 +73,15 @@ export default defineComponent({
 
 <style lang="scss">
 .base-title {
+  display: flex;
+  flex-direction: column;
   font-size: 3rem;
   font-weight: 300;
-  margin-top: auto;
+  height: 100%;
+  justify-content: center;
+}
+
+.height-100 {
+  height: 100%;
 }
 </style>
