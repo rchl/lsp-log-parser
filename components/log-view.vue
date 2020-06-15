@@ -141,6 +141,7 @@ export default defineComponent({
 <style lang="scss">
 .v-alert {
   cursor: pointer;
+  will-change: transform;
 
   &:hover {
     transform: scale(1.05);
