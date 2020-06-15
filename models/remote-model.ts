@@ -88,6 +88,12 @@ function onMessage (event: MessageEvent) {
   if (data.params) {
     // @ts-ignore
     message.child = { name: data.params }
+
+    // @ts-ignore
+    if (message.child.name) {
+    // @ts-ignore
+      message.summary = JSON.stringify(message.child.name).substr(0, 100)
+    }
   }
 
   logModel.appendLogMessage(message)

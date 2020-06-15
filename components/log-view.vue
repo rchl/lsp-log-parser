@@ -48,12 +48,12 @@
             <v-chip v-if="line.filter && !line.toServer" color="brown darken-3 ml-2" label>
               {{ line.filter }}
             </v-chip>
-            <!-- <div
-              v-if="line.child"
+            <div
+              v-if="line.summary"
               class="text-no-wrap inline-payload my-2"
             >
-              {{ line.child.name }}
-            </div> -->
+              {{ line.summary }}
+            </div>
           </v-alert>
         </template>
       </v-scale-transition>

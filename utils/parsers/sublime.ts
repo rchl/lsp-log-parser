@@ -38,6 +38,8 @@ const parser: Parser = {
             filter: serverName,
             toServer
           }
+
+          message.summary = message.child.name.substr(0, 100)
         }
 
         if (!filters.includes(serverName)) {

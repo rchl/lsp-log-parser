@@ -9,6 +9,7 @@ export interface Message {
   isError?: boolean
   time?: string
   type?: string
+  summary?: string
   filter?: string
 }
 

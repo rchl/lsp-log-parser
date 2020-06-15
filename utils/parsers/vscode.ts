@@ -25,6 +25,8 @@ const parser: Parser = {
               name: message.tempChildren.join('\n'),
               toServer: message.toServer
             }
+
+            message.summary = message.child.name.substr(0, 100)
           }
 
           lines.push(message)
@@ -59,6 +61,8 @@ const parser: Parser = {
           name: message.tempChildren.join('\n'),
           toServer: message.toServer
         }
+
+        message.summary = message.child.name.substr(0, 100)
       }
 
       lines.push(message)
