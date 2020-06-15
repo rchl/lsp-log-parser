@@ -20,11 +20,11 @@
           {{ line.time }}
         </div>
         <v-alert
-          :key="line.id"
+          :key="`${line.id}p`"
           :border="line.toServer ? 'left' : 'right'"
           :class="[line.toServer ? 'mr-auto' : 'ml-auto text-right', 'd-inline-block', { 'selected': line === uiModel.selectedLine }]"
           :color="line.isError ? 'red' : (line.toServer ? 'blue lighten-1' : 'brown')"
-          :icon="getIconForLineType(line.type)"
+          :icon="line.type && iconTypes[line.type]"
           dark
           dense
           max-width="70%"
@@ -72,8 +72,8 @@
       <v-card v-if="uiModel.selectedLine" class="pt-3">
         <v-card-text class="bottom-sheet-text-container">
           <h3 class="pb-3">
-            <v-icon v-if="getIconForLineType(uiModel.selectedLine.type)">
-              {{ getIconForLineType(uiModel.selectedLine.type) }}
+            <v-icon v-if="uiModel.selectedLine.type && iconTypes[uiModel.selectedLine.type]">
+              {{ iconTypes[uiModel.selectedLine.type] }}
             </v-icon>
             {{ uiModel.selectedLine.name }}
             <v-spacer />
@@ -125,18 +125,10 @@ export default defineComponent({
       }
     })
 
-    const iconTypes = computed<Record<string, string>>(() => ({ info: 'mdi-information-outline' }))
-
-    function getIconForLineType (type: string | undefined): string | undefined {
-      if (type && type in iconTypes.value) {
-        return iconTypes.value[type]
-      }
-    }
+    const iconTypes: Record<string, string> = { info: 'mdi-information-outline' }
 
     return {
-      enabledFilters,
       filteredLines,
-      getIconForLineType,
       iconTypes,
       logModel,
       state,

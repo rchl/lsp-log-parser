@@ -2,11 +2,11 @@ import { ref, watch } from '@vue/composition-api'
 import { useLogModel } from '~/models/log-model'
 import { Message } from '~/utils'
 
+let lastId = 0
+let socket: WebSocket | null = null
 const connected = ref(false)
 const enabled = ref(false)
-const errorText = ref('s')
-const id = ref(0)
-const socket = ref<WebSocket | null>(null)
+const errorText = ref('')
 
 watch(enabled, (isEnabled) => {
   if (isEnabled) {
@@ -28,20 +28,20 @@ function createWebSocket () {
     return
   }
 
-  socket.value = new WebSocket('ws://localhost:9981')
-  socket.value.onopen = onOpen
-  socket.value.onmessage = onMessage
-  socket.value.onclose = onClose
-  socket.value.onerror = onError
+  socket = new WebSocket('ws://localhost:9981')
+  socket.onopen = onOpen
+  socket.onmessage = onMessage
+  socket.onclose = onClose
+  socket.onerror = onError
 }
 
 function closeConnection () {
   connected.value = false
   errorText.value = ''
 
-  if (socket.value) {
-    socket.value.close()
-    socket.value = null
+  if (socket) {
+    socket.close()
+    socket = null
   }
 }
 
@@ -57,7 +57,7 @@ function onError (event: Event) {
 function onClose (event: CloseEvent) {
   if (!event.wasClean) {
     connected.value = false
-    socket.value = null
+    socket = null
     const reason = event.reason ? event.reason : `code: ${event.code}`
     errorText.value = `Error connecting to remote (${reason})`
 
@@ -75,7 +75,7 @@ function onMessage (event: MessageEvent) {
   }
 
   const message: Message = {
-    id: ++id.value,
+    id: ++lastId,
     requestId: data.id,
     name: data.method,
     type: data.method,
@@ -97,8 +97,6 @@ export function useRemoteModel () {
   return {
     connected,
     enabled,
-    errorText,
-    id,
-    socket
+    errorText
   }
 }
