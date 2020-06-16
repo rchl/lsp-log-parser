@@ -68,6 +68,25 @@
       @shortkey.native="focusSearchField()"
     />
 
+    <v-tooltip bottom>
+      <template v-slot:activator="{ on }">
+        <v-btn
+          class="ml-2"
+          ripple
+          color="black"
+          icon
+          href="https://github.com/rchl/lsp-log-parser"
+          target="_blank"
+          v-on="on"
+        >
+          <v-icon>
+            mdi-github
+          </v-icon>
+        </v-btn>
+      </template>
+      <span>Check out the source code</span>
+    </v-tooltip>
+
     <v-dialog v-model="uiModel.errorDialogVisible" max-width="290">
       <v-card>
         <v-card-title class="headline">
