@@ -6,10 +6,12 @@ let lastId = 0
 let socket: WebSocket | null = null
 const connected = ref(false)
 const enabled = ref(false)
+const hasConnectedAtLeastOnce = ref(false)
 const errorText = ref('')
 
 watch(enabled, (isEnabled) => {
   if (isEnabled) {
+    hasConnectedAtLeastOnce.value = false
     initializeConnection()
   } else {
     closeConnection()
@@ -48,6 +50,7 @@ function closeConnection () {
 function onOpen () {
   errorText.value = ''
   connected.value = true
+  hasConnectedAtLeastOnce.value = true
 }
 
 function onError (event: Event) {
@@ -103,6 +106,7 @@ export function useRemoteModel () {
   return {
     connected,
     enabled,
-    errorText
+    errorText,
+    hasConnectedAtLeastOnce
   }
 }

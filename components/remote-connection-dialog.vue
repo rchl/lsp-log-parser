@@ -10,7 +10,7 @@
           Attempting to connect to server at port 9981...
         </p>
         <v-alert
-          v-if="remoteModel.errorText"
+          v-if="remoteModel.hasConnectedAtLeastOnce && remoteModel.errorText"
           border="left"
           dense
           colored-border
