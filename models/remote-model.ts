@@ -94,7 +94,7 @@ function onMessage (event: MessageEvent) {
 
     // @ts-ignore
     if (message.child.name) {
-    // @ts-ignore
+      // @ts-ignore
       message.summary = JSON.stringify(message.child.name).substr(0, 100)
     }
   }
