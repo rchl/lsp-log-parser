@@ -82,13 +82,18 @@
     <v-bottom-sheet v-model="state.sheetInternalOpen" scrollable>
       <v-card v-if="uiModel.selectedLine" class="pt-3">
         <v-card-text class="bottom-sheet-text-container">
-          <h3 class="pb-3">
-            <v-icon v-if="uiModel.selectedLine.type && iconTypes[uiModel.selectedLine.type]">
-              {{ iconTypes[uiModel.selectedLine.type] }}
-            </v-icon>
-            {{ uiModel.selectedLine.name }}
-            <v-spacer />
-          </h3>
+          <div class="d-flex">
+            <h3 class="pb-3 flex-grow-1">
+              <v-icon v-if="uiModel.selectedLine.type && iconTypes[uiModel.selectedLine.type]">
+                {{ iconTypes[uiModel.selectedLine.type] }}
+              </v-icon>
+              {{ uiModel.selectedLine.name }}
+              <v-spacer />
+            </h3>
+            <v-btn @click="uiModel.selectedLine && uiModel.selectedLine.child && copyoClipboard(uiModel.selectedLine.child.name)">
+              Copy to clipboard
+            </v-btn>
+          </div>
           <span v-if="uiModel.selectedLine.child" class="payload">{{ uiModel.selectedLine.child.name }}</span>
         </v-card-text>
       </v-card>
@@ -138,9 +143,19 @@ export default defineComponent({
       }
     })
 
+    async function copyoClipboard (data: any) {
+      try {
+        const text = JSON.stringify(data, null, 2)
+        await navigator.clipboard.writeText(text)
+      } catch (error) {
+        uiModel.showError(error.message)
+      }
+    }
+
     const iconTypes: Record<string, string> = { info: 'mdi-information-outline' }
 
     return {
+      copyoClipboard,
       filteredLines,
       iconTypes,
       logModel,
