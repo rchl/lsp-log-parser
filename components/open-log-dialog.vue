@@ -77,8 +77,7 @@ export default defineComponent({
         try {
           results = parser.parse(inputLines)
         } catch (error) {
-          uiModel.parseErrorText.value = error.message
-          uiModel.errorDialogVisible.value = true
+          uiModel.showError(error.message)
         }
 
         logModel.setParseResults(results)

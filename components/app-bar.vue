@@ -86,26 +86,6 @@
       </template>
       <span>Check out the source code</span>
     </v-tooltip>
-
-    <v-dialog v-model="uiModel.errorDialogVisible" max-width="290">
-      <v-card>
-        <v-card-title class="headline">
-          Parse error
-        </v-card-title>
-
-        <v-card-text>
-          {{ uiModel.parseErrorText }}
-        </v-card-text>
-
-        <v-card-actions>
-          <v-spacer />
-
-          <v-btn color="primary" text @click="uiModel.errorDialogVisible = false">
-            Close
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </v-app-bar>
 </template>
 

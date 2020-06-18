@@ -1,4 +1,5 @@
-export default {
+/** @type {import('@nuxt/types').Configuration} **/
+const configuration = {
   mode: 'spa',
   /*
   ** Headers of the page
@@ -56,3 +57,5 @@ export default {
     customVariables: ['~/assets/variables.scss']
   }
 }
+
+export default configuration

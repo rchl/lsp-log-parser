@@ -38,6 +38,26 @@
         LSP Log Parser
       </h1>
       <log-view v-else class="height-100" />
+
+      <v-dialog v-model="uiModel.errorDialogVisible" max-width="290">
+        <v-card>
+          <v-card-title class="headline">
+            Error
+          </v-card-title>
+
+          <v-card-text>
+            {{ uiModel.errorDialogText }}
+          </v-card-text>
+
+          <v-card-actions>
+            <v-spacer />
+
+            <v-btn color="primary" text @click="uiModel.errorDialogVisible = false">
+              Close
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-main>
   </v-app>
 </template>
