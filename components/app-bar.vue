@@ -27,7 +27,7 @@
           class="mr-2"
           :color="remoteModel.connected ? 'error' : 'primary'"
           :outlined="!remoteModel.connected"
-          @shortkey.native="remoteModel.enabled = true"
+          @shortkey.native="remoteModel.enabled = !remoteModel.enabled"
           @click="remoteModel.enabled = !remoteModel.enabled"
           v-on="on"
         >
