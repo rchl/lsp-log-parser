@@ -45,42 +45,44 @@
         </h2>
       </div>
 
-      <template v-for="line in filteredLines">
-        <div
-          v-if="line.time"
-          :key="`${line.id}t`"
-          class="caption"
-          :class="{ 'text-right': !line.toServer }"
-        >
-          {{ line.time }}
-        </div>
-        <v-alert
-          :key="`${line.id}p`"
-          :border="line.toServer ? 'left' : 'right'"
-          :class="[line.toServer ? 'mr-auto' : 'ml-auto text-right', 'd-inline-block', { 'selected': line === uiModel.selectedLine }]"
-          :color="line.isError ? 'red' : (line.toServer ? 'blue lighten-1' : 'brown')"
-          :icon="line.type && uiModel.ICON_TYPES[line.type]"
-          dark
-          dense
-          max-width="70%"
-          @click.native="uiModel.setSelectedMessage(line)"
-        >
-          <v-chip v-if="line.filter && line.toServer" color="blue darken-3 mr-2" label>
-            {{ line.filter }}
-          </v-chip>
-          <span class="font-weight-medium">{{ line.name }}</span>
-          <span v-if="line.requestId">({{ line.requestId }})</span>
-          <v-chip v-if="line.filter && !line.toServer" color="brown darken-3 ml-2" label>
-            {{ line.filter }}
-          </v-chip>
+      <div class="d-flex flex-column">
+        <template v-for="line in filteredLines">
           <div
-            v-if="line.summary"
-            class="text-no-wrap inline-payload my-2"
+            v-if="line.time"
+            :key="`${line.id}t`"
+            class="caption"
+            :class="{ 'text-right': !line.toServer }"
           >
-            {{ line.summary }}
+            {{ line.time }}
           </div>
-        </v-alert>
-      </template>
+          <v-alert
+            :key="`${line.id}p`"
+            :border="line.toServer ? 'left' : 'right'"
+            :class="[line.toServer ? 'mr-auto' : 'ml-auto text-right', 'd-inline-block', { 'selected': line === uiModel.selectedLine }]"
+            :color="line.isError ? 'red' : (line.toServer ? 'blue lighten-1' : 'brown')"
+            :icon="line.type && uiModel.ICON_TYPES[line.type]"
+            dark
+            dense
+            max-width="70%"
+            @click.native="uiModel.setSelectedMessage(line)"
+          >
+            <v-chip v-if="line.filter && line.toServer" color="blue darken-3 mr-2" label>
+              {{ line.filter }}
+            </v-chip>
+            <span class="font-weight-medium">{{ line.name }}</span>
+            <span v-if="line.requestId">({{ line.requestId }})</span>
+            <v-chip v-if="line.filter && !line.toServer" color="brown darken-3 ml-2" label>
+              {{ line.filter }}
+            </v-chip>
+            <div
+              v-if="line.summary"
+              class="text-no-wrap inline-payload my-2"
+            >
+              {{ line.summary }}
+            </div>
+          </v-alert>
+        </template>
+      </div>
     </v-container>
 
     <v-tooltip left>
