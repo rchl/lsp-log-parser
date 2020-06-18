@@ -1,11 +1,13 @@
 import { ref } from '@vue/composition-api'
 import { Message } from '~/utils'
 
+const ICON_TYPES: Record<string, string> = { info: 'mdi-information-outline' }
+
 const bottomSheetOpen = ref(false)
 const errorDialogText = ref('')
 const errorDialogVisible = ref(false)
 const logDialogVisible = ref(false)
-const drawerVisible = ref(false)
+const drawerVisible = ref(true)
 const queryText = ref('')
 const selectedLine = ref<Message | null>(null)
 
@@ -34,6 +36,7 @@ export function useUiModel () {
     drawerVisible,
     errorDialogText,
     errorDialogVisible,
+    ICON_TYPES,
     logDialogVisible,
     queryText,
     selectedLine,

@@ -1,6 +1,37 @@
 <template>
   <div class="pa-6">
     <v-container class="main">
+      <!-- <v-navigation-drawer v-model="uiModel.drawerVisible" permanent absolute>
+        <v-list-item>
+          <v-list-item-content>
+            <v-list-item-title class="title">
+              Servers
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-divider />
+        <v-list dense>
+          <v-list-item
+            v-for="(item, i) in logModel.parsedLines"
+            :key="item.id"
+            link
+            @click="$vuetify.goTo(`.treeview > div:nth-child(${i})`)"
+          >
+            <v-list-item-icon>
+              <v-icon v-if="item.type && uiModel.ICON_TYPES[item.type]">
+                {{ uiModel.ICON_TYPES[item.type] }}
+              </v-icon>
+            <v-icon v-else>
+              {{ item.directionIcon }}
+            </v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title v-text="item.name" />
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-navigation-drawer> -->
+
       <v-alert v-if="remoteModel.connected" type="info" outlined>
         Log view is limited to {{ logModel.REMOTE_MESSAGE_COUNT_LIMIT }} latest messages
       </v-alert>
@@ -34,7 +65,7 @@
             :border="line.toServer ? 'left' : 'right'"
             :class="[line.toServer ? 'mr-auto' : 'ml-auto text-right', 'd-inline-block', { 'selected': line === uiModel.selectedLine }]"
             :color="line.isError ? 'red' : (line.toServer ? 'blue lighten-1' : 'brown')"
-            :icon="line.type && iconTypes[line.type]"
+            :icon="line.type && uiModel.ICON_TYPES[line.type]"
             dark
             dense
             max-width="70%"
@@ -84,8 +115,8 @@
         <v-card-text class="bottom-sheet-text-container">
           <div class="d-flex">
             <h3 class="pb-3 flex-grow-1">
-              <v-icon v-if="uiModel.selectedLine.type && iconTypes[uiModel.selectedLine.type]">
-                {{ iconTypes[uiModel.selectedLine.type] }}
+              <v-icon v-if="uiModel.selectedLine.type && uiModel.ICON_TYPES[uiModel.selectedLine.type]">
+                {{ uiModel.ICON_TYPES[uiModel.selectedLine.type] }}
               </v-icon>
               {{ uiModel.selectedLine.name }}
               <v-spacer />
@@ -152,12 +183,9 @@ export default defineComponent({
       }
     }
 
-    const iconTypes: Record<string, string> = { info: 'mdi-information-outline' }
-
     return {
       copyoClipboard,
       filteredLines,
-      iconTypes,
       logModel,
       remoteModel,
       state,
