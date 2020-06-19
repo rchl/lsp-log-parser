@@ -45,21 +45,20 @@
         </h2>
       </div>
 
-      <div class="d-flex flex-column">
-        <template v-for="line in filteredLines">
+      <template v-for="line in filteredLines">
+        <div :key="line.id" class="d-flex flex-column" @mouseenter="setHovered(line)" @mouseleave="setHovered(null)">
           <div
             v-if="line.time"
-            :key="`${line.id}t`"
             class="caption"
             :class="{ 'text-right': !line.toServer }"
           >
             {{ line.time }}
+            <span v-if="line.timeLatency">({{ line.timeLatency }} ms)</span>
           </div>
           <v-alert
-            :key="`${line.id}p`"
             :border="line.toServer ? 'left' : 'right'"
-            :class="['message', line.toServer ? 'mr-auto' : 'ml-auto text-right', 'd-inline-block']"
-            :color="line.isError ? 'red' : (line.toServer ? 'blue lighten-1' : 'brown')"
+            :class="getMessageClass(line)"
+            :color="getMessageColor(line)"
             :icon="line.type && uiModel.ICON_TYPES[line.type]"
             dark
             dense
@@ -69,23 +68,24 @@
               {{ line.filter }}
             </v-chip>
             <span>{{ line.name }}</span>
-            <span v-if="line.requestId">({{ line.requestId }})</span>
             <v-chip v-if="line.filter && !line.toServer" color="brown darken-3 ml-2" label>
               {{ line.filter }}
             </v-chip>
             <v-expand-transition>
-              <div v-if="line.isExpanded && line.child" class="pa-2 mt-2 mb-1 payload-container rounded white black--text" @click.stop>
-                <span v-if="line.child" class="payload">{{ line.child.name }}</span>
-                <div class="text-right">
-                  <v-btn icon light @click.stop="line && line.child && copyToClipboard(line.child.name)">
-                    <v-icon>mdi-content-copy</v-icon>
-                  </v-btn>
+              <div v-if="line.isExpanded && line.child">
+                <div class="pa-2 mt-2 mb-1 payload-container rounded white black--text" @click.stop>
+                  <span class="payload">{{ line.child.name }}</span>
+                  <div class="text-right">
+                    <v-btn icon light @click.stop="line && line.child && copyToClipboard(line.child.name)">
+                      <v-icon>mdi-content-copy</v-icon>
+                    </v-btn>
+                  </div>
                 </div>
               </div>
             </v-expand-transition>
           </v-alert>
-        </template>
-      </div>
+        </div>
+      </template>
 
       <div id="log-bottom" />
     </v-container>
@@ -113,10 +113,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, onMounted, onUnmounted, watch } from '@vue/composition-api'
+import { defineComponent, computed, onMounted, onUnmounted, ref, watch } from '@vue/composition-api'
 import { useLogModel } from '~/models/log-model'
 import { useRemoteModel } from '~/models/remote-model'
 import { useUiModel } from '~/models/ui-model'
+import { Message } from '~/utils'
 
 export default defineComponent({
   setup () {
@@ -201,11 +202,50 @@ export default defineComponent({
       scrollTracker.stop()
     })
 
+    const state = {
+      hoveredRequestId: ref<NonNullable<Message['requestId']>>(-1)
+    }
+
+    function setHovered (message: Message | null) {
+      if (message && message.requestId) {
+        state.hoveredRequestId.value = message.requestId
+      } else {
+        state.hoveredRequestId.value = -1
+      }
+    }
+
+    function getMessageClass (message: Message) {
+      const classes = ['message', 'd-inline-block']
+
+      if (message.toServer) {
+        classes.push('mr-auto')
+      } else {
+        classes.push('ml-auto text-right')
+      }
+
+      return classes
+    }
+
+    function getMessageColor (message: Message) {
+      if (message.isError) {
+        return 'red'
+      }
+
+      if (state.hoveredRequestId.value === message.requestId) {
+        return 'orange darken-2'
+      }
+
+      return message.toServer ? 'blue lighten-1' : 'brown'
+    }
+
     return {
       copyToClipboard,
       filteredLines,
       logModel,
+      getMessageClass,
+      getMessageColor,
       remoteModel,
+      setHovered,
       uiModel
     }
   }
@@ -227,8 +267,11 @@ export default defineComponent({
 }
 
 .payload {
+  display: block;
   font-family: monospace !important;
   font-size: small !important;
+  max-height: 80vh;
+  overflow: auto;
   white-space: pre-wrap;
 }
 

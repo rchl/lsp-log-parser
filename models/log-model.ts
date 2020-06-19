@@ -1,15 +1,24 @@
 import { ref } from '@vue/composition-api'
 import { parsers, Parser, ParseResults, SelectedFilter, Message } from '~/utils'
 
+type MessageMapping = Record<NonNullable<Message['requestId']>, Message>
+
 const REMOTE_MESSAGE_COUNT_LIMIT = 220
 
 const parsedFilters = ref<ParseResults['filters']>([])
 const parsedLines = ref<ParseResults['lines']>([])
 const selectedFilters = ref<SelectedFilter[]>([])
+const messageMapping: MessageMapping = {}
 
 function setParseResults (data: ParseResults) {
+  clearMessages()
   parsedFilters.value = data.filters
   parsedLines.value = data.lines
+  for (const line of parsedLines.value) {
+    if (line.requestId) {
+      updateResponse(line)
+    }
+  }
   selectedFilters.value = parsedFilters.value.map(filter => ({
     name: filter,
     enabled: true
@@ -42,6 +51,9 @@ function appendLogMessage (message: Message) {
     parsedLines.value.splice(0, 20)
   }
 
+  if (message.requestId) {
+    updateResponse(message)
+  }
   parsedLines.value.push(message)
 
   if (message.filter && !parsedFilters.value.includes(message.filter)) {
@@ -50,6 +62,21 @@ function appendLogMessage (message: Message) {
       name: message.filter,
       enabled: true
     })
+  }
+}
+
+function updateResponse (message: Message) {
+  const { requestId } = message
+  if (requestId) {
+    const request = messageMapping[requestId]
+    if (request) {
+      message.name = request.name
+      if (message.timestamp && request.timestamp) {
+        message.timeLatency = message.timestamp - request.timestamp
+      }
+    } else {
+      messageMapping[requestId] = message
+    }
   }
 }
 

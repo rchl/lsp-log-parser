@@ -9,6 +9,8 @@ export interface Message {
   toServer: boolean
   isError?: boolean
   time?: string
+  timestamp?: number
+  timeLatency?: number
   type?: string
   filter?: string
 }
