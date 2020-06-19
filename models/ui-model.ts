@@ -1,6 +1,11 @@
 import { ref } from '@vue/composition-api'
 
-const ICON_TYPES: Record<string, string> = { info: 'mdi-information-outline' }
+const ICON_TYPES: Record<string, string> = {
+  error: 'mdi-alert-circle',
+  info: 'mdi-information-outline',
+  notification: 'mdi-bullhorn',
+  reqres: 'mdi-chat'
+}
 
 const errorDialogText = ref('')
 const errorDialogVisible = ref(false)

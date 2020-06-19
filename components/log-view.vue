@@ -61,18 +61,23 @@
             :border="line.toServer ? 'left' : 'right'"
             :class="getMessageClass(line)"
             :color="getMessageColor(line)"
-            :icon="line.type && uiModel.ICON_TYPES[line.type]"
             dark
             dense
             @click.native="line.isExpanded = !line.isExpanded"
           >
-            <v-chip v-if="line.serverName && line.toServer" color="blue darken-3 mr-2" label>
+            <v-icon v-if="line.type && line.toServer" color="blue darken-3">
+              {{ uiModel.ICON_TYPES[line.type] }}
+            </v-icon>
+            <v-chip v-if="line.serverName && line.toServer" color="blue darken-3" class="mr-2" label>
               {{ line.serverName }}
             </v-chip>
             <span>{{ line.name }}</span>
-            <v-chip v-if="line.serverName && !line.toServer" color="brown darken-3 ml-2" label>
+            <v-chip v-if="line.serverName && !line.toServer" color="brown darken-3" class="ml-2" label>
               {{ line.serverName }}
             </v-chip>
+            <v-icon v-if="line.type && !line.toServer" class="h-reverse" color="brown darken-3">
+              {{ uiModel.ICON_TYPES[line.type] }}
+            </v-icon>
             <v-expand-transition>
               <div v-if="line.isExpanded && line.payload">
                 <div class="pa-2 mt-2 mb-1 payload-container rounded white black--text" @click.stop>
@@ -261,6 +266,10 @@ export default defineComponent({
 
 .message {
   cursor: pointer;
+}
+
+.h-reverse {
+  transform: scaleX(-1);
 }
 
 .payload-container {
