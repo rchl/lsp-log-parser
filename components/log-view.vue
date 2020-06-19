@@ -83,6 +83,8 @@
           </v-alert>
         </template>
       </div>
+
+      <div id="log-bottom" />
     </v-container>
 
     <v-tooltip left>
@@ -128,7 +130,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive, toRef, watch, watchEffect } from '@vue/composition-api'
+import { defineComponent, computed, onMounted, onUnmounted, reactive, toRef, watch, watchEffect } from '@vue/composition-api'
 import { useLogModel } from '~/models/log-model'
 import { useRemoteModel } from '~/models/remote-model'
 import { useUiModel } from '~/models/ui-model'
@@ -178,6 +180,57 @@ export default defineComponent({
       }
     }
 
+    class ScrollTracker {
+      _timeout: NodeJS.Timeout | null
+      _onScrollBound: EventListener
+      isScrolledToBottom: boolean
+
+      constructor () {
+        this._timeout = null
+        this._onScrollBound = () => this.onScroll()
+        this.isScrolledToBottom = false
+      }
+
+      start () {
+        window.addEventListener('scroll', this._onScrollBound)
+        this.updateIsScrolledToBottom()
+      }
+
+      stop () {
+        window.removeEventListener('scroll', this._onScrollBound)
+      }
+
+      onScroll () {
+        if (this._timeout) {
+          clearTimeout(this._timeout)
+        }
+
+        this._timeout = setTimeout(() => this.updateIsScrolledToBottom(), 100)
+      }
+
+      updateIsScrolledToBottom () {
+        this.isScrolledToBottom = (window.scrollY + window.innerHeight) === document.body.scrollHeight
+      }
+    }
+
+    const scrollTracker = new ScrollTracker()
+
+    // Scroll to bottom if anchored to bottom.
+    watch(logModel.parsedLines, () => {
+      if (scrollTracker.isScrolledToBottom) {
+        const logBottomElement = document.querySelector('#log-bottom') as HTMLElement
+        logBottomElement.scrollIntoView()
+      }
+    })
+
+    onMounted(() => {
+      scrollTracker.start()
+    })
+
+    onUnmounted(() => {
+      scrollTracker.stop()
+    })
+
     return {
       copyoClipboard,
       filteredLines,
@@ -226,5 +279,9 @@ export default defineComponent({
   font-family: monospace !important;
   font-size: small !important;
   height: 50vh;
+}
+
+#log-bottom {
+  height: 1px;
 }
 </style>
