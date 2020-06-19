@@ -1,7 +1,7 @@
 import { ref } from '@vue/composition-api'
 import { parsers, Parser, ParseResults, SelectedFilter, Message } from '~/utils'
 
-type MessageMapping = Record<NonNullable<Message['requestId']>, Message>
+type MessageMapping = Record<string, Message>
 
 const REMOTE_MESSAGE_COUNT_LIMIT = 220
 
@@ -66,16 +66,16 @@ function appendLogMessage (message: Message) {
 }
 
 function updateResponse (message: Message) {
-  const { requestId } = message
-  if (requestId) {
-    const request = messageMapping[requestId]
+  const { pairKey } = message
+  if (pairKey) {
+    const request = messageMapping[pairKey]
     if (request) {
       message.name = request.name
       if (message.timestamp && request.timestamp) {
         message.timeLatency = message.timestamp - request.timestamp
       }
     } else {
-      messageMapping[requestId] = message
+      messageMapping[pairKey] = message
     }
   }
 }

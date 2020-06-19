@@ -81,6 +81,7 @@ function onMessage (event: MessageEvent) {
     id: ++lastId,
     isExpanded: false,
     requestId: data.id,
+    pairKey: data.id ? `${data.server || ''}${data.id}` : '',
     name: data.method,
     type: data.method,
     isError: data.isError,

@@ -203,14 +203,14 @@ export default defineComponent({
     })
 
     const state = {
-      hoveredRequestId: ref<NonNullable<Message['requestId']>>(-1)
+      hoveredPairKey: ref('')
     }
 
     function setHovered (message: Message | null) {
-      if (message && message.requestId) {
-        state.hoveredRequestId.value = message.requestId
+      if (message && message.pairKey) {
+        state.hoveredPairKey.value = message.pairKey
       } else {
-        state.hoveredRequestId.value = -1
+        state.hoveredPairKey.value = ''
       }
     }
 
@@ -231,7 +231,7 @@ export default defineComponent({
         return 'red'
       }
 
-      if (state.hoveredRequestId.value === message.requestId) {
+      if (state.hoveredPairKey.value && state.hoveredPairKey.value === message.pairKey) {
         return 'orange darken-2'
       }
 

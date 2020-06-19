@@ -2,6 +2,8 @@ export interface Message {
   id: number
   isExpanded?: boolean
   requestId?: number
+  // A key that is equal for two related request-response calls.
+  pairKey?: string
   name: string
   child?: Message
   toServer: boolean
