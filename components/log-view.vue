@@ -234,12 +234,12 @@ export default defineComponent({
     }
 
     function getMessageColor (message: Message) {
-      if (message.isError) {
-        return 'red'
-      }
-
       if (state.hoveredPairKey.value && state.hoveredPairKey.value === message.pairKey) {
         return 'orange darken-2'
+      }
+
+      if (message.isError) {
+        return 'red'
       }
 
       return message.toServer ? 'blue lighten-1' : 'brown'
