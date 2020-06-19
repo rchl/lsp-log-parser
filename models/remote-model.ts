@@ -77,13 +77,15 @@ function onMessage (event: MessageEvent) {
     return
   }
 
+  const isRequestOrResponse = typeof (data.id) === 'number'
+
   const message: Message = {
     id: ++lastId,
     isExpanded: false,
     requestId: data.id,
-    pairKey: data.id ? `${data.server || ''}${data.id}` : '',
+    pairKey: isRequestOrResponse ? `${data.server || ''}${data.id}` : '',
     name: data.method,
-    type: data.id ? 'reqres' : data.isError ? 'error' : 'notification',
+    type: isRequestOrResponse ? 'reqres' : data.isError ? 'error' : 'notification',
     isError: data.isError,
     time: new Date(data.time).toLocaleTimeString(),
     timestamp: data.time,

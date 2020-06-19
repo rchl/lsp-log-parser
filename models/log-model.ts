@@ -15,9 +15,7 @@ function setParseResults (data: ParseResults) {
   parsedFilters.value = data.filters
   parsedLines.value = data.lines
   for (const line of parsedLines.value) {
-    if (line.requestId) {
-      updateResponse(line)
-    }
+    updateResponse(line)
   }
   selectedFilters.value = parsedFilters.value.map(filter => ({
     name: filter,
@@ -51,9 +49,8 @@ function appendLogMessage (message: Message) {
     parsedLines.value.splice(0, 20)
   }
 
-  if (message.requestId) {
-    updateResponse(message)
-  }
+  updateResponse(message)
+
   parsedLines.value.push(message)
 
   if (message.serverName && !parsedFilters.value.includes(message.serverName)) {
