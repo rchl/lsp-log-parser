@@ -68,11 +68,11 @@
             <v-icon v-if="line.type && line.toServer" color="blue darken-3">
               {{ uiModel.ICON_TYPES[line.type] }}
             </v-icon>
-            <v-chip v-if="line.serverName && line.toServer" color="blue darken-3" class="mr-2" label>
+            <v-chip v-if="line.serverName && line.toServer" color="blue darken-3" class="mr-2" label small>
               {{ line.serverName }}
             </v-chip>
             <span>{{ line.name }}</span>
-            <v-chip v-if="line.serverName && !line.toServer" color="brown darken-3" class="ml-2" label>
+            <v-chip v-if="line.serverName && !line.toServer" color="brown darken-3" class="ml-2" label small>
               {{ line.serverName }}
             </v-chip>
             <v-icon v-if="line.type && !line.toServer" class="h-reverse" color="brown darken-3">
