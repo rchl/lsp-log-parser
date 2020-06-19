@@ -64,12 +64,12 @@
             dense
             @click.native="line.isExpanded = !line.isExpanded"
           >
-            <v-chip v-if="line.filter && line.toServer" color="blue darken-3 mr-2" label>
-              {{ line.filter }}
+            <v-chip v-if="line.serverName && line.toServer" color="blue darken-3 mr-2" label>
+              {{ line.serverName }}
             </v-chip>
             <span>{{ line.name }}</span>
-            <v-chip v-if="line.filter && !line.toServer" color="brown darken-3 ml-2" label>
-              {{ line.filter }}
+            <v-chip v-if="line.serverName && !line.toServer" color="brown darken-3 ml-2" label>
+              {{ line.serverName }}
             </v-chip>
             <v-expand-transition>
               <div v-if="line.isExpanded && line.child">
@@ -133,7 +133,7 @@ export default defineComponent({
 
     const filteredLines = computed(() => {
       return logModel.parsedLines.value.filter((line) => {
-        const matchesFilter = logModel.parsedFilters.value.length === 0 || !line.filter || enabledFilters.value.includes(line.filter)
+        const matchesFilter = logModel.parsedFilters.value.length === 0 || !line.serverName || enabledFilters.value.includes(line.serverName)
         if (!matchesFilter) {
           return false
         }

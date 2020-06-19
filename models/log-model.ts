@@ -56,10 +56,10 @@ function appendLogMessage (message: Message) {
   }
   parsedLines.value.push(message)
 
-  if (message.filter && !parsedFilters.value.includes(message.filter)) {
-    parsedFilters.value.push(message.filter)
+  if (message.serverName && !parsedFilters.value.includes(message.serverName)) {
+    parsedFilters.value.push(message.serverName)
     selectedFilters.value.push({
-      name: message.filter,
+      name: message.serverName,
       enabled: true
     })
   }

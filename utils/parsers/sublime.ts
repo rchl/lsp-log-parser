@@ -27,7 +27,7 @@ const parser: Parser = {
           isExpanded: false,
           name: type,
           type,
-          filter: serverName,
+          serverName,
           toServer
         }
 
@@ -36,7 +36,7 @@ const parser: Parser = {
             id: ++id,
             isExpanded: false,
             name: params,
-            filter: serverName,
+            serverName,
             toServer
           }
         }
@@ -59,7 +59,7 @@ const parser: Parser = {
             name: `(${serverName}) ${text}`,
             toServer: false,
             type: 'info',
-            filter: serverName
+            serverName
           })
         } else {
           lines.push({

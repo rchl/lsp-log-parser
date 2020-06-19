@@ -87,7 +87,7 @@ function onMessage (event: MessageEvent) {
     time: new Date(data.time).toLocaleTimeString(),
     timestamp: data.time,
     toServer: data.direction === 1,
-    filter: data.server
+    serverName: data.server
   }
 
   if (data.params) {

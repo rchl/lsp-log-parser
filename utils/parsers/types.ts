@@ -10,7 +10,7 @@ export interface Message {
   timestamp?: number
   timeLatency?: number
   type?: string
-  filter?: string
+  serverName?: string
 }
 
 export interface ParseResults {
