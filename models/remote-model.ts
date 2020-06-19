@@ -92,8 +92,7 @@ function onMessage (event: MessageEvent) {
   }
 
   if (data.params) {
-    // @ts-ignore
-    message.child = { name: data.params }
+    message.payload = data.params
   }
 
   logModel.appendLogMessage(message)

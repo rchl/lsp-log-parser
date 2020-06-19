@@ -32,13 +32,7 @@ const parser: Parser = {
         }
 
         if (params) {
-          message.child = {
-            id: ++id,
-            isExpanded: false,
-            name: params,
-            serverName,
-            toServer
-          }
+          message.payload = params
         }
 
         if (!filters.includes(serverName)) {

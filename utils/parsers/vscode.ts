@@ -23,11 +23,7 @@ const parser: Parser = {
           const childParams = tempChildren[id]
           if (childParams) {
             tempChildren[id] = []
-            message.child = {
-              id: ++id,
-              name: childParams.join('\n'),
-              toServer: message.toServer
-            }
+            message.payload = childParams.join('\n')
           }
 
           lines.push(message)
@@ -62,12 +58,7 @@ const parser: Parser = {
     if (message.name) {
       const childParams = tempChildren[id]
       if (childParams) {
-        message.child = {
-          id: ++id,
-          isExpanded: false,
-          name: childParams.join('\n'),
-          toServer: message.toServer
-        }
+        message.payload = childParams.join('\n')
       }
 
       lines.push(message)

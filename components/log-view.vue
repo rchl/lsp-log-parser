@@ -72,11 +72,11 @@
               {{ line.serverName }}
             </v-chip>
             <v-expand-transition>
-              <div v-if="line.isExpanded && line.child">
+              <div v-if="line.isExpanded && line.payload">
                 <div class="pa-2 mt-2 mb-1 payload-container rounded white black--text" @click.stop>
-                  <span class="payload">{{ line.child.name }}</span>
+                  <span class="payload">{{ line.payload }}</span>
                   <div class="text-right">
-                    <v-btn icon light @click.stop="line && line.child && copyToClipboard(line.child.name)">
+                    <v-btn icon light @click.stop="line && line.payload && copyToClipboard(line.payload)">
                       <v-icon>mdi-content-copy</v-icon>
                     </v-btn>
                   </div>
