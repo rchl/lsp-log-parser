@@ -58,28 +58,31 @@
           <v-alert
             :key="`${line.id}p`"
             :border="line.toServer ? 'left' : 'right'"
-            :class="[line.toServer ? 'mr-auto' : 'ml-auto text-right', 'd-inline-block', { 'selected': line === uiModel.selectedLine }]"
+            :class="['message', line.toServer ? 'mr-auto' : 'ml-auto text-right', 'd-inline-block']"
             :color="line.isError ? 'red' : (line.toServer ? 'blue lighten-1' : 'brown')"
             :icon="line.type && uiModel.ICON_TYPES[line.type]"
             dark
             dense
-            max-width="70%"
-            @click.native="uiModel.setSelectedMessage(line)"
+            @click.native="line.isExpanded = !line.isExpanded"
           >
             <v-chip v-if="line.filter && line.toServer" color="blue darken-3 mr-2" label>
               {{ line.filter }}
             </v-chip>
-            <span class="font-weight-medium">{{ line.name }}</span>
+            <span>{{ line.name }}</span>
             <span v-if="line.requestId">({{ line.requestId }})</span>
             <v-chip v-if="line.filter && !line.toServer" color="brown darken-3 ml-2" label>
               {{ line.filter }}
             </v-chip>
-            <div
-              v-if="line.summary"
-              class="text-no-wrap inline-payload my-2"
-            >
-              {{ line.summary }}
-            </div>
+            <v-expand-transition>
+              <div v-if="line.isExpanded && line.child" class="pa-2 mt-2 mb-1 payload-container rounded white black--text" @click.stop>
+                <span v-if="line.child" class="payload">{{ line.child.name }}</span>
+                <div class="text-right">
+                  <v-btn icon light @click.stop="line && line.child && copyToClipboard(line.child.name)">
+                    <v-icon>mdi-content-copy</v-icon>
+                  </v-btn>
+                </div>
+              </div>
+            </v-expand-transition>
           </v-alert>
         </template>
       </div>
@@ -106,41 +109,17 @@
       </template>
       <span>Clear log view ({{ cmdOrCtrl }}-X)</span>
     </v-tooltip>
-
-    <v-bottom-sheet v-model="state.sheetInternalOpen" scrollable>
-      <v-card v-if="uiModel.selectedLine" class="pt-3">
-        <v-card-text class="bottom-sheet-text-container">
-          <div class="d-flex">
-            <h3 class="pb-3 flex-grow-1">
-              <v-icon v-if="uiModel.selectedLine.type && uiModel.ICON_TYPES[uiModel.selectedLine.type]">
-                {{ uiModel.ICON_TYPES[uiModel.selectedLine.type] }}
-              </v-icon>
-              {{ uiModel.selectedLine.name }}
-              <v-spacer />
-            </h3>
-            <v-btn @click="uiModel.selectedLine && uiModel.selectedLine.child && copyoClipboard(uiModel.selectedLine.child.name)">
-              Copy to clipboard
-            </v-btn>
-          </div>
-          <span v-if="uiModel.selectedLine.child" class="payload">{{ uiModel.selectedLine.child.name }}</span>
-        </v-card-text>
-      </v-card>
-    </v-bottom-sheet>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, onMounted, onUnmounted, reactive, toRef, watch, watchEffect } from '@vue/composition-api'
+import { defineComponent, computed, onMounted, onUnmounted, watch } from '@vue/composition-api'
 import { useLogModel } from '~/models/log-model'
 import { useRemoteModel } from '~/models/remote-model'
 import { useUiModel } from '~/models/ui-model'
 
 export default defineComponent({
   setup () {
-    const state = reactive({
-      sheetInternalOpen: false
-    })
-
     const logModel = useLogModel()
     const remoteModel = useRemoteModel()
     const uiModel = useUiModel()
@@ -162,16 +141,7 @@ export default defineComponent({
       })
     })
 
-    watchEffect(() => {
-      state.sheetInternalOpen = uiModel.bottomSheetOpen.value
-    })
-    watch(toRef(state, 'sheetInternalOpen'), (open) => {
-      if (!open) {
-        uiModel.setSelectedMessage(null)
-      }
-    })
-
-    async function copyoClipboard (data: any) {
+    async function copyToClipboard (data: any) {
       try {
         const text = JSON.stringify(data, null, 2)
         await navigator.clipboard.writeText(text)
@@ -232,11 +202,10 @@ export default defineComponent({
     })
 
     return {
-      copyoClipboard,
+      copyToClipboard,
       filteredLines,
       logModel,
       remoteModel,
-      state,
       uiModel
     }
   }
@@ -247,38 +216,20 @@ export default defineComponent({
 .main {
   max-width: 800px !important;
 }
-</style>
 
-<style lang="scss">
-.v-alert {
+.message {
   cursor: pointer;
-  will-change: transform;
-
-  &:hover {
-    transform: scale(1.05);
-  }
-
-  * {
-    overflow: hidden;
-  }
 }
 
-.inline-payload {
-  font-family: monospace;
-  font-size: smaller;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.payload-container {
+  cursor: initial;
+  text-align: left;
 }
 
 .payload {
-  white-space: pre-wrap;
-}
-
-.bottom-sheet-text-container {
   font-family: monospace !important;
   font-size: small !important;
-  height: 50vh;
+  white-space: pre-wrap;
 }
 
 #log-bottom {

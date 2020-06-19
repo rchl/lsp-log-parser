@@ -1,5 +1,6 @@
 export interface Message {
   id: number
+  isExpanded?: boolean
   isChild?: boolean
   requestId?: number
   name: string
@@ -9,7 +10,6 @@ export interface Message {
   isError?: boolean
   time?: string
   type?: string
-  summary?: string
   filter?: string
 }
 

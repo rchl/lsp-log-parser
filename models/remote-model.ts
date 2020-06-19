@@ -79,6 +79,7 @@ function onMessage (event: MessageEvent) {
 
   const message: Message = {
     id: ++lastId,
+    isExpanded: false,
     requestId: data.id,
     name: data.method,
     type: data.method,
@@ -91,12 +92,6 @@ function onMessage (event: MessageEvent) {
   if (data.params) {
     // @ts-ignore
     message.child = { name: data.params }
-
-    // @ts-ignore
-    if (message.child.name) {
-      // @ts-ignore
-      message.summary = JSON.stringify(message.child.name).substr(0, 100)
-    }
   }
 
   logModel.appendLogMessage(message)

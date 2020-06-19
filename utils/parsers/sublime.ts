@@ -24,6 +24,7 @@ const parser: Parser = {
         const params = lspMatch[4]
         message = {
           id: ++id,
+          isExpanded: false,
           name: type,
           type,
           filter: serverName,
@@ -33,13 +34,12 @@ const parser: Parser = {
         if (params) {
           message.child = {
             id: ++id,
+            isExpanded: false,
             isChild: true,
             name: params,
             filter: serverName,
             toServer
           }
-
-          message.summary = message.child.name.substr(0, 100)
         }
 
         if (!filters.includes(serverName)) {
@@ -56,6 +56,7 @@ const parser: Parser = {
 
           lines.push({
             id: ++id,
+            isExpanded: false,
             name: `(${serverName}) ${text}`,
             toServer: false,
             type: 'info',
@@ -64,6 +65,7 @@ const parser: Parser = {
         } else {
           lines.push({
             id: ++id,
+            isExpanded: false,
             name: line,
             toServer: false,
             type: 'info'

@@ -25,12 +25,15 @@ const parser: Parser = {
               name: message.tempChildren.join('\n'),
               toServer: message.toServer
             }
-
-            message.summary = message.child.name.substr(0, 100)
           }
 
           lines.push(message)
-          message = { id: ++id, name: '', toServer: true }
+          message = {
+            id: ++id,
+            isExpanded: false,
+            name: '',
+            toServer: true
+          }
         }
 
         const direction = newHeaderMatch[3] ? newHeaderMatch[3].toLowerCase() : null
@@ -57,12 +60,11 @@ const parser: Parser = {
       if (message.tempChildren) {
         message.child = {
           id: ++id,
+          isExpanded: false,
           isChild: true,
           name: message.tempChildren.join('\n'),
           toServer: message.toServer
         }
-
-        message.summary = message.child.name.substr(0, 100)
       }
 
       lines.push(message)
