@@ -78,18 +78,21 @@ function onMessage (event: MessageEvent) {
   }
 
   const isRequestOrResponse = typeof (data.id) === 'number'
+  const isResponse = isRequestOrResponse && !data.method
+  const toServer = data.direction === 1
+  const initiatedByServer = (!isResponse && !toServer) || (isResponse && toServer)
 
   const message: Message = {
     id: ++lastId,
     isExpanded: false,
     requestId: data.id,
-    pairKey: isRequestOrResponse ? `${data.server || ''}${data.id}` : '',
+    pairKey: isRequestOrResponse ? `${data.server || ''}-${initiatedByServer ? 's' : 'c'}-${data.id}` : '',
     name: data.method,
     type: isRequestOrResponse ? 'reqres' : data.isError ? 'error' : 'notification',
     isError: data.isError,
     time: new Date(data.time).toLocaleTimeString(),
     timestamp: data.time,
-    toServer: data.direction === 1,
+    toServer,
     serverName: data.server
   }
 

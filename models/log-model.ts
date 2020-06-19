@@ -67,9 +67,11 @@ function updateResponse (message: Message) {
   if (pairKey) {
     const request = messageMapping[pairKey]
     if (request) {
-      message.name = request.name
-      if (message.timestamp && request.timestamp) {
-        message.timeLatency = message.timestamp - request.timestamp
+      if (!message.name) {
+        message.name = request.name
+        if (message.timestamp && request.timestamp) {
+          message.timeLatency = message.timestamp - request.timestamp
+        }
       }
     } else {
       messageMapping[pairKey] = message
