@@ -75,6 +75,24 @@
           ripple
           color="black"
           icon
+          href="https://microsoft.github.io/language-server-protocol/specification"
+          target="_blank"
+          v-on="on"
+        >
+          <v-icon>
+            mdi-file-document-outline
+          </v-icon>
+        </v-btn>
+      </template>
+      <span>LSP specification</span>
+    </v-tooltip>
+    <v-tooltip bottom>
+      <template v-slot:activator="{ on }">
+        <v-btn
+          class="ml-2"
+          ripple
+          color="black"
+          icon
           href="https://github.com/rchl/lsp-log-parser"
           target="_blank"
           v-on="on"
