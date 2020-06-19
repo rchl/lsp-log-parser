@@ -46,14 +46,16 @@
       </div>
 
       <template v-for="line in filteredLines">
-        <div :key="line.id" class="d-flex flex-column" @mouseenter="setHovered(line)" @mouseleave="setHovered(null)">
-          <div
-            v-if="line.time"
-            class="caption"
-            :class="{ 'text-right': !line.toServer }"
-          >
-            {{ line.time }}
-            <span v-if="line.timeLatency">({{ line.timeLatency }} ms)</span>
+        <div
+          :key="line.id"
+          class="d-flex flex-column"
+          :class="{ 'text-right': !line.toServer }"
+          @mouseenter="setHovered(line)"
+          @mouseleave="setHovered(null)"
+        >
+          <div v-if="line.time || line.timeLatency !== undefined" class="caption">
+            <span v-if="line.timeLatency !== undefined">{{ line.timeLatency }} ms</span>
+            <span v-else>{{ line.time }}</span>
           </div>
           <v-alert
             :border="line.toServer ? 'left' : 'right'"
