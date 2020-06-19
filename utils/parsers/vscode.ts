@@ -21,7 +21,6 @@ const parser: Parser = {
           if (message.tempChildren) {
             message.child = {
               id: ++id,
-              isChild: true,
               name: message.tempChildren.join('\n'),
               toServer: message.toServer
             }
@@ -61,7 +60,6 @@ const parser: Parser = {
         message.child = {
           id: ++id,
           isExpanded: false,
-          isChild: true,
           name: message.tempChildren.join('\n'),
           toServer: message.toServer
         }

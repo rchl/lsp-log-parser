@@ -1,7 +1,6 @@
 export interface Message {
   id: number
   isExpanded?: boolean
-  isChild?: boolean
   requestId?: number
   name: string
   child?: Message

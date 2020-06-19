@@ -35,7 +35,6 @@ const parser: Parser = {
           message.child = {
             id: ++id,
             isExpanded: false,
-            isChild: true,
             name: params,
             filter: serverName,
             toServer
