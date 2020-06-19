@@ -151,7 +151,7 @@ export default defineComponent({
 
     async function copyToClipboard (data: any) {
       try {
-        const text = JSON.stringify(data, null, 2)
+        const text = typeof (data) === 'string' ? data : JSON.stringify(data, null, 2)
         await navigator.clipboard.writeText(text)
       } catch (error) {
         uiModel.showError(error.message)
