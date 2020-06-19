@@ -12,16 +12,20 @@ const parser: Parser = {
       toServer: true
     }
 
+    const tempChildren: Record<number, string[]> = {}
+
     for (const [i, line] of inputLines.entries()) {
       const newHeaderMatch = line.match(this.lineRegex)
 
       if (newHeaderMatch) {
         // Process completed object first.
         if (message.name) {
-          if (message.tempChildren) {
+          const childParams = tempChildren[id]
+          if (childParams) {
+            tempChildren[id] = []
             message.child = {
               id: ++id,
-              name: message.tempChildren.join('\n'),
+              name: childParams.join('\n'),
               toServer: message.toServer
             }
           }
@@ -43,24 +47,25 @@ const parser: Parser = {
         message.type = newHeaderMatch[1].toLowerCase()
         message.toServer = direction === 'sending'
       } else {
-        if (!message.tempChildren) {
-          message.tempChildren = []
-        }
-
         if (!message.name) {
           throw new Error(`Message content with no parent (line ${i}.`)
         }
 
-        message.tempChildren.push(line)
+        if (!tempChildren[id]) {
+          tempChildren[id] = []
+        }
+
+        tempChildren[id].push(line)
       }
     }
 
     if (message.name) {
-      if (message.tempChildren) {
+      const childParams = tempChildren[id]
+      if (childParams) {
         message.child = {
           id: ++id,
           isExpanded: false,
-          name: message.tempChildren.join('\n'),
+          name: childParams.join('\n'),
           toServer: message.toServer
         }
       }

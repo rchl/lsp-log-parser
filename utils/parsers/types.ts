@@ -4,7 +4,6 @@ export interface Message {
   requestId?: number
   name: string
   child?: Message
-  tempChildren?: string[]
   toServer: boolean
   isError?: boolean
   time?: string
