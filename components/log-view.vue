@@ -61,6 +61,7 @@
             :border="line.toServer ? 'left' : 'right'"
             :class="getMessageClass(line)"
             :color="getMessageColor(line)"
+            max-width="100%"
             dark
             dense
             @click.native="line.isExpanded = !line.isExpanded"
@@ -80,13 +81,18 @@
             </v-icon>
             <v-expand-transition>
               <div v-if="line.isExpanded && line.payload">
-                <div class="pa-2 mt-2 mb-1 payload-container rounded white black--text" @click.stop>
-                  <span class="payload">{{ line.payload }}</span>
-                  <div class="text-right">
-                    <v-btn icon light @click.stop="line && line.payload && copyToClipboard(line.payload)">
-                      <v-icon>mdi-content-copy</v-icon>
-                    </v-btn>
-                  </div>
+                <div class="mt-2 mb-1 payload-container rounded" @click.stop>
+                  <json-tree :data="line.payload" class="payload" />
+                </div>
+                <div class="text-right">
+                  <v-tooltip left>
+                    <template v-slot:activator="{ on }">
+                      <v-btn icon dark @click.stop="line && line.payload && copyToClipboard(line.payload)" v-on="on">
+                        <v-icon>mdi-content-copy</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Copy payload to clipboard</span>
+                  </v-tooltip>
                 </div>
               </div>
             </v-expand-transition>
@@ -120,6 +126,8 @@
 </template>
 
 <script lang="ts">
+// @ts-ignore
+import JsonTree from 'vue-json-tree'
 import { defineComponent, computed, onMounted, onUnmounted, ref, watch } from '@vue/composition-api'
 import { useLogModel } from '~/models/log-model'
 import { useRemoteModel } from '~/models/remote-model'
@@ -127,6 +135,9 @@ import { useUiModel } from '~/models/ui-model'
 import { Message } from '~/utils'
 
 export default defineComponent({
+  components: {
+    JsonTree
+  },
   setup () {
     const logModel = useLogModel()
     const remoteModel = useRemoteModel()
@@ -278,15 +289,21 @@ export default defineComponent({
 }
 
 .payload {
-  display: block;
-  font-family: monospace !important;
-  font-size: small !important;
   max-height: 80vh;
   overflow: auto;
-  white-space: pre-wrap;
 }
 
 #log-bottom {
   height: 1px;
+}
+</style>
+
+<style>
+.json-tree-sign {
+  color: lightgrey;
+}
+
+.json-tree-value {
+  white-space: pre-wrap !important;
 }
 </style>
