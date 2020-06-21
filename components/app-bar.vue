@@ -61,10 +61,11 @@
       class="mr-2"
       :disabled="!logModel.parsedLines.length"
       placeholder="Filter by text ('/' to focus)"
-      solo-inverted
+      dense
+      solo
       hide-details
       clearable
-      clear-icon="mdi-close-circle-outline"
+      prepend-inner-icon="mdi-magnify"
       @shortkey.native="focusSearchField()"
     />
 
