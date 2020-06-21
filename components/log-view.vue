@@ -51,7 +51,8 @@
             <v-expand-transition>
               <div v-if="line.isExpanded && line.payload">
                 <div class="mt-2 mb-1 payload-container rounded" @click.stop>
-                  <json-tree :data="line.payload" class="payload" />
+                  <span v-if="typeof(line.payload) === 'string'" class="pa-2 rounded payload payload--text">{{ line.payload }}</span>
+                  <json-tree v-else :data="line.payload" class="payload" />
                 </div>
                 <div class="text-right">
                   <v-tooltip left>
@@ -241,6 +242,15 @@ export default defineComponent({
 .payload {
   max-height: 80vh;
   overflow: auto;
+
+  &--text {
+    background: #fff;
+    color: #000;
+    display: block;
+    font-family: monospace !important;
+    font-size: small !important;
+    white-space: pre-wrap;
+  }
 }
 
 #log-bottom {
