@@ -1,6 +1,6 @@
 <template>
   <v-app-bar app>
-    <!-- <v-app-bar-nav-icon class="mr-2" @click.stop="uiModel.setDrawerVisible(!drawer)" /> -->
+    <v-app-bar-nav-icon class="mr-2" @click.stop="uiModel.toggleDrawer()" />
 
     <v-tooltip bottom>
       <template v-slot:activator="{ on }">
@@ -39,18 +39,6 @@
       <span>{{ remoteModel.connected ? 'Disconnect from remote' : 'Connect to remote websocket server' }} ({{ cmdOrCtrl }}-D)</span>
     </v-tooltip>
     <remote-connection-dialog />
-
-    <v-chip
-      v-for="filter in logModel.selectedFilters"
-      :key="filter.name"
-      class="mr-2"
-      :input-value="filter.enabled"
-      filter
-      outlined
-      @click="filter.enabled = !filter.enabled"
-    >
-      {{ filter.name }}
-    </v-chip>
 
     <v-spacer />
 
@@ -120,11 +108,6 @@ export default defineComponent({
   components: {
     RemoteConnectionDialog,
     OpenLogDialog
-  },
-  props: {
-    drawer: {
-      type: Boolean
-    }
   },
   setup () {
     const remoteModel = useRemoteModel()

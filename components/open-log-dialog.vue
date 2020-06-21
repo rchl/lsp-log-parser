@@ -46,9 +46,10 @@
 
 <script lang="ts">
 import { defineComponent, reactive, toRef, watch, watchEffect } from '@vue/composition-api'
-import { useLogModel } from '~/models/log-model'
+import { ParseResults, useLogModel } from '~/models/log-model'
+import { useParserModel } from '~/models/parser-model'
 import { useUiModel } from '~/models/ui-model'
-import { parsers, ParseResults } from '~/utils'
+import parsers from '~/models/parsers'
 
 export default defineComponent({
   setup (_, { root }) {
@@ -60,11 +61,11 @@ export default defineComponent({
     })
 
     const logModel = useLogModel()
+    const parserModel = useParserModel()
     const uiModel = useUiModel()
 
     function parseLog () {
       uiModel.logDialogVisible.value = false
-      uiModel.setDrawerVisible(false)
       state.selectedParserHint = ''
 
       const content = state.logContent
@@ -86,7 +87,7 @@ export default defineComponent({
     }
 
     watchEffect(() => {
-      const parser = logModel.contentSniffParser(state.logContent.substr(0, 500).split('\n'))
+      const parser = parserModel.contentSniffParser(state.logContent.substr(0, 500).split('\n'))
 
       if (parser) {
         state.selectedParser = parser.name

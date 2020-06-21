@@ -1,6 +1,5 @@
 import { ref, watch } from '@vue/composition-api'
-import { useLogModel } from '~/models/log-model'
-import { Message } from '~/utils'
+import { Message, useLogModel } from '~/models/log-model'
 
 let lastId = 0
 let socket: WebSocket | null = null

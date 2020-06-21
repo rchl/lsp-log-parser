@@ -1,37 +1,6 @@
 <template>
   <div class="pa-6">
     <v-container class="main">
-      <!-- <v-navigation-drawer v-model="uiModel.drawerVisible" permanent absolute>
-        <v-list-item>
-          <v-list-item-content>
-            <v-list-item-title class="title">
-              Servers
-            </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-        <v-divider />
-        <v-list dense>
-          <v-list-item
-            v-for="(item, i) in logModel.parsedLines"
-            :key="item.id"
-            link
-            @click="$vuetify.goTo(`.treeview > div:nth-child(${i})`)"
-          >
-            <v-list-item-icon>
-              <v-icon v-if="item.type && uiModel.ICON_TYPES[item.type]">
-                {{ uiModel.ICON_TYPES[item.type] }}
-              </v-icon>
-            <v-icon v-else>
-              {{ item.directionIcon }}
-            </v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title v-text="item.name" />
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
-      </v-navigation-drawer> -->
-
       <v-alert v-if="remoteModel.connected" type="info" outlined>
         Log view is limited to {{ logModel.REMOTE_MESSAGE_COUNT_LIMIT }} latest messages
       </v-alert>
@@ -45,7 +14,7 @@
         </h2>
       </div>
 
-      <template v-for="line in filteredLines">
+      <template v-for="line in uiModel.filteredLines">
         <div
           :key="line.id"
           class="d-flex flex-column"
@@ -128,11 +97,10 @@
 <script lang="ts">
 // @ts-ignore
 import JsonTree from 'vue-json-tree'
-import { defineComponent, computed, onMounted, onUnmounted, ref, watch } from '@vue/composition-api'
-import { useLogModel } from '~/models/log-model'
+import { defineComponent, onMounted, onUnmounted, ref, watch } from '@vue/composition-api'
+import { useLogModel, Message } from '~/models/log-model'
 import { useRemoteModel } from '~/models/remote-model'
 import { useUiModel } from '~/models/ui-model'
-import { Message } from '~/utils'
 
 export default defineComponent({
   components: {
@@ -142,23 +110,6 @@ export default defineComponent({
     const logModel = useLogModel()
     const remoteModel = useRemoteModel()
     const uiModel = useUiModel()
-
-    const enabledFilters = computed<string[]>(() => {
-      return logModel.selectedFilters.value
-        .filter(filter => filter.enabled)
-        .map(filter => filter.name)
-    })
-
-    const filteredLines = computed(() => {
-      return logModel.parsedLines.value.filter((line) => {
-        const matchesFilter = logModel.parsedFilters.value.length === 0 || !line.serverName || enabledFilters.value.includes(line.serverName)
-        if (!matchesFilter) {
-          return false
-        }
-
-        return !uiModel.queryText.value || (line.name && line.name.toLowerCase().includes(uiModel.queryText.value.toLowerCase()))
-      })
-    })
 
     async function copyToClipboard (data: any) {
       try {
@@ -258,7 +209,6 @@ export default defineComponent({
 
     return {
       copyToClipboard,
-      filteredLines,
       logModel,
       getMessageClass,
       getMessageColor,

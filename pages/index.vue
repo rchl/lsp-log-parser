@@ -1,7 +1,7 @@
 <template>
   <v-app>
-    <app-bar :drawer="uiModel.drawerVisible" />
-
+    <app-bar />
+    <app-drawer />
     <v-main>
       <h1 v-if="logModel.parsedLines.length === 0" class="base-title text-center">
         LSP Log Parser
@@ -34,6 +34,7 @@
 <script lang="ts">
 import { defineComponent } from '@vue/composition-api'
 import appBar from '~/components/app-bar.vue'
+import appDrawer from '~/components/app-drawer.vue'
 import logView from '~/components/log-view.vue'
 import { useLogModel } from '~/models/log-model'
 import { useUiModel } from '~/models/ui-model'
@@ -41,6 +42,7 @@ import { useUiModel } from '~/models/ui-model'
 export default defineComponent({
   components: {
     appBar,
+    appDrawer,
     logView
   },
   setup () {

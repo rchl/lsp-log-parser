@@ -1,7 +1,33 @@
 import { ref } from '@vue/composition-api'
-import { parsers, Parser, ParseResults, SelectedFilter, Message } from '~/utils'
 
 type MessageMapping = Record<string, Message>
+
+export interface Message {
+  id: number
+  isExpanded?: boolean
+  requestId?: number
+  // A key that is equal for two related request-response calls.
+  pairKey?: string
+  name: string
+  payload?: string
+  toServer: boolean
+  isError?: boolean
+  time?: string
+  timestamp?: number
+  timeLatency?: number
+  type?: string
+  serverName?: string
+}
+
+export interface ParseResults {
+  lines: Message[]
+  filters: string[]
+}
+
+type SelectedFilter = {
+  name: string,
+  enabled: Boolean
+}
 
 const REMOTE_MESSAGE_COUNT_LIMIT = 220
 
@@ -21,27 +47,6 @@ function setParseResults (data: ParseResults) {
     name: filter,
     enabled: true
   }))
-}
-
-function contentSniffParser (lines: string[]): Parser | null {
-  let highestHits = 0
-  let highestParserIndex = -1
-
-  for (const [index, parser] of parsers.entries()) {
-    const hits = lines.filter(chunk => parser.lineRegex.test(chunk)).length
-    if (hits > highestHits) {
-      highestHits = hits
-      highestParserIndex = index
-    }
-  }
-
-  let parser = null
-
-  if (highestParserIndex !== -1) {
-    parser = parsers[highestParserIndex]
-  }
-
-  return parser
 }
 
 function appendLogMessage (message: Message) {
@@ -89,7 +94,6 @@ export function useLogModel () {
   return {
     appendLogMessage,
     clearMessages,
-    contentSniffParser,
     parsedFilters,
     parsedLines,
     REMOTE_MESSAGE_COUNT_LIMIT,

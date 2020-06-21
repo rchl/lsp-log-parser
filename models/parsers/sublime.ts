@@ -1,4 +1,5 @@
-import { Message, Parser } from './types'
+import { Message } from '../log-model'
+import { Parser } from '../parser-model'
 
 const parser: Parser = {
   name: 'Sublime LSP',
