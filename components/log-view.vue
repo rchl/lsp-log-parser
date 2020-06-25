@@ -221,6 +221,17 @@ export default defineComponent({
 })
 </script>
 
+<style lang="scss">
+// Hack to max payload not overflow.
+.message {
+  cursor: pointer;
+
+  .v-alert__content {
+    max-width: 100%;
+  }
+}
+</style>
+
 <style lang="scss" scoped>
 .main {
   max-width: 800px !important;
