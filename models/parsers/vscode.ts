@@ -9,6 +9,7 @@ const parser: Parser = {
     let id = 1
     let message: Message = {
       id,
+      isExpanded: false,
       name: '',
       toServer: true
     }
