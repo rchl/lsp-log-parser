@@ -11,6 +11,7 @@ const parser: Parser = {
       id,
       isExpanded: false,
       name: '',
+      payloadTabIndex: 0,
       toServer: true
     }
 
@@ -33,6 +34,7 @@ const parser: Parser = {
             id: ++id,
             isExpanded: false,
             name: '',
+            payloadTabIndex: 0,
             toServer: true
           }
         }

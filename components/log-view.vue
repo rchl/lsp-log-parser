@@ -33,7 +33,7 @@
             max-width="100%"
             dark
             dense
-            @click.native="line.isExpanded = !line.isExpanded"
+            @click.native="toggleExpand(line)"
           >
             <v-icon v-if="line.type && line.toServer" color="blue darken-3">
               {{ uiModel.ICON_TYPES[line.type] }}
@@ -50,10 +50,7 @@
             </v-icon>
             <v-expand-transition>
               <div v-if="line.isExpanded && line.payload">
-                <div class="mt-2 mb-1 payload-container rounded" @click.stop>
-                  <span v-if="typeof(line.payload) === 'string'" class="pa-2 rounded payload payload--text">{{ line.payload }}</span>
-                  <json-tree v-else :data="line.payload" class="payload" />
-                </div>
+                <message-payload :message="line" />
                 <div class="text-right">
                   <v-tooltip left>
                     <template v-slot:activator="{ on }">
@@ -96,21 +93,24 @@
 </template>
 
 <script lang="ts">
-// @ts-ignore
-import JsonTree from 'vue-json-tree'
 import { defineComponent, onMounted, onUnmounted, ref, watch } from '@vue/composition-api'
+import MessagePayload from '~/components/message-payload.vue'
 import { useLogModel, Message } from '~/models/log-model'
 import { useRemoteModel } from '~/models/remote-model'
 import { useUiModel } from '~/models/ui-model'
 
 export default defineComponent({
   components: {
-    JsonTree
+    MessagePayload
   },
   setup () {
     const logModel = useLogModel()
     const remoteModel = useRemoteModel()
     const uiModel = useUiModel()
+
+    const state = {
+      hoveredPairKey: ref('')
+    }
 
     async function copyToClipboard (data: any) {
       try {
@@ -172,10 +172,6 @@ export default defineComponent({
       scrollTracker.stop()
     })
 
-    const state = {
-      hoveredPairKey: ref('')
-    }
-
     function setHovered (message: Message | null) {
       if (message && message.pairKey) {
         state.hoveredPairKey.value = message.pairKey
@@ -184,8 +180,17 @@ export default defineComponent({
       }
     }
 
+    function scrollMessageIntoView (id: number) {
+      const messageElement = document.querySelector(`.l-${id}`) as HTMLElement
+      messageElement.scrollIntoView({ block: 'center', behavior: 'smooth' })
+    }
+
+    function toggleExpand (message: Message) {
+      message.isExpanded = !message.isExpanded
+    }
+
     function getMessageClass (message: Message) {
-      const classes = ['message', 'd-inline-block']
+      const classes = ['message', 'd-inline-block', `l-${message.id}`]
 
       if (message.toServer) {
         classes.push('mr-auto')
@@ -214,27 +219,20 @@ export default defineComponent({
       getMessageClass,
       getMessageColor,
       remoteModel,
+      scrollMessageIntoView,
       setHovered,
+      state,
+      toggleExpand,
       uiModel
     }
   }
 })
 </script>
 
-<style lang="scss">
-// Hack to max payload not overflow.
-.message {
-  cursor: pointer;
-
-  .v-alert__content {
-    max-width: 100%;
-  }
-}
-</style>
-
 <style lang="scss" scoped>
 .main {
   max-width: 800px !important;
+  scroll-padding: 80px 0 0 0;
 }
 
 .message {
@@ -245,23 +243,13 @@ export default defineComponent({
   transform: scaleX(-1);
 }
 
+.overflow-hidden {
+  overflow: hidden;
+}
+
 .payload-container {
   cursor: initial;
   text-align: left;
-}
-
-.payload {
-  max-height: 80vh;
-  overflow: auto;
-
-  &--text {
-    background: #fff;
-    color: #000;
-    display: block;
-    font-family: monospace !important;
-    font-size: small !important;
-    white-space: pre-wrap;
-  }
 }
 
 #log-bottom {
@@ -270,6 +258,10 @@ export default defineComponent({
 </style>
 
 <style>
+.json-tree-root {
+  margin-top: 0;
+}
+
 .json-tree-sign {
   color: lightgrey;
 }

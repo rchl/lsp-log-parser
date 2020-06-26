@@ -10,6 +10,7 @@ export interface Message {
   pairKey?: string
   name: string
   payload?: string
+  payloadTabIndex: number
   toServer: boolean
   isError?: boolean
   time?: string

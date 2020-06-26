@@ -11,6 +11,7 @@ const parser: Parser = {
     let message: Message = {
       id,
       name: '',
+      payloadTabIndex: 0,
       toServer: false
     }
 
@@ -27,6 +28,7 @@ const parser: Parser = {
           id: ++id,
           isExpanded: false,
           name: type,
+          payloadTabIndex: 0,
           type,
           serverName,
           toServer
@@ -53,6 +55,7 @@ const parser: Parser = {
             isExpanded: false,
             name: `(${serverName}) ${text}`,
             toServer: false,
+            payloadTabIndex: 0,
             type: 'info',
             serverName
           })
@@ -61,6 +64,7 @@ const parser: Parser = {
             id: ++id,
             isExpanded: false,
             name: line,
+            payloadTabIndex: 0,
             toServer: false,
             type: 'info'
           })
