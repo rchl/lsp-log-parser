@@ -31,6 +31,7 @@
             :class="getMessageClass(line)"
             :color="getMessageColor(line)"
             max-width="100%"
+            :min-width="line.isExpanded ? '100%' : '0'"
             dark
             dense
             @click.native="toggleExpand(line)"
@@ -52,14 +53,10 @@
               <div v-if="line.isExpanded && line.payload">
                 <message-payload :message="line" />
                 <div class="text-right">
-                  <v-tooltip left>
-                    <template v-slot:activator="{ on }">
-                      <v-btn icon dark @click.stop="line && line.payload && copyToClipboard(line.payload)" v-on="on">
-                        <v-icon>mdi-content-copy</v-icon>
-                      </v-btn>
-                    </template>
-                    <span>Copy payload to clipboard</span>
-                  </v-tooltip>
+                  <v-btn light @click.stop="line && line.payload && copyToClipboard(line.payload)">
+                    <v-icon>mdi-content-copy</v-icon>
+                    <span>Copy payload</span>
+                  </v-btn>
                 </div>
               </div>
             </v-expand-transition>
