@@ -157,7 +157,7 @@ export default defineComponent({
     watch(logModel.parsedLines, () => {
       if (scrollTracker.isScrolledToBottom) {
         const logBottomElement = document.querySelector('#log-bottom') as HTMLElement
-        logBottomElement.scrollIntoView()
+        logBottomElement.scrollIntoView({ block: 'start', behavior: 'smooth' })
       }
     })
 
