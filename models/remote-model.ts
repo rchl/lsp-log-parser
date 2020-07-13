@@ -26,6 +26,7 @@ function initializeConnection () {
 
 function createWebSocket () {
   if (!enabled.value) {
+    console.info('Not enabled, not creating new connection')
     return
   }
 
@@ -37,6 +38,7 @@ function createWebSocket () {
 }
 
 function closeConnection () {
+  console.info('Triggered manual close')
   connected.value = false
   errorText.value = ''
 
@@ -47,23 +49,28 @@ function closeConnection () {
 }
 
 function onOpen () {
+  console.info('Connection opened')
   errorText.value = ''
   connected.value = true
   hasConnectedAtLeastOnce.value = true
 }
 
 function onError (event: Event) {
-  console.info({ event })
+  console.info('Got error event', event)
 }
 
 function onClose (event: CloseEvent) {
+  console.info('onClose', event)
   if (!event.wasClean) {
     connected.value = false
     socket = null
-    const reason = event.reason ? event.reason : `code: ${event.code}`
-    errorText.value = `Error connecting to remote (${reason})`
 
-    setTimeout(createWebSocket, 2000)
+    if (enabled.value) {
+      const reason = event.reason ? event.reason : `code: ${event.code}`
+      errorText.value = `Error connecting to remote (${reason})`
+      console.info('Unclean shutdown, retrying...')
+      setTimeout(createWebSocket, 2000)
+    }
   }
 }
 
