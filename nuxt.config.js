@@ -1,6 +1,9 @@
-/** @type {import('@nuxt/types').Configuration} **/
+/** @type {import('@nuxt/types').NuxtConfig} **/
 const configuration = {
   mode: 'spa',
+  generate: {
+    fallback: true
+  },
   /*
   ** Headers of the page
   */
