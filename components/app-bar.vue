@@ -97,7 +97,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from '@vue/composition-api'
+import { defineComponent, ref, reactive } from '@vue/composition-api'
 import { useRemoteModel } from '~/models/remote-model'
 import { useLogModel } from '~/models/log-model'
 import { useUiModel } from '~/models/ui-model'
@@ -110,10 +110,6 @@ export default defineComponent({
     OpenLogDialog
   },
   setup () {
-    const remoteModel = useRemoteModel()
-    const logModel = useLogModel()
-    const uiModel = useUiModel()
-
     const filterField = ref<any | null>(null)
 
     function focusSearchField () {
@@ -126,9 +122,9 @@ export default defineComponent({
     return {
       filterField,
       focusSearchField,
-      logModel,
-      remoteModel,
-      uiModel
+      logModel: reactive(useLogModel()),
+      remoteModel: reactive(useRemoteModel()),
+      uiModel: reactive(useUiModel())
     }
   }
 })

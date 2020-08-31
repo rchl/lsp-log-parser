@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+import { defineComponent, reactive } from '@vue/composition-api'
 import appBar from '~/components/app-bar.vue'
 import appDrawer from '~/components/app-drawer.vue'
 import logView from '~/components/log-view.vue'
@@ -46,12 +46,9 @@ export default defineComponent({
     logView
   },
   setup () {
-    const logModel = useLogModel()
-    const uiModel = useUiModel()
-
     return {
-      logModel,
-      uiModel
+      logModel: reactive(useLogModel()),
+      uiModel: reactive(useUiModel())
     }
   }
 })

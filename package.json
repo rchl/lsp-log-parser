@@ -21,23 +21,23 @@
     }
   },
   "dependencies": {
-    "@vue/composition-api": "^1.0.0-beta.6",
-    "nuxt": "^2.14.0",
+    "@vue/composition-api": "^1.0.0-beta.11",
+    "nuxt": "^2.14.4",
     "vue-json-tree": "^0.4.3",
     "vue-shortkey": "^3.1.7"
   },
   "devDependencies": {
-    "@nuxt/types": "^2.14.0",
+    "@nuxt/types": "^2.14.4",
     "@nuxt/typescript-build": "^2.0.2",
     "@nuxtjs/eslint-config-typescript": "^3.0.0",
     "@nuxtjs/eslint-module": "^2.0.0",
     "@nuxtjs/stylelint-module": "^4.0.0",
     "@nuxtjs/vuetify": "^1.11.2",
     "babel-eslint": "^10.0.1",
-    "eslint": "^7.6.0",
+    "eslint": "^7.7.0",
     "eslint-plugin-nuxt": "^1.0.0",
     "husky": "^4.2.5",
-    "lint-staged": "^10.2.11",
+    "lint-staged": "^10.2.13",
     "stylelint": "^13.6.1"
   }
 }

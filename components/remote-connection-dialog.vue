@@ -49,7 +49,7 @@ export default defineComponent({
     })
 
     return {
-      remoteModel,
+      remoteModel: reactive(remoteModel),
       state
     }
   }

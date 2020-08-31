@@ -109,7 +109,7 @@ export default defineComponent({
     return {
       parseLog,
       state,
-      uiModel
+      uiModel: reactive(uiModel)
     }
   }
 })

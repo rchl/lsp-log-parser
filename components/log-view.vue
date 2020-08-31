@@ -90,7 +90,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onUnmounted, ref, watch } from '@vue/composition-api'
+import { defineComponent, onMounted, onUnmounted, ref, watch, reactive } from '@vue/composition-api'
 import MessagePayload from '~/components/message-payload.vue'
 import { useLogModel, Message } from '~/models/log-model'
 import { useRemoteModel } from '~/models/remote-model'
@@ -102,7 +102,6 @@ export default defineComponent({
   },
   setup () {
     const logModel = useLogModel()
-    const remoteModel = useRemoteModel()
     const uiModel = useUiModel()
 
     const state = {
@@ -212,15 +211,15 @@ export default defineComponent({
 
     return {
       copyToClipboard,
-      logModel,
+      logModel: reactive(logModel),
       getMessageClass,
       getMessageColor,
-      remoteModel,
+      remoteModel: reactive(useRemoteModel()),
       scrollMessageIntoView,
       setHovered,
       state,
       toggleExpand,
-      uiModel
+      uiModel: reactive(uiModel)
     }
   }
 })

@@ -44,20 +44,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from '@vue/composition-api'
+import { defineComponent, ref, reactive } from '@vue/composition-api'
 import { useLogModel } from '~/models/log-model'
 import { useUiModel } from '~/models/ui-model'
 
 export default defineComponent({
   setup () {
-    const activeIndex = ref(0)
-    const logModel = useLogModel()
-    const uiModel = useUiModel()
-
     return {
-      activeIndex,
-      logModel,
-      uiModel
+      activeIndex: ref(0),
+      logModel: reactive(useLogModel()),
+      uiModel: reactive(useUiModel())
     }
   }
 })
