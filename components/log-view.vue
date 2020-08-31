@@ -50,10 +50,10 @@
               {{ uiModel.ICON_TYPES[line.type] }}
             </v-icon>
             <v-expand-transition>
-              <div v-if="line.isExpanded && line.payload">
+              <div v-if="line.isExpanded">
                 <message-payload :message="line" />
-                <div class="text-right">
-                  <v-btn light @click.stop="line && line.payload && copyToClipboard(line.payload)">
+                <div v-if="line.payload" class="text-right">
+                  <v-btn light @click.stop="line && copyToClipboard(line.payload)">
                     <v-icon>mdi-content-copy</v-icon>
                     <span>Copy payload</span>
                   </v-btn>
@@ -244,6 +244,8 @@ export default defineComponent({
 }
 
 .payload-container {
+  background: #fff;
+  color: #000;
   cursor: initial;
   text-align: left;
 }
@@ -254,15 +256,13 @@ export default defineComponent({
 </style>
 
 <style>
-.json-tree-root {
-  margin-top: 0;
+.vjs-tree {
+  font-family: Menlo, Monaco, Consolas, Bitstream Vera Sans Mono, monospace;
+  font-size: 12px;
 }
 
-.json-tree-sign {
-  color: lightgrey;
-}
-
-.json-tree-value {
+.vjs-value__string {
+  color: #298613 !important;
   white-space: pre-wrap !important;
 }
 </style>

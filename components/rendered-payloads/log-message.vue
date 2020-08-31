@@ -1,5 +1,5 @@
 <template>
-  <v-alert :type="alertType" :icon="alertType ? null : 'mdi-console-line'" rounded="0">
+  <v-alert :type="alertType" :icon="alertType ? null : 'mdi-console-line'" rounded="0" class="ma-0">
     <span class="pre-wrap">{{ payload.message }}</span>
   </v-alert>
 </template>

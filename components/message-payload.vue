@@ -1,34 +1,47 @@
 <template>
   <div class="mt-2 mb-1 payload-container rounded" @click.stop>
     <div class="rounded overflow-hidden">
-      <v-tabs v-model="message.payloadTabIndex" light>
-        <v-tab v-for="tab in messageTabs" :key="tab">
-          {{ tab }}
-        </v-tab>
-      </v-tabs>
-      <v-tabs-items v-model="message.payloadTabIndex">
-        <v-tab-item v-for="tab in messageTabs" :key="tab">
-          <div :is="renderedComponent" v-if="tab === 'rendered'" :payload="message.payload" />
-          <template v-else>
-            <span v-if="typeof(message.payload) === 'string'" class="pa-2 payload payload--text">{{ message.payload }}</span>
-            <json-tree v-else :data="message.payload" class="payload" />
-          </template>
-        </v-tab-item>
-      </v-tabs-items>
+      <div v-if="!message.payload" class="grey lighten-1 text-center">
+        &lt;empty&gt;
+      </div>
+      <template v-else>
+        <v-tabs v-model="message.payloadTabIndex" light>
+          <v-tab v-for="tab in messageTabs" :key="tab">
+            {{ tab }}
+          </v-tab>
+        </v-tabs>
+        <v-tabs-items v-model="message.payloadTabIndex">
+          <v-tab-item v-for="tab in messageTabs" :key="tab">
+            <div :is="renderedComponent" v-if="tab === 'rendered'" :payload="message.payload" />
+            <div v-else class="pa-2">
+              <span v-if="typeof(message.payload) === 'string'" class="payload payload--text">{{ message.payload }}</span>
+              <vue-json-pretty
+                v-else
+                :data="message.payload"
+                :show-line="false"
+                :show-double-quotes="false"
+                :highlight-mouseover-node="false"
+                class="payload"
+              />
+            </div>
+          </v-tab-item>
+        </v-tabs-items>
+      </template>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 // @ts-ignore
-import JsonTree from 'vue-json-tree'
+import VueJsonPretty from 'vue-json-pretty'
 import { defineComponent, PropType } from '@vue/composition-api'
 import { Message } from '~/models/log-model'
 import RenderedLogMessage from '~/components/rendered-payloads/log-message.vue'
+import TextDocumentFormattingMessage from '~/components/rendered-payloads/text-document-formatting.vue'
 
 export default defineComponent({
   components: {
-    JsonTree
+    VueJsonPretty
   },
   props: {
     message: {
@@ -47,6 +60,8 @@ export default defineComponent({
         if (!message.toServer) {
           if (message.name === 'window/logMessage' || message.name === 'window/showMessage') {
             renderedComponent = RenderedLogMessage
+          } else if (message.name === 'textDocument/formatting') {
+            renderedComponent = TextDocumentFormattingMessage
           }
         }
       }
@@ -71,8 +86,6 @@ export default defineComponent({
   overflow: auto;
 
   &--text {
-    background: #fff;
-    color: #000;
     display: block;
     font-family: monospace !important;
     font-size: small !important;
