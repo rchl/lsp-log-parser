@@ -10,20 +10,20 @@
           Attempting to connect to server at port 9981...
         </p>
         <v-alert
-          v-if="remoteModel.hasConnectedAtLeastOnce && remoteModel.errorText"
+          v-if="remoteModel.hasConnectedAtLeastOnce.value && remoteModel.errorText.value"
           border="left"
           dense
           colored-border
           type="error"
           elevation="2"
         >
-          {{ remoteModel.errorText }}
+          {{ remoteModel.errorText.value }}
         </v-alert>
       </v-card-text>
 
       <v-card-actions>
         <v-spacer />
-        <v-btn text @click="remoteModel.enabled = false">
+        <v-btn text @click="remoteModel.enabled.value = false">
           Cancel
         </v-btn>
         <v-spacer />
@@ -49,7 +49,7 @@ export default defineComponent({
     })
 
     return {
-      remoteModel: reactive(remoteModel),
+      remoteModel,
       state
     }
   }

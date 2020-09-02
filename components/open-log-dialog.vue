@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="uiModel.logDialogVisible" max-width="600px">
+  <v-dialog v-model="uiModel.logDialogVisible.value" max-width="600px">
     <v-card>
       <v-card-title class="headline">
         Paste the log and press the button to parse
@@ -30,7 +30,7 @@
             <v-btn
               v-shortkey="[cmdOrCtrl, 'enter']"
               color="primary"
-              @shortkey.native="uiModel.logDialogVisible ? parseLog() : null"
+              @shortkey.native="uiModel.logDialogVisible.value ? parseLog() : null"
               @click="parseLog"
               v-on="on"
             >
@@ -109,7 +109,7 @@ export default defineComponent({
     return {
       parseLog,
       state,
-      uiModel: reactive(uiModel)
+      uiModel
     }
   }
 })

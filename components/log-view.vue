@@ -1,11 +1,11 @@
 <template>
   <div class="pa-6">
     <v-container class="main">
-      <v-alert v-if="remoteModel.connected" type="info" outlined>
+      <v-alert v-if="remoteModel.connected.value" type="info" outlined>
         Log view is limited to {{ logModel.REMOTE_MESSAGE_COUNT_LIMIT }} latest messages
       </v-alert>
 
-      <div v-if="logModel.parsedLines.length" class="d-flex justify-space-between mb-6">
+      <div v-if="logModel.parsedLines.value.length" class="d-flex justify-space-between mb-6">
         <h2 class="headline">
           Client
         </h2>
@@ -14,7 +14,7 @@
         </h2>
       </div>
 
-      <template v-for="line in uiModel.filteredLines">
+      <template v-for="line in uiModel.filteredLines.value">
         <div
           :key="line.id"
           class="d-flex flex-column"
@@ -72,7 +72,7 @@
         <v-btn
           v-shortkey="[cmdOrCtrl, 'x']"
           fixed
-          :disabled="logModel.parsedLines.length === 0"
+          :disabled="logModel.parsedLines.value.length === 0"
           fab
           bottom
           right
@@ -90,7 +90,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onUnmounted, ref, watch, reactive } from '@vue/composition-api'
+import { defineComponent, onMounted, onUnmounted, ref, watch } from '@vue/composition-api'
 import MessagePayload from '~/components/message-payload.vue'
 import { useLogModel, Message } from '~/models/log-model'
 import { useRemoteModel } from '~/models/remote-model'
@@ -211,15 +211,15 @@ export default defineComponent({
 
     return {
       copyToClipboard,
-      logModel: reactive(logModel),
+      logModel,
       getMessageClass,
       getMessageColor,
-      remoteModel: reactive(useRemoteModel()),
+      remoteModel: useRemoteModel(),
       scrollMessageIntoView,
       setHovered,
       state,
       toggleExpand,
-      uiModel: reactive(uiModel)
+      uiModel
     }
   }
 })

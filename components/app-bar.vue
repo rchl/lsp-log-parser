@@ -8,9 +8,9 @@
           v-shortkey="[cmdOrCtrl, 'o']"
           color="primary"
           class="mr-2"
-          :disabled="remoteModel.enabled"
-          @click="uiModel.logDialogVisible = true"
-          @shortkey.native="uiModel.logDialogVisible = true"
+          :disabled="remoteModel.enabled.value"
+          @click="uiModel.logDialogVisible.value = true"
+          @shortkey.native="uiModel.logDialogVisible.value = true"
           v-on="on"
         >
           Open log
@@ -25,18 +25,18 @@
         <v-btn
           v-shortkey="[cmdOrCtrl, 'd']"
           class="mr-2"
-          :color="remoteModel.connected ? 'error' : 'primary'"
-          :outlined="!remoteModel.connected"
-          @shortkey.native="remoteModel.enabled = !remoteModel.enabled"
-          @click="remoteModel.enabled = !remoteModel.enabled"
+          :color="remoteModel.connected.value ? 'error' : 'primary'"
+          :outlined="!remoteModel.connected.value"
+          @shortkey.native="remoteModel.enabled.value = !remoteModel.enabled.value"
+          @click="remoteModel.enabled.value = !remoteModel.enabled.value"
           v-on="on"
         >
           <v-icon>
-            {{ remoteModel.connected ? 'mdi-lan-disconnect' : 'mdi-lan-connect' }}
+            {{ remoteModel.connected.value ? 'mdi-lan-disconnect' : 'mdi-lan-connect' }}
           </v-icon>
         </v-btn>
       </template>
-      <span>{{ remoteModel.connected ? 'Disconnect from remote' : 'Connect to remote websocket server' }} ({{ cmdOrCtrl }}-D)</span>
+      <span>{{ remoteModel.connected.value ? 'Disconnect from remote' : 'Connect to remote websocket server' }} ({{ cmdOrCtrl }}-D)</span>
     </v-tooltip>
     <remote-connection-dialog />
 
@@ -44,10 +44,10 @@
 
     <v-text-field
       ref="filterField"
-      v-model="uiModel.queryText"
+      v-model="uiModel.queryText.value"
       v-shortkey="['/']"
       class="mr-2"
-      :disabled="!logModel.parsedLines.length"
+      :disabled="!logModel.parsedLines.value.length"
       placeholder="Filter by text ('/' to focus)"
       dense
       solo
@@ -97,7 +97,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive } from '@vue/composition-api'
+import { defineComponent, ref } from '@vue/composition-api'
 import { useRemoteModel } from '~/models/remote-model'
 import { useLogModel } from '~/models/log-model'
 import { useUiModel } from '~/models/ui-model'
@@ -122,9 +122,9 @@ export default defineComponent({
     return {
       filterField,
       focusSearchField,
-      logModel: reactive(useLogModel()),
-      remoteModel: reactive(useRemoteModel()),
-      uiModel: reactive(useUiModel())
+      logModel: useLogModel(),
+      remoteModel: useRemoteModel(),
+      uiModel: useUiModel()
     }
   }
 })
