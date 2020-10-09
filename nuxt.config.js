@@ -1,6 +1,6 @@
 /** @type {import('@nuxt/types').NuxtConfig} **/
 const configuration = {
-  mode: 'spa',
+  // mode: 'spa',
   target: 'static',
   generate: {
     fallback: true
@@ -36,7 +36,8 @@ const configuration = {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    { src: '~/plugins/vue-shortkey', mode: 'client' },
+    '~/plugins/vue-shortkey.client',
+    '~/plugins/vue-shortkey.server',
     '~/plugins/composition-api'
   ],
   /*
