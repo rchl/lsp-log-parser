@@ -50,6 +50,13 @@
               {{ uiModel.ICON_TYPES[line.type] }}
             </v-icon>
             <v-expand-transition>
+              <div v-if="!line.isExpanded">
+                <div class="caption text-truncate pa-1 mt-1 rounded" :class="getPayloadSummaryColor(line)">
+                  {{ line.payload ? line.payload : '(empty)' }}
+                </div>
+              </div>
+            </v-expand-transition>
+            <v-expand-transition>
               <div v-if="line.isExpanded">
                 <message-payload :message="line" />
                 <div v-if="line.payload" class="text-right">
@@ -182,31 +189,34 @@ export default defineComponent({
     }
 
     function toggleExpand (message: Message) {
-      message.isExpanded = !message.isExpanded
+      message.isExpanded = !message.isExpanded && message.payload !== undefined
     }
 
     function getMessageClass (message: Message) {
-      const classes = ['message', 'd-inline-block', `l-${message.id}`]
-
-      if (message.toServer) {
-        classes.push('mr-auto')
-      } else {
-        classes.push('ml-auto text-right')
-      }
-
-      return classes
+      return ['message', 'd-inline-block', `l-${message.id}`, message.toServer ? 'mr-auto' : 'ml-auto text-right']
     }
 
     function getMessageColor (message: Message) {
+      let color
       if (state.hoveredPairKey.value && state.hoveredPairKey.value === message.pairKey) {
-        return 'orange darken-2'
+        color = 'orange'
+      } else if (message.isError) {
+        color = 'red lighten-2'
+      } else {
+        color = message.toServer ? 'blue lighten-1' : 'brown'
       }
+      return color
+    }
 
+    function getPayloadSummaryColor (message: Message) {
+      let color = ''
       if (message.isError) {
-        return 'red'
+        color = 'red'
+      } else {
+        color = message.toServer ? 'blue' : 'brown'
       }
 
-      return message.toServer ? 'blue lighten-1' : 'brown'
+      return `${color} lighten-4 grey--text text--darken-3`
     }
 
     return {
@@ -214,6 +224,7 @@ export default defineComponent({
       logModel,
       getMessageClass,
       getMessageColor,
+      getPayloadSummaryColor,
       remoteModel: useRemoteModel(),
       scrollMessageIntoView,
       setHovered,

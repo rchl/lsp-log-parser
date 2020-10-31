@@ -9,7 +9,7 @@ export interface Message {
   // A key that is equal for two related request-response calls.
   pairKey?: string
   name: string
-  payload?: string
+  payload?: string | object
   payloadTabIndex: number
   toServer: boolean
   isError?: boolean
