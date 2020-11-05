@@ -7,7 +7,7 @@ export interface Message {
   // A key that is equal for two related request-response calls.
   pairKey?: string
   name: string
-  payload?: string | object
+  payload?: string | Record<string, any>
   payloadTabIndex: number
   toServer: boolean
   isError?: boolean

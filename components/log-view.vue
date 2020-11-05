@@ -125,7 +125,9 @@ export default defineComponent({
     }
 
     class ScrollTracker {
+      // eslint-disable-next-line no-undef
       _timeout: NodeJS.Timeout | null
+      // eslint-disable-next-line no-undef
       _onScrollBound: EventListener
       isScrolledToBottom: boolean
 

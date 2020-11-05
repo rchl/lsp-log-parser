@@ -1,16 +1,17 @@
 <template>
   <v-alert :type="alertType" :icon="alertType ? null : 'mdi-console-line'" rounded="0" class="ma-0">
-    <span class="pre-wrap">{{ payload.message }}</span>
+    <span class="pre-wrap">{{ typeof payload === 'string' ? payload : payload.message }}</span>
   </v-alert>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from '@vue/composition-api'
+import { Message } from '~/models/log-model'
 
 export default defineComponent({
   props: {
     payload: {
-      type: Object as PropType<any>,
+      type: Object as PropType<NonNullable<Message['payload']>>,
       required: true
     }
   },
@@ -21,8 +22,9 @@ export default defineComponent({
       3: 'info',
       4: ''
     }
+    const messageType = typeof props.payload === 'string' ? '' : props.payload.type
     return {
-      alertType: mapping[props.payload.type]
+      alertType: mapping[messageType]
     }
   }
 })

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="typeof payload !== 'string'">
     <v-expansion-panels hover>
       <v-expansion-panel v-for="(change, index) in payload" :key="index">
         <v-expansion-panel-header>
@@ -16,11 +16,12 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from '@vue/composition-api'
+import { Message } from '~/models/log-model'
 
 export default defineComponent({
   props: {
     payload: {
-      type: Array as PropType<any>,
+      type: Array as PropType<NonNullable<Message['payload']>>,
       required: true
     }
   },
