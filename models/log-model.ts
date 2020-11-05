@@ -1,7 +1,5 @@
 import { ref } from '@vue/composition-api'
 
-type MessageMapping = Record<string, Message>
-
 export interface Message {
   id: number
   isExpanded?: boolean
@@ -20,6 +18,8 @@ export interface Message {
   serverName?: string
 }
 
+type MessageMapping = Record<string, Message>
+
 export interface ParseResults {
   lines: Message[]
   filters: string[]
@@ -35,7 +35,7 @@ const REMOTE_MESSAGE_COUNT_LIMIT = 220
 const parsedFilters = ref<ParseResults['filters']>([])
 const parsedLines = ref<ParseResults['lines']>([])
 const selectedFilters = ref<SelectedFilter[]>([])
-const messageMapping: MessageMapping = {}
+let messageMapping: MessageMapping = {}
 
 function setParseResults (data: ParseResults) {
   clearMessages()
@@ -89,6 +89,7 @@ function clearMessages () {
   parsedFilters.value = []
   parsedLines.value = []
   selectedFilters.value = []
+  messageMapping = {}
 }
 
 export function useLogModel () {
