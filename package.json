@@ -12,7 +12,7 @@
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore ."
   },
   "lint-staged": {
-    "*.{js,vue}": "npm run lint",
+    "*.{js,vue}": "yarn lint",
     "*.{css,vue}": "stylelint"
   },
   "husky": {
@@ -22,22 +22,22 @@
   },
   "dependencies": {
     "@vue/composition-api": "^1.0.0-beta.11",
-    "nuxt": "^2.14.6",
-    "vue-json-pretty": "^1.7.0",
+    "nuxt": "^2.14.7",
+    "vue-json-pretty": "^1.7.1",
     "vue-shortkey": "^3.1.7"
   },
   "devDependencies": {
-    "@nuxt/types": "^2.14.6",
+    "@nuxt/types": "^2.14.7",
     "@nuxt/typescript-build": "^2.0.3",
-    "@nuxtjs/eslint-config-typescript": "^3.0.0",
-    "@nuxtjs/eslint-module": "^2.0.0",
+    "@nuxtjs/eslint-config-typescript": "^4.0.0",
+    "@nuxtjs/eslint-module": "^3.0.0",
     "@nuxtjs/stylelint-module": "^4.0.0",
     "@nuxtjs/vuetify": "^1.11.2",
     "babel-eslint": "^10.0.1",
-    "eslint": "^7.10.0",
+    "eslint": "^7.12.1",
     "eslint-plugin-nuxt": "^1.0.0",
     "husky": "^4.3.0",
-    "lint-staged": "^10.4.0",
+    "lint-staged": "^10.5.1",
     "stylelint": "^13.7.2"
   }
 }
