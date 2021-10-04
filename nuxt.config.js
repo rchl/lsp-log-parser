@@ -1,7 +1,7 @@
 /** @type {import('@nuxt/types').NuxtConfig} **/
 const configuration = {
   target: 'static',
-  mode: 'spa',
+  ssr: false,
   generate: {
     fallback: true
   },

@@ -5,12 +5,12 @@
         &lt;empty&gt;
       </div>
       <template v-else>
-        <v-tabs v-model="message.payloadTabIndex" light>
+        <v-tabs v-model="selectedTabIndex" light>
           <v-tab v-for="tab in messageTabs" :key="tab">
             {{ tab }}
           </v-tab>
         </v-tabs>
-        <v-tabs-items v-model="message.payloadTabIndex">
+        <v-tabs-items v-model="selectedTabIndex">
           <v-tab-item v-for="tab in messageTabs" :key="tab">
             <div :is="renderedComponent" v-if="tab === 'rendered'" :payload="message.payload" />
             <div v-else class="pa-2">
@@ -34,7 +34,8 @@
 <script lang="ts">
 // @ts-ignore
 import VueJsonPretty from 'vue-json-pretty'
-import { defineComponent, PropType } from '@vue/composition-api'
+import { defineComponent } from '@vue/composition-api'
+import type { PropType } from '@vue/composition-api'
 import { Message } from '~/models/log-model'
 import RenderedLogMessage from '~/components/rendered-payloads/log-message.vue'
 import TextDocumentFormattingMessage from '~/components/rendered-payloads/text-document-formatting.vue'
@@ -73,6 +74,7 @@ export default defineComponent({
     }
 
     return {
+      selectedTabIndex: 0,
       renderedComponent,
       messageTabs
     }

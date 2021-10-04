@@ -75,7 +75,7 @@
     </v-container>
 
     <v-tooltip left>
-      <template v-slot:activator="{ on }">
+      <template #activator="{ on }">
         <v-btn
           v-shortkey="[cmdOrCtrl, 'x']"
           fixed

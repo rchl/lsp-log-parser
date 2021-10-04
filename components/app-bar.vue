@@ -3,7 +3,7 @@
     <v-app-bar-nav-icon class="mr-2" @click.stop="uiModel.toggleDrawer()" />
 
     <v-tooltip bottom>
-      <template v-slot:activator="{ on }">
+      <template #activator="{ on }">
         <v-btn
           v-shortkey="[cmdOrCtrl, 'o']"
           color="primary"
@@ -21,7 +21,7 @@
     <open-log-dialog />
 
     <v-tooltip bottom>
-      <template v-slot:activator="{ on }">
+      <template #activator="{ on }">
         <v-btn
           v-shortkey="[cmdOrCtrl, 'd']"
           class="mr-2"
@@ -58,7 +58,7 @@
     />
 
     <v-tooltip bottom>
-      <template v-slot:activator="{ on }">
+      <template #activator="{ on }">
         <v-btn
           class="ml-2"
           ripple
@@ -76,7 +76,7 @@
       <span>LSP specification</span>
     </v-tooltip>
     <v-tooltip bottom>
-      <template v-slot:activator="{ on }">
+      <template #activator="{ on }">
         <v-btn
           class="ml-2"
           ripple

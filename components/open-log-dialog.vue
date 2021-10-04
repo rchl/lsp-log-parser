@@ -26,7 +26,7 @@
       <v-card-actions>
         <v-spacer />
         <v-tooltip left>
-          <template v-slot:activator="{ on }">
+          <template #activator="{ on }">
             <v-btn
               v-shortkey="[cmdOrCtrl, 'enter']"
               color="primary"

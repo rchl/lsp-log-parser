@@ -99,8 +99,7 @@ function onMessage (event: MessageEvent) {
     time: new Date(data.time).toLocaleTimeString(),
     timestamp: data.time,
     toServer,
-    serverName: data.server,
-    payloadTabIndex: 0
+    serverName: data.server
   }
 
   if (data.params) {
