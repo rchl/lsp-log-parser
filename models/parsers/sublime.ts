@@ -27,7 +27,7 @@ const parser: Parser = {
           id: ++id,
           isExpanded: false,
           name: type,
-          type,
+          type: type as Message['type'],
           serverName,
           toServer
         }
