@@ -13,7 +13,7 @@ export interface Message {
   time?: string
   timestamp?: number
   timeLatency?: number
-  type?: string
+  type?: 'reqres' | 'notification' | 'error'
   serverName?: string
 }
 
@@ -41,7 +41,7 @@ function setParseResults (data: ParseResults) {
   parsedFilters.value = data.filters
   parsedLines.value = data.lines
   for (const line of parsedLines.value) {
-    updateResponse(line)
+    updateRelatedMessage(line)
   }
   selectedFilters.value = parsedFilters.value.map(filter => ({
     name: filter,
@@ -54,7 +54,16 @@ function appendLogMessage (message: Message) {
     parsedLines.value.splice(0, 20)
   }
 
-  updateResponse(message)
+  updateRelatedMessage(message)
+
+  // If an error, and previous was also an error, merge together.
+  if (message.type === 'error') {
+    const previousMessage = parsedLines.value[parsedLines.value.length - 1]
+    if (previousMessage && previousMessage.type === message.type && previousMessage.serverName === message.serverName) {
+      previousMessage.payload += '\n' + message.payload
+      return
+    }
+  }
 
   parsedLines.value.push(message)
 
@@ -67,7 +76,7 @@ function appendLogMessage (message: Message) {
   }
 }
 
-function updateResponse (message: Message) {
+function updateRelatedMessage (message: Message) {
   const { pairKey } = message
   if (pairKey) {
     const request = messageMapping[pairKey]
