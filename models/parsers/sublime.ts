@@ -53,7 +53,7 @@ const parser: Parser = {
             isExpanded: false,
             name: `(${serverName}) ${text}`,
             toServer: false,
-            type: 'info',
+            type: 'info' as Message['type'],
             serverName
           })
         } else {
@@ -62,7 +62,7 @@ const parser: Parser = {
             isExpanded: false,
             name: line,
             toServer: false,
-            type: 'info'
+            type: 'info' as Message['type']
           })
         }
       }

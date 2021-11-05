@@ -13,7 +13,7 @@ export interface Message {
   time?: string
   timestamp?: number
   timeLatency?: number
-  type?: 'reqres' | 'notification' | 'error'
+  type?: 'reqres' | 'notification' | 'error' | 'info'
   serverName?: string
 }
 
