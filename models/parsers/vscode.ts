@@ -42,7 +42,7 @@ const parser: Parser = {
         const messageText = newHeaderMatch[5].trim().replace(/(^'|'\.?$)/g, '')
         message.name = messageText
         message.time = newHeaderMatch[2]
-        message.type = newHeaderMatch[1].toLowerCase()
+        message.type = newHeaderMatch[1].toLowerCase() as Message['type']
         message.toServer = direction === 'sending'
       } else {
         if (!message.name) {
