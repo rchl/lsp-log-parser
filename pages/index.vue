@@ -1,34 +1,43 @@
 <template>
-  <v-app>
-    <app-bar />
-    <app-drawer />
-    <v-main>
-      <h1 v-if="logModel.parsedLines.length === 0" class="base-title text-center">
-        LSP Log Parser
-      </h1>
-      <log-view v-else class="height-100" />
+    <v-app>
+        <app-bar />
+        <app-drawer />
+        <v-main>
+            <h1
+                v-if="logModel.parsedLines.length === 0"
+                class="base-title text-center">
+                LSP Log Parser
+            </h1>
+            <log-view
+                v-else
+                class="height-100" />
 
-      <v-dialog v-model="uiModel.errorDialogVisible" max-width="290">
-        <v-card>
-          <v-card-title class="headline">
-            Error
-          </v-card-title>
+            <v-dialog
+                v-model="uiModel.errorDialogVisible"
+                max-width="290">
+                <v-card>
+                    <v-card-title class="headline">
+                        Error
+                    </v-card-title>
 
-          <v-card-text>
-            {{ uiModel.errorDialogText }}
-          </v-card-text>
+                    <v-card-text>
+                        {{ uiModel.errorDialogText }}
+                    </v-card-text>
 
-          <v-card-actions>
-            <v-spacer />
+                    <v-card-actions>
+                        <v-spacer />
 
-            <v-btn color="primary" text @click="uiModel.errorDialogVisible = false">
-              Close
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </v-main>
-  </v-app>
+                        <v-btn
+                            color="primary"
+                            text
+                            @click="uiModel.errorDialogVisible = false">
+                            Close
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+        </v-main>
+    </v-app>
 </template>
 
 <script lang="ts">
@@ -40,17 +49,17 @@ import { useLogModel } from '~/models/log-model'
 import { useUiModel } from '~/models/ui-model'
 
 export default defineComponent({
-  components: {
-    appBar,
-    appDrawer,
-    logView
-  },
-  setup () {
-    return {
-      logModel: reactive(useLogModel()),
-      uiModel: reactive(useUiModel())
-    }
-  }
+    components: {
+        appBar,
+        appDrawer,
+        logView,
+    },
+    setup() {
+        return {
+            logModel: reactive(useLogModel()),
+            uiModel: reactive(useUiModel()),
+        }
+    },
 })
 </script>
 

@@ -1,34 +1,53 @@
 <template>
-  <div class="mt-2 mb-1 payload-container rounded" @click.stop>
-    <div class="rounded overflow-hidden">
-      <div v-if="!message.payload" class="grey lighten-1 text-center">
-        &lt;empty&gt;
-      </div>
-      <template v-else>
-        <v-tabs v-model="selectedTabIndex" light>
-          <v-tab v-for="tab in messageTabs" :key="tab">
-            {{ tab }}
-          </v-tab>
-        </v-tabs>
-        <v-tabs-items v-model="selectedTabIndex">
-          <v-tab-item v-for="tab in messageTabs" :key="tab">
-            <div :is="renderedComponent" v-if="tab === 'rendered'" :payload="message.payload" />
-            <div v-else class="pa-2">
-              <span v-if="typeof(message.payload) === 'string'" class="payload payload--text">{{ message.payload }}</span>
-              <vue-json-pretty
-                v-else
-                :data="message.payload"
-                :show-line="false"
-                :show-double-quotes="false"
-                :highlight-mouseover-node="false"
-                class="payload"
-              />
+    <div
+        class="mt-2 mb-1 payload-container rounded"
+        @click.stop>
+        <div class="rounded overflow-hidden">
+            <div
+                v-if="!message.payload"
+                class="grey lighten-1 text-center">
+                &lt;empty&gt;
             </div>
-          </v-tab-item>
-        </v-tabs-items>
-      </template>
+            <template v-else>
+                <v-tabs
+                    v-model="selectedTabIndex"
+                    light>
+                    <v-tab
+                        v-for="tab in messageTabs"
+                        :key="tab">
+                        {{ tab }}
+                    </v-tab>
+                </v-tabs>
+                <v-tabs-items v-model="selectedTabIndex">
+                    <v-tab-item
+                        v-for="tab in messageTabs"
+                        :key="tab">
+                        <div
+                            :is="renderedComponent"
+                            v-if="tab === 'rendered'"
+                            :payload="message.payload" />
+                        <div
+                            v-else
+                            class="pa-2">
+                            <span
+                                v-if="typeof(message.payload) === 'string'"
+                                class="payload payload--text">
+                                {{ message.payload }}
+                            </span>
+                            <vue-json-pretty
+                                v-else
+                                :data="message.payload"
+                                :show-line="false"
+                                :show-double-quotes="false"
+                                :highlight-mouseover-node="false"
+                                class="payload"
+                            />
+                        </div>
+                    </v-tab-item>
+                </v-tabs-items>
+            </template>
+        </div>
     </div>
-  </div>
 </template>
 
 <script lang="ts">
@@ -41,44 +60,44 @@ import RenderedLogMessage from '~/components/rendered-payloads/log-message.vue'
 import TextDocumentFormattingMessage from '~/components/rendered-payloads/text-document-formatting.vue'
 
 export default defineComponent({
-  components: {
-    VueJsonPretty
-  },
-  props: {
-    message: {
-      type: Object as PropType<Message>,
-      required: true
-    }
-  },
-  setup (props) {
-    const { message } = props
+    components: {
+        VueJsonPretty,
+    },
+    props: {
+        message: {
+            type: Object as PropType<Message>,
+            required: true,
+        },
+    },
+    setup(props) {
+        const { message } = props
 
-    let renderedComponent
-    const messageTabs = []
+        let renderedComponent
+        const messageTabs = []
 
-    if (message.payload) {
-      if (typeof (message.payload) !== 'string') {
-        if (!message.toServer) {
-          if (message.name === 'window/logMessage' || message.name === 'window/showMessage') {
-            renderedComponent = RenderedLogMessage
-          } else if (message.name === 'textDocument/formatting') {
-            renderedComponent = TextDocumentFormattingMessage
-          }
+        if (message.payload) {
+            if (typeof (message.payload) !== 'string') {
+                if (!message.toServer) {
+                    if (message.name === 'window/logMessage' || message.name === 'window/showMessage') {
+                        renderedComponent = RenderedLogMessage
+                    } else if (message.name === 'textDocument/formatting') {
+                        renderedComponent = TextDocumentFormattingMessage
+                    }
+                }
+            }
+
+            if (renderedComponent) {
+                messageTabs.push('rendered')
+            }
+            messageTabs.push('raw')
         }
-      }
 
-      if (renderedComponent) {
-        messageTabs.push('rendered')
-      }
-      messageTabs.push('raw')
-    }
-
-    return {
-      selectedTabIndex: 0,
-      renderedComponent,
-      messageTabs
-    }
-  }
+        return {
+            selectedTabIndex: 0,
+            renderedComponent,
+            messageTabs,
+        }
+    },
 })
 </script>
 

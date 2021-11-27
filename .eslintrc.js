@@ -1,15 +1,149 @@
 module.exports = {
-  root: true,
-  extends: [
-    '@nuxtjs/eslint-config-typescript',
-    'plugin:nuxt/recommended'
-  ],
-  // add your custom rules here
-  rules: {
-    'no-console': [
-      'error', {
-        allow: ['assert', 'warn', 'error', 'info', 'time', 'timeEnd']
-      }
-    ]
-  }
+    root: true,
+    env: {
+        browser: true,
+        commonjs: true,
+        es2020: true,
+        node: true,
+    },
+    extends: 'eslint:recommended',
+    parserOptions: {
+        sourceType: 'module',
+    },
+    // add your custom rules here
+    rules: {
+        'array-bracket-spacing': 'error',
+        'brace-style': 'error',
+        'comma-dangle': ['error', 'always-multiline'],
+        'comma-spacing': 'error',
+        'computed-property-spacing': 'error',
+        curly: 'error',
+        'dot-notation': 'error',
+        'eol-last': 'error',
+        eqeqeq: 'error',
+        'func-call-spacing': 'error',
+        indent: [
+            'error', 4, {
+                SwitchCase: 1,
+            },
+        ],
+        'keyword-spacing': 'error',
+        'linebreak-style': 'error',
+        'no-console': [
+            'error', {
+                allow: ['assert', 'warn', 'error', 'info', 'time', 'timeEnd'],
+            },
+        ],
+        'no-constructor-return': 'error',
+        'no-multi-spaces': ['error', { ignoreEOLComments: true }],
+        'no-multiple-empty-lines': ['error', { max: 1 }],
+        'no-tabs': 'error',
+        'no-template-curly-in-string': 'error',
+        'no-trailing-spaces': 'error',
+        'no-var': 'error',
+        'no-whitespace-before-property': 'error',
+        'object-curly-spacing': ['error', 'always'],
+        'one-var-declaration-per-line': ['error', 'always'],
+        'prefer-const': 'error',
+        'quote-props': ['error', 'as-needed'],
+        quotes: ['error', 'single'],
+        'padded-blocks': ['error', 'never'],
+        semi: ['error', 'never'],
+        'space-before-blocks': 'error',
+        'space-before-function-paren': ['error', 'never'],
+        'space-in-parens': 'error',
+        'space-infix-ops': 'error',
+    },
+    overrides: [
+        {
+            files: ['*.ts'],
+            extends: 'plugin:@typescript-eslint/recommended',
+            parserOptions: {
+                project: './tsconfig.json',
+                tsconfigRootDir: __dirname,
+            },
+            rules: {
+                indent: 'off',
+                'no-extra-parens': 'off',
+                'no-extra-semi': 'off',
+                quotes: 'off',
+                semi: 'off',
+                '@typescript-eslint/ban-ts-comment': 'off',
+                '@typescript-eslint/explicit-function-return-type': 'off',
+                '@typescript-eslint/explicit-module-boundary-types': 'off',
+                '@typescript-eslint/indent': [
+                    'error', 4, {
+                        SwitchCase: 1,
+                        FunctionDeclaration: { parameters: 'first' },
+                        FunctionExpression: { parameters: 'first' },
+                        CallExpression: { arguments: 'first' },
+                    },
+                ],
+                '@typescript-eslint/member-delimiter-style': 'error',
+                '@typescript-eslint/no-empty-interface': ['error', { allowSingleExtends: true }],
+                '@typescript-eslint/no-explicit-any': 'off',
+                '@typescript-eslint/no-extra-parens': 'error',
+                '@typescript-eslint/no-extra-semi': 'error',
+                '@typescript-eslint/no-require-imports': 'error',
+                '@typescript-eslint/no-unnecessary-qualifier': 'error',
+                '@typescript-eslint/no-useless-constructor': 'error',
+                '@typescript-eslint/quotes': ['error', 'single', { avoidEscape: true, allowTemplateLiterals: false }],
+                '@typescript-eslint/restrict-plus-operands': 'error',
+                '@typescript-eslint/semi': ['error', 'never'],
+            },
+        },
+        {
+            files: ['*.vue'],
+            extends: [
+                'plugin:vue/recommended',
+                'plugin:@typescript-eslint/recommended',
+            ],
+            parser: 'vue-eslint-parser',
+            parserOptions: {
+                parser: '@typescript-eslint/parser',
+                extraFileExtensions: ['vue'],
+                project: './tsconfig.json',
+                tsconfigRootDir: __dirname,
+            },
+            rules: {
+                '@typescript-eslint/ban-ts-comment': 'off',
+                'vue/arrow-spacing': 'error',
+                'vue/block-spacing': 'error',
+                'vue/brace-style': 'error',
+                'vue/comma-dangle': ['error', 'always-multiline'],
+                'vue/component-name-in-template-casing': ['error', 'kebab-case', {
+                    registeredComponentsOnly: false,
+                }],
+                'vue/eqeqeq': 'error',
+                'vue/html-closing-bracket-newline': 'off',
+                'vue/html-indent': ['error', 4],
+                'vue/html-self-closing': [
+                    'error', {
+                        html: { normal: 'never' },
+                    },
+                ],
+                'vue/key-spacing': 'error',
+                'vue/keyword-spacing': 'error',
+                // 'vue/max-attributes-per-line': ['error', {
+                //     singleline: 100,
+                //     multiline: {
+                //         max: 1,
+                //         allowFirstLine: false,
+                //     },
+                // }],
+                'vue/multi-word-component-names': 'off',
+                'vue/multiline-html-element-content-newline': ['error', {
+                    ignores: ['pre', 'textarea', 'a', 'nuxt-link'],
+                }],
+                'vue/no-deprecated-scope-attribute': 'error',
+                'vue/no-v-html': 'off',
+                'vue/object-curly-spacing': ['error', 'always'],
+                'vue/script-indent': ['error', 4, { switchCase: 1 }],
+                'vue/singleline-html-element-content-newline': 'off',
+                'vue/space-infix-ops': 'error',
+                'vue/valid-v-slot': 'error',
+                'vue/v-slot-style': 'error',
+            },
+        },
+    ],
 }
