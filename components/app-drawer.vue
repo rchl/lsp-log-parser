@@ -44,14 +44,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from '@vue/composition-api'
+import { defineComponent } from '@vue/composition-api'
 import { useLogModel } from '~/models/log-model'
 import { useUiModel } from '~/models/ui-model'
 
 export default defineComponent({
   setup () {
     return {
-      activeIndex: ref(0),
       logModel: useLogModel(),
       uiModel: useUiModel()
     }

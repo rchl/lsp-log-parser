@@ -1,13 +1,18 @@
 import { ref } from '@vue/composition-api'
 
+export interface LogProvider {
+  clear(): void
+}
+
 export interface Message {
   id: number
   isExpanded?: boolean
   requestId?: number
   // A key that is equal for two related request-response calls.
   pairKey?: string
-  name: string
+  name?: string
   payload?: string | Record<string, any>
+  payloadSummary?: string
   toServer: boolean
   isError?: boolean
   time?: string
@@ -16,8 +21,6 @@ export interface Message {
   type?: 'reqres' | 'notification' | 'error' | 'info'
   serverName?: string
 }
-
-type MessageMapping = Record<string, Message>
 
 export interface ParseResults {
   lines: Message[]
@@ -31,18 +34,20 @@ type SelectedFilter = {
 
 const REMOTE_MESSAGE_COUNT_LIMIT = 220
 
+const logProviders: LogProvider[] = []
 const parsedFilters = ref<ParseResults['filters']>([])
 const parsedLines = ref<ParseResults['lines']>([])
 const selectedFilters = ref<SelectedFilter[]>([])
-let messageMapping: MessageMapping = {}
+
+function registerLogProvider (logProvider: LogProvider): void {
+  console.assert(!logProviders.includes(logProvider), 'LogProvider already registered')
+  logProviders.push(logProvider)
+}
 
 function setParseResults (data: ParseResults) {
   clearMessages()
   parsedFilters.value = data.filters
   parsedLines.value = data.lines
-  for (const line of parsedLines.value) {
-    updateRelatedMessage(line)
-  }
   selectedFilters.value = parsedFilters.value.map(filter => ({
     name: filter,
     enabled: true
@@ -53,8 +58,6 @@ function appendLogMessage (message: Message) {
   if (parsedLines.value.length > REMOTE_MESSAGE_COUNT_LIMIT) {
     parsedLines.value.splice(0, 20)
   }
-
-  updateRelatedMessage(message)
 
   // If an error, and previous was also an error, merge together.
   if (message.type === 'error') {
@@ -76,28 +79,13 @@ function appendLogMessage (message: Message) {
   }
 }
 
-function updateRelatedMessage (message: Message) {
-  const { pairKey } = message
-  if (pairKey) {
-    const request = messageMapping[pairKey]
-    if (request) {
-      if (!message.name) {
-        message.name = request.name
-        if (message.timestamp && request.timestamp) {
-          message.timeLatency = message.timestamp - request.timestamp
-        }
-      }
-    } else {
-      messageMapping[pairKey] = message
-    }
-  }
-}
-
 function clearMessages () {
   parsedFilters.value = []
   parsedLines.value = []
   selectedFilters.value = []
-  messageMapping = {}
+  for (const logProvider of logProviders) {
+    logProvider.clear()
+  }
 }
 
 export function useLogModel () {
@@ -106,6 +94,7 @@ export function useLogModel () {
     clearMessages,
     parsedFilters,
     parsedLines,
+    registerLogProvider,
     REMOTE_MESSAGE_COUNT_LIMIT,
     selectedFilters,
     setParseResults

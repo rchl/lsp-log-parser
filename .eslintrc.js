@@ -8,7 +8,7 @@ module.exports = {
   rules: {
     'no-console': [
       'error', {
-        allow: ['assert', 'warn', 'error', 'info']
+        allow: ['assert', 'warn', 'error', 'info', 'time', 'timeEnd']
       }
     ]
   }

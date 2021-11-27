@@ -52,7 +52,7 @@
             <v-expand-transition>
               <div v-if="!line.isExpanded">
                 <div class="caption text-truncate pa-1 mt-1 rounded" :class="getPayloadSummaryColor(line)">
-                  {{ line.payload ? line.payload : '(empty)' }}
+                  {{ line.payloadSummary || line.payload || '(empty)' }}
                 </div>
               </div>
             </v-expand-transition>
@@ -185,11 +185,6 @@ export default defineComponent({
       }
     }
 
-    function scrollMessageIntoView (id: number) {
-      const messageElement = document.querySelector(`.l-${id}`) as HTMLElement
-      messageElement.scrollIntoView({ block: 'center', behavior: 'smooth' })
-    }
-
     function toggleExpand (message: Message) {
       message.isExpanded = !message.isExpanded && message.payload !== undefined
     }
@@ -228,9 +223,7 @@ export default defineComponent({
       getMessageColor,
       getPayloadSummaryColor,
       remoteModel: useRemoteModel(),
-      scrollMessageIntoView,
       setHovered,
-      state,
       toggleExpand,
       uiModel
     }

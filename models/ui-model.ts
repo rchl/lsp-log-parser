@@ -103,7 +103,7 @@ function messageMatchesSessionFilter (message: Message) {
 }
 
 function messageMatchesCategoryFilter (message: Message) {
-  if (selectedCategoryType.value === 'all') {
+  if (selectedCategoryType.value === 'all' || !message.name) {
     return true
   }
 
