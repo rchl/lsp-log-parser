@@ -144,10 +144,13 @@ class RemoteLogProvider implements LogProvider {
         if (method.startsWith('textDocument')) {
             const textDocumentMethod = method.slice('textDocument'.length + 1)
             if (isRequest) {
-                if (['completion', 'hover', 'documentHighlight'].includes(textDocumentMethod)) {
+                if (['completion', 'hover', 'documentHighlight', 'signatureHelp'].includes(textDocumentMethod)) {
                     result += `at (${payload.position.line}, ${payload.position.character}) for `
                 }
-                if (['didOpen', 'didClose', 'didChange', 'didSave', 'codeAction', 'completion', 'documentColor', 'documentHighlight', 'hover'].includes(textDocumentMethod)) {
+                if (textDocumentMethod === 'didOpen') {
+                    result += `langugageId: ${payload.textDocument.languageId}`
+                }
+                if (['didOpen', 'didClose', 'didChange', 'didSave', 'codeAction', 'completion', 'documentColor', 'documentHighlight', 'hover', 'signatureHelp'].includes(textDocumentMethod)) {
                     result += `uri: ${payload.textDocument.uri}`
                 }
             } else {
