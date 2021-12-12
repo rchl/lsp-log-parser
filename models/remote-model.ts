@@ -149,10 +149,10 @@ class RemoteLogProvider implements LogProvider {
                     result += `at (${payload.position.line}, ${payload.position.character}) for `
                 }
                 if (textDocumentMethod === 'didOpen') {
-                    result += `langugageId: ${payload.textDocument.languageId}, `
+                    result += `langugageId: ${(payload as lsp.DidOpenTextDocumentParams).textDocument.languageId}, `
                 }
                 if (['didOpen', 'didClose', 'didChange', 'didSave', 'codeAction', 'completion', 'documentColor', 'documentHighlight', 'hover', 'signatureHelp'].includes(textDocumentMethod)) {
-                    result += `uri: ${payload.textDocument.uri}`
+                    result += `uri: ${(payload as lsp.DidOpenTextDocumentParams).textDocument.uri}`
                 }
             } else {
                 if (textDocumentMethod === 'completion') {
@@ -166,13 +166,14 @@ class RemoteLogProvider implements LogProvider {
                         }
                     }
                 } else if (textDocumentMethod === 'documentHighlight') {
-                    result += `${payload.length} highlights`
+                    result += `${(payload as lsp.DocumentHighlight[]).length} highlights`
                 } else if (textDocumentMethod === 'codeAction') {
-                    result += `${payload.length} code actions`
+                    result += `${(payload as lsp.CodeAction[]).length} code actions`
                 }
             }
             if (textDocumentMethod === 'publishDiagnostics') {
-                result += `${payload.diagnostics.length} diagnostics for uri: ${payload.uri}`
+                const params: lsp.PublishDiagnosticsParams = payload
+                result += `${params.diagnostics.length} diagnostics for uri: ${params.uri}`
             }
         }
         return result
