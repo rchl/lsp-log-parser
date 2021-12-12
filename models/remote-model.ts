@@ -8,6 +8,72 @@ const hasConnectedAtLeastOnce = ref(false)
 const errorText = ref('')
 const logModel = useLogModel()
 
+type Outgoing = 1
+type Incoming = 2
+type Direction = Outgoing | Incoming
+
+function isRequestOrResponse(message: Base<Outgoing | Incoming>): message is RequestOrResponse<Outgoing | Incoming> {
+    return 'id' in message
+}
+
+function isRequest(message: RemoteMessage): message is OutgoingRequest | IncomingRequest {
+    return 'method' in message
+}
+
+function isIncoming(message: RequestOrResponse<Outgoing | Incoming> | Notification<Outgoing | Incoming>): message is RequestOrResponse<Incoming> | Notification<Incoming> {
+    return message.direction === 1
+}
+
+function isStderrMessage(message: RemoteMessage): message is IncomingStderrMessage {
+    return 'method' in message && message.method === 'stderr'
+}
+
+interface Base<Dir extends Direction> {
+    direction: Dir;
+    params: any;
+    server: string;
+    time: number;
+}
+
+interface IncomingStderrMessage extends Base<Incoming> {
+    method: 'stderr';
+    isError: true;
+}
+
+interface RequestOrResponse<Dir extends Direction> extends Base<Dir> {
+    id: any;
+}
+
+interface Notification<Dir extends Direction> extends Base<Dir> {
+    method: string;
+}
+
+interface IncomingNotification extends Notification<Outgoing> {
+    error?: 'Unhandled notification!';
+}
+
+interface OutgoingNotification extends Notification<Outgoing> {}
+
+interface IncomingRequest extends RequestOrResponse<Incoming> {
+    method: string;
+}
+
+interface IncomingResponse extends RequestOrResponse<Incoming> {
+    isError: boolean;
+}
+
+interface OutgoingRequest extends RequestOrResponse<Outgoing> {
+    method: string;
+}
+
+interface OutgoingResponse extends RequestOrResponse<Outgoing> {}
+
+interface OutgoingErrorResponse extends RequestOrResponse<Outgoing> {
+    isError: true;
+}
+
+type RemoteMessage = IncomingNotification | OutgoingNotification | IncomingRequest | IncomingResponse | OutgoingRequest | OutgoingResponse | OutgoingErrorResponse | IncomingStderrMessage
+
 class RemoteLogProvider implements LogProvider {
     lastId = 0
     socket: WebSocket | null = null
@@ -84,59 +150,62 @@ class RemoteLogProvider implements LogProvider {
     }
 
     _onMessage(event: MessageEvent) {
-        let data
-        try {
-            data = JSON.parse(event.data)
-        } catch (error) {
-            console.error('Error parsing the message data', event.data)
+        const data = this._parseMessage(event.data)
+        if (!data) {
             return
         }
-
-        const isRequestOrResponse = typeof data.id === 'number'
-        const isResponse = isRequestOrResponse && !data.method
-        const toServer = data.direction === 1
-        const initiatedByServer = !isResponse && !toServer || isResponse && toServer
 
         const message: Message = {
             id: ++this.lastId,
             isExpanded: false,
-            requestId: data.id,
-            pairKey: isRequestOrResponse ? `${data.server || ''}-${initiatedByServer ? 's' : 'c'}-${data.id}` : '',
-            name: data.method,
-            type: isRequestOrResponse ? 'reqres' : data.isError ? 'error' : 'notification',
-            isError: data.isError,
-            time: new Date(data.time).toLocaleTimeString(),
+            name: 'method' in data ? data.method : undefined,
+            type: isRequestOrResponse(data) ? 'reqres' : isStderrMessage(data) ? 'error' : 'notification',
+            isError: Boolean('isError' in data && data.isError || 'error' in data && data.error),
             timestamp: data.time,
-            toServer,
+            toServer: data.direction === 1,
             serverName: data.server,
         }
 
-        this._updateRelatedMessage(message)
+        if (isRequestOrResponse(data)) {
+            message.requestId = data.id
+            message.pairKey = `${data.server}-${isRequest(data) && isIncoming(data) || !isRequest(data) && !isIncoming(data) ? 's' : 'c'}-${data.id}`
+            this._updateRelatedMessage(message.pairKey, message)
+        }
+
+        if (!message.timeLatency && message.timestamp) {
+            message.time = new Date(message.timestamp).toLocaleTimeString()
+        }
 
         if (data.params) {
             message.payload = data.params
-            if (!data.isError && message.name) {
-                message.payloadSummary = this._createPayloadSummary(message.name, message.payload, !isResponse)
+            if (!message.isError && message.name) {
+                message.payloadSummary = this._createPayloadSummary(message.name, message.payload, isRequestOrResponse(data) && isRequest(data))
             }
         }
 
         logModel.appendLogMessage(message)
     }
 
-    _updateRelatedMessage(message: Message) {
-        const { pairKey } = message
-        if (pairKey) {
-            const request = this.messageMapping[pairKey]
-            if (request) {
-                if (!message.name) {
-                    message.name = request.name
-                    if (message.timestamp && request.timestamp) {
-                        message.timeLatency = message.timestamp - request.timestamp
-                    }
+    _parseMessage(data: any): RemoteMessage | null {
+        try {
+            return JSON.parse(data)
+        } catch (error) {
+            console.error('Error parsing the message data', data)
+            return null
+        }
+    }
+
+    _updateRelatedMessage(pairKey: string, message: Message) {
+        const pairMessage = this.messageMapping[pairKey]
+        if (pairMessage) {
+            if (!message.name) {
+                message.name = pairMessage.name
+                if (message.timestamp && pairMessage.timestamp) {
+                    message.timeLatency = message.timestamp - pairMessage.timestamp
                 }
-            } else {
-                this.messageMapping[pairKey] = message
             }
+        } else {
+            this.messageMapping[pairKey] = message
         }
     }
 
