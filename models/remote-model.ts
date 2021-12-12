@@ -1,3 +1,4 @@
+import * as lsp from 'vscode-languageserver-protocol'
 import { ref, watch } from '@vue/composition-api'
 import { Message, useLogModel, LogProvider } from '~/models/log-model'
 
@@ -155,9 +156,14 @@ class RemoteLogProvider implements LogProvider {
                 }
             } else {
                 if (textDocumentMethod === 'completion') {
-                    result += `${payload.items.length} completions`
-                    if (payload.incomplete) {
-                        result += ' (incomplete)'
+                    const completions: lsp.CompletionItem[] | lsp.CompletionList = payload
+                    if (Array.isArray(completions)) {
+                        result += `${completions.length} completions`
+                    } else {
+                        result += `${completions.items.length} completions`
+                        if (completions.isIncomplete) {
+                            result += ' (incomplete)'
+                        }
                     }
                 } else if (textDocumentMethod === 'documentHighlight') {
                     result += `${payload.length} highlights`

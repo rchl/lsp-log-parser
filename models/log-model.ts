@@ -56,6 +56,7 @@ function setParseResults(data: ParseResults) {
 
 function appendLogMessage(message: Message) {
     if (parsedLines.value.length > REMOTE_MESSAGE_COUNT_LIMIT) {
+        console.warn(`Trimming messages due to reaching the limit of ${REMOTE_MESSAGE_COUNT_LIMIT}`)
         parsedLines.value.splice(0, 20)
     }
 
