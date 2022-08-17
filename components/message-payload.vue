@@ -122,6 +122,7 @@ export default defineComponent({
 .message {
   cursor: pointer;
 
+  /* stylelint-disable-next-line selector-class-pattern */
   .v-alert__content {
     max-width: 100%;
   }
