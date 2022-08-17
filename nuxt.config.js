@@ -1,3 +1,5 @@
+import { resolve } from 'path'
+
 /** @type {import('@nuxt/types').NuxtConfig} **/
 const configuration = {
     target: 'static',
@@ -29,6 +31,7 @@ const configuration = {
         '~/plugins/composition-api',
     ],
     buildModules: [
+        '@nuxt/postcss8',
         '@nuxt/typescript-build',
         // Doc: https://github.com/nuxt-community/stylelint-module
         '@nuxtjs/stylelint-module',
@@ -36,6 +39,10 @@ const configuration = {
     ],
     modules: [
     ],
+    stylelint: {
+        context: resolve(__dirname),
+        lintDirtyModulesOnly: true,
+    },
     vuetify: {
         customVariables: ['~/assets/variables.scss'],
     },
