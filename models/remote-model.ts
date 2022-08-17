@@ -172,7 +172,7 @@ class RemoteLogProvider implements LogProvider {
             this._updateRelatedMessage(message.pairKey, message)
         }
 
-        if (!message.timeLatency && message.timestamp) {
+        if (message.timestamp) {
             const date = new Date(message.timestamp)
             message.time = `${date.toLocaleTimeString()}.${date.getMilliseconds()}`
         }

@@ -29,9 +29,9 @@
                 >
                     <div
                         v-if="line.time || line.timeLatency !== undefined"
-                        class="caption">
-                        <span v-if="line.timeLatency !== undefined">{{ line.timeLatency }} ms</span>
-                        <span v-else>{{ line.time }}</span>
+                        class="caption"
+                    >
+                        {{ line.time }}<span v-if="line.timeLatency !== undefined"> (self: {{ line.timeLatency }} ms)</span>
                     </div>
                     <v-alert
                         :border="line.toServer ? 'left' : 'right'"
@@ -292,8 +292,10 @@ export default defineComponent({
 </style>
 
 <style>
+/* stylelint-disable selector-class-pattern */
+
 .vjs-tree {
-  font-family: Menlo, Monaco, Consolas, Bitstream Vera Sans Mono, monospace;
+  font-family: Menlo, Monaco, Consolas, 'Bitstream Vera Sans Mono', monospace;
   font-size: 12px;
 }
 
