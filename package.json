@@ -39,6 +39,9 @@
     "husky": "^4.3.0",
     "lint-staged": "^13.0.3",
     "stylelint": "^13.7.2",
-    "vscode-languageserver-protocol": "^3.16.0"
+    "vscode-languageserver-protocol": "^3.16.0",
+    "vue": "2.6",
+    "vue-server-renderer": "2.6",
+    "vue-template-compiler": "2.6"
   }
 }
