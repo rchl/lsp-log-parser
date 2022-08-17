@@ -70,6 +70,8 @@ export default defineComponent({
         },
     },
     setup(props) {
+        // FIXME
+        // eslint-disable-next-line vue/no-setup-props-destructure
         const { message } = props
 
         let renderedComponent
