@@ -25,7 +25,7 @@
   "dependencies": {
     "@vue/composition-api": "^1.7.0",
     "nuxt": "^2.15.3",
-    "vue-json-pretty": "1.8.3",
+    "vue-json-pretty": "1.9.0",
     "vue-shortkey": "^3.1.7"
   },
   "devDependencies": {
