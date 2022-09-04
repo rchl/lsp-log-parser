@@ -1,0 +1,22 @@
+diff --git a/node_modules/@nuxt/webpack/dist/webpack.js b/node_modules/@nuxt/webpack/dist/webpack.js
+index 5b2d005..bf14513 100644
+--- a/node_modules/@nuxt/webpack/dist/webpack.js
++++ b/node_modules/@nuxt/webpack/dist/webpack.js
+@@ -1248,7 +1248,7 @@ class WebpackBaseConfig {
+ 
+     return {
+       resolve: {
+-        extensions: ['.wasm', '.mjs', '.js', '.json', '.vue', '.jsx'],
++        extensions: ['.wasm', '.mjs', '.cjs', '.js', '.json', '.vue', '.jsx'],
+         alias: this.alias(),
+         modules: webpackModulesDir,
+         plugins: resolvePlugins
+@@ -1338,7 +1338,7 @@ class WebpackBaseConfig {
+         ]
+       },
+       {
+-        test: /\.m?jsx?$/i,
++        test: /\.(c|m)?jsx?$/i,
+         exclude: (file) => {
+           file = file.split(/node_modules(.*)/)[1];
+ 

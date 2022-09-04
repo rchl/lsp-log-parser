@@ -1,0 +1,24 @@
+diff --git a/node_modules/@nuxt/types/config/build.d.ts b/node_modules/@nuxt/types/config/build.d.ts
+index 5fa11c5..e1b7db9 100644
+--- a/node_modules/@nuxt/types/config/build.d.ts
++++ b/node_modules/@nuxt/types/config/build.d.ts
+@@ -121,7 +121,7 @@ interface PostcssConfiguration {
+   order?: PostcssOrderPreset | string[] | ((names: string[], presets: PostcssOrderPresetFunctions) => string[])
+   plugins?: {
+     [key: string]: false | { [key: string]: any }
+-  } | ((loader: WebpackLoaderNamespace.LoaderContext) => PostcssPlugin<any>[]) | Array<[string | PostcssPlugin<any>, any] | string | PostcssPlugin<any>>
++  } | ((loader: WebpackLoaderNamespace.LoaderContext) => PostcssPlugin[]) | Array<[string | PostcssPlugin, any] | string | PostcssPlugin>
+   preset?: {
+     autoprefixer?: false | AutoprefixerOptions
+     browsers?: string
+@@ -130,8 +130,8 @@ interface PostcssConfiguration {
+       [key: string]: boolean | { [key: string]: any }
+     }
+     importFrom?: string | string[] | Partial<PostcssVariableMap> | (() => Partial<PostcssVariableMap>)
+-    insertAfter?: { [key: string]: PostcssPlugin<any> }
+-    insertBefore?: { [key: string]: PostcssPlugin<any> }
++    insertAfter?: { [key: string]: PostcssPlugin }
++    insertBefore?: { [key: string]: PostcssPlugin }
+     preserve?: boolean
+     stage?: 0 | 1 | 2 | 3 | 4 | false
+   }
