@@ -40,27 +40,16 @@
     </v-app>
 </template>
 
-<script lang="ts">
-import { defineComponent, reactive } from '@vue/composition-api'
+<script setup lang="ts">
+import { reactive } from 'vue'
 import appBar from '~/components/app-bar.vue'
 import appDrawer from '~/components/app-drawer.vue'
 import logView from '~/components/log-view.vue'
 import { useLogModel } from '~/models/log-model'
 import { useUiModel } from '~/models/ui-model'
 
-export default defineComponent({
-    components: {
-        appBar,
-        appDrawer,
-        logView,
-    },
-    setup() {
-        return {
-            logModel: reactive(useLogModel()),
-            uiModel: reactive(useUiModel()),
-        }
-    },
-})
+const logModel = reactive(useLogModel())
+const uiModel = reactive(useUiModel())
 </script>
 
 <style lang="scss">

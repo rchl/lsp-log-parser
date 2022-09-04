@@ -8,6 +8,12 @@ const configuration = {
     generate: {
         fallback: true,
     },
+    build: {
+        transpile: [
+            'vscode-jsonrpc',
+            'vscode-languageserver-protocol',
+        ],
+    },
     head: {
         title: 'LSP Log Parser',
         meta: [
@@ -28,11 +34,10 @@ const configuration = {
     plugins: [
         '~/plugins/vue-shortkey.client',
         '~/plugins/vue-shortkey.server',
-        '~/plugins/composition-api',
     ],
     buildModules: [
-        '@nuxt/postcss8',
         '@nuxt/typescript-build',
+        '@nuxt/postcss8',
         // Doc: https://github.com/nuxt-community/stylelint-module
         '@nuxtjs/stylelint-module',
         '@nuxtjs/vuetify',

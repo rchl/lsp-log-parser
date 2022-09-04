@@ -1,4 +1,4 @@
-import { computed, ref } from '@vue/composition-api'
+import { computed, ref } from 'vue'
 import { Message, useLogModel } from '~/models/log-model'
 
 type CategoryType = 'all' | 'general' | 'window' | 'telemetry' | 'client' | 'workspace' | 'text-synchronization' | 'diagnostics' | 'language-features'

@@ -37,26 +37,17 @@
     </v-dialog>
 </template>
 
-<script lang="ts">
-import { defineComponent, reactive, watch } from '@vue/composition-api'
+<script setup lang="ts">
+import { reactive, watch } from 'vue'
 import { useRemoteModel } from '~/models/remote-model'
 
-export default defineComponent({
-    setup() {
-        const state = reactive({
-            open: false,
-        })
+const state = reactive({
+    open: false,
+})
 
-        const remoteModel = useRemoteModel()
+const remoteModel = useRemoteModel()
 
-        watch([remoteModel.enabled, remoteModel.connected], () => {
-            state.open = remoteModel.enabled.value && !remoteModel.connected.value
-        })
-
-        return {
-            remoteModel,
-            state,
-        }
-    },
+watch([remoteModel.enabled, remoteModel.connected], () => {
+    state.open = remoteModel.enabled.value && !remoteModel.connected.value
 })
 </script>

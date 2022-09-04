@@ -8,31 +8,21 @@
     </v-alert>
 </template>
 
-<script lang="ts">
-import type { PropType } from '@vue/composition-api'
-import { defineComponent } from '@vue/composition-api'
+<script setup lang="ts">
 import { Message } from '~/models/log-model'
 
-export default defineComponent({
-    props: {
-        payload: {
-            type: Object as PropType<NonNullable<Message['payload']>>,
-            required: true,
-        },
-    },
-    setup(props) {
-        const mapping: Record<number, string> = {
-            1: 'error',
-            2: 'warning',
-            3: 'info',
-            4: '',
-        }
-        const messageType = typeof props.payload === 'string' ? '' : props.payload.type
-        return {
-            alertType: mapping[messageType],
-        }
-    },
-})
+const props = defineProps<{
+    payload: NonNullable<Message['payload']>
+}>()
+
+const mapping: Record<number, string> = {
+    1: 'error',
+    2: 'warning',
+    3: 'info',
+    4: '',
+}
+const messageType = typeof props.payload === 'string' ? '' : props.payload.type
+const alertType = mapping[messageType]
 </script>
 
 <style lang="scss" scoped>

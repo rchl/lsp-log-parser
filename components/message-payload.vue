@@ -24,7 +24,7 @@
                         :key="tab">
                         <div
                             :is="renderedComponent"
-                            v-if="tab === 'rendered'"
+                            v-if="renderedComponent && tab === 'rendered'"
                             :payload="message.payload" />
                         <div
                             v-else
@@ -50,55 +50,47 @@
     </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { computed } from 'vue'
 // @ts-ignore
 import VueJsonPretty from 'vue-json-pretty'
-import { defineComponent } from '@vue/composition-api'
-import type { PropType } from '@vue/composition-api'
 import { Message } from '~/models/log-model'
+
+const props = defineProps<{
+    message: Message
+}>()
+
+const renderedComponent = computed((): string | undefined => {
+    const message = props.message
+    if (message.payload && typeof (message.payload) !== 'string') {
+        if (!message.toServer) {
+            if (message.name === 'window/logMessage' || message.name === 'window/showMessage') {
+                return 'rendered-log-message'
+            } else if (message.name === 'textDocument/formatting') {
+                return 'text-document-formatting-message'
+            }
+        }
+    }
+    return undefined
+})
+const selectedTabIndex = 0
+const messageTabs = computed(() => {
+    if (renderedComponent.value) {
+        return ['rendered', 'raw']
+    }
+    return ['raw']
+})
+</script>
+
+<script lang="ts">
+import { defineComponent } from 'vue'
 import RenderedLogMessage from '~/components/rendered-payloads/log-message.vue'
 import TextDocumentFormattingMessage from '~/components/rendered-payloads/text-document-formatting.vue'
 
 export default defineComponent({
     components: {
-        VueJsonPretty,
-    },
-    props: {
-        message: {
-            type: Object as PropType<Message>,
-            required: true,
-        },
-    },
-    setup(props) {
-        // FIXME
-        // eslint-disable-next-line vue/no-setup-props-destructure
-        const { message } = props
-
-        let renderedComponent
-        const messageTabs = []
-
-        if (message.payload) {
-            if (typeof (message.payload) !== 'string') {
-                if (!message.toServer) {
-                    if (message.name === 'window/logMessage' || message.name === 'window/showMessage') {
-                        renderedComponent = RenderedLogMessage
-                    } else if (message.name === 'textDocument/formatting') {
-                        renderedComponent = TextDocumentFormattingMessage
-                    }
-                }
-            }
-
-            if (renderedComponent) {
-                messageTabs.push('rendered')
-            }
-            messageTabs.push('raw')
-        }
-
-        return {
-            selectedTabIndex: 0,
-            renderedComponent,
-            messageTabs,
-        }
+        RenderedLogMessage,
+        TextDocumentFormattingMessage,
     },
 })
 </script>

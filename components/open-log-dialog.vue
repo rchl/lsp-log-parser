@@ -46,75 +46,65 @@
     </v-dialog>
 </template>
 
-<script lang="ts">
-import { defineComponent, reactive, toRef, watch, watchEffect } from '@vue/composition-api'
+<script setup lang="ts">
+import { nextTick, reactive, toRef, watch, watchEffect } from 'vue'
 import { ParseResults, useLogModel } from '~/models/log-model'
 import { useParserModel } from '~/models/parser-model'
 import { useUiModel } from '~/models/ui-model'
 import parsers from '~/models/parsers'
 
-export default defineComponent({
-    setup(_, { root }) {
-        const state = reactive({
-            logContent: '',
-            parserTypes: parsers.map(p => p.name),
-            selectedParser: parsers[0].name,
-            selectedParserHint: '',
-        })
+const state = reactive({
+    logContent: '',
+    parserTypes: parsers.map(p => p.name),
+    selectedParser: parsers[0].name,
+    selectedParserHint: '',
+})
 
-        const logModel = useLogModel()
-        const parserModel = useParserModel()
-        const uiModel = useUiModel()
+const logModel = useLogModel()
+const parserModel = useParserModel()
+const uiModel = useUiModel()
 
-        function parseLog() {
-            uiModel.logDialogVisible.value = false
-            state.selectedParserHint = ''
+function parseLog() {
+    uiModel.logDialogVisible.value = false
+    state.selectedParserHint = ''
 
-            const content = state.logContent
-            const inputLines = content.split('\n').filter(line => Boolean(line))
-            const parser = parsers.find(p => p.name === state.selectedParser)
+    const content = state.logContent
+    const inputLines = content.split('\n').filter(line => Boolean(line))
+    const parser = parsers.find(p => p.name === state.selectedParser)
 
-            if (parser) {
-                let results: ParseResults = { lines: [], filters: [] }
+    if (parser) {
+        let results: ParseResults = { lines: [], filters: [] }
 
-                try {
-                    results = parser.parse(inputLines)
-                } catch (error) {
-                    if (error instanceof Error) {
-                        uiModel.showError(error.message)
-                    }
-                }
-
-                logModel.setParseResults(results)
-                uiModel.resetState()
+        try {
+            results = parser.parse(inputLines)
+        } catch (error) {
+            if (error instanceof Error) {
+                uiModel.showError(error.message)
             }
         }
 
-        watchEffect(() => {
-            const parser = parserModel.contentSniffParser(state.logContent.substr(0, 500).split('\n'))
+        logModel.setParseResults(results)
+        uiModel.resetState()
+    }
+}
 
-            if (parser) {
-                state.selectedParser = parser.name
-            }
+watchEffect(() => {
+    const parser = parserModel.contentSniffParser(state.logContent.substr(0, 500).split('\n'))
 
-            root.$nextTick(() => (state.selectedParserHint = parser ? 'auto-detected from log content' : ''))
-        })
+    if (parser) {
+        state.selectedParser = parser.name
+    }
 
-        watch(toRef(state, 'selectedParser'), () => {
-            state.selectedParserHint = ''
-        })
+    nextTick(() => (state.selectedParserHint = parser ? 'auto-detected from log content' : ''))
+})
 
-        watchEffect(() => {
-            if (!uiModel.logDialogVisible.value) {
-                state.logContent = ''
-            }
-        })
+watch(toRef(state, 'selectedParser'), () => {
+    state.selectedParserHint = ''
+})
 
-        return {
-            parseLog,
-            state,
-            uiModel,
-        }
-    },
+watchEffect(() => {
+    if (!uiModel.logDialogVisible.value) {
+        state.logContent = ''
+    }
 })
 </script>

@@ -136,6 +136,7 @@ module.exports = {
                     ignores: ['pre', 'textarea', 'a', 'nuxt-link'],
                 }],
                 'vue/no-deprecated-scope-attribute': 'error',
+                'vue/no-v-for-template-key': 'off',
                 'vue/no-v-html': 'off',
                 'vue/object-curly-spacing': ['error', 'always'],
                 'vue/script-indent': ['error', 4, { switchCase: 1 }],

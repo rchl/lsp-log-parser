@@ -54,17 +54,10 @@
     </v-navigation-drawer>
 </template>
 
-<script lang="ts">
-import { defineComponent } from '@vue/composition-api'
+<script setup lang="ts">
 import { useLogModel } from '~/models/log-model'
 import { useUiModel } from '~/models/ui-model'
 
-export default defineComponent({
-    setup() {
-        return {
-            logModel: useLogModel(),
-            uiModel: useUiModel(),
-        }
-    },
-})
+const logModel = useLogModel()
+const uiModel = useUiModel()
 </script>

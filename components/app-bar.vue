@@ -98,36 +98,24 @@
     </v-app-bar>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from '@vue/composition-api'
+<script setup lang="ts">
+import { ref } from 'vue'
 import { useRemoteModel } from '~/models/remote-model'
 import { useLogModel } from '~/models/log-model'
 import { useUiModel } from '~/models/ui-model'
 import RemoteConnectionDialog from '~/components/remote-connection-dialog.vue'
 import OpenLogDialog from '~/components/open-log-dialog.vue'
 
-export default defineComponent({
-    components: {
-        RemoteConnectionDialog,
-        OpenLogDialog,
-    },
-    setup() {
-        const filterField = ref<HTMLElement | null>(null)
+const filterField = ref<HTMLElement | null>(null)
 
-        function focusSearchField() {
-            const filterComponent = filterField.value
-            if (filterComponent) {
-                filterComponent.focus()
-            }
-        }
+function focusSearchField() {
+    const filterComponent = filterField.value
+    if (filterComponent) {
+        filterComponent.focus()
+    }
+}
 
-        return {
-            filterField,
-            focusSearchField,
-            logModel: useLogModel(),
-            remoteModel: useRemoteModel(),
-            uiModel: useUiModel(),
-        }
-    },
-})
+const logModel = useLogModel()
+const remoteModel = useRemoteModel()
+const uiModel = useUiModel()
 </script>

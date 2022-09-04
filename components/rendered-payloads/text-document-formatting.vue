@@ -16,22 +16,12 @@
     </div>
 </template>
 
-<script lang="ts">
-import { PropType } from '@vue/composition-api'
-import { defineComponent } from '@vue/composition-api'
+<script setup lang="ts">
 import { Message } from '~/models/log-model'
 
-export default defineComponent({
-    props: {
-        payload: {
-            type: Array as PropType<NonNullable<Message['payload']>>,
-            required: true,
-        },
-    },
-    setup() {
-        return {}
-    },
-})
+defineProps<{
+    payload: NonNullable<Message['payload']>
+}>()
 </script>
 
 <style lang="scss" scoped>

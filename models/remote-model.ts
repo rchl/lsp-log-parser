@@ -1,5 +1,5 @@
 import * as lsp from 'vscode-languageserver-protocol'
-import { ref, watch } from '@vue/composition-api'
+import { ref, watch } from 'vue'
 import { Message, useLogModel, LogProvider } from '~/models/log-model'
 
 const connected = ref(false)
