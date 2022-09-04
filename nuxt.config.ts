@@ -1,17 +1,15 @@
 import { resolve } from 'path'
+import { defineNuxtConfig } from '@nuxt/bridge'
 
 /** @type {import('@nuxt/types').NuxtConfig} **/
-const configuration = {
+export default defineNuxtConfig({
     target: 'static',
     modern: true,
     ssr: false,
-    generate: {
-        fallback: true,
-    },
     build: {
         transpile: [
-            'vscode-jsonrpc',
-            'vscode-languageserver-protocol',
+            // 'vscode-jsonrpc',
+            // 'vscode-languageserver-protocol',
         ],
     },
     head: {
@@ -36,8 +34,6 @@ const configuration = {
         '~/plugins/vue-shortkey.server',
     ],
     buildModules: [
-        '@nuxt/typescript-build',
-        '@nuxt/postcss8',
         // Doc: https://github.com/nuxt-community/stylelint-module
         '@nuxtjs/stylelint-module',
         '@nuxtjs/vuetify',
@@ -51,6 +47,4 @@ const configuration = {
     vuetify: {
         customVariables: ['~/assets/variables.scss'],
     },
-}
-
-export default configuration
+})
