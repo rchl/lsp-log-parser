@@ -245,9 +245,24 @@ class RemoteLogProvider implements LogProvider {
                 const params: lsp.PublishDiagnosticsParams = payload
                 result += `${params.diagnostics.length} diagnostics for uri: ${params.uri}`
             }
+        } else if (method === 'window/logMessage') {
+            const params = payload as lsp.LogMessageParams
+            result += `(${toMessageTypeText(params.type)}) ${params.message}`
         }
         return result
     }
+}
+
+function toMessageTypeText(type: lsp.MessageType): string {
+    switch (type) {
+        case lsp.MessageType.Error:
+            return 'Error'
+        case lsp.MessageType.Info:
+            return 'Info'
+        case lsp.MessageType.Log:
+            return 'Log'
+    }
+    return 'Unknown Type'
 }
 
 logModel.registerLogProvider(new RemoteLogProvider())
