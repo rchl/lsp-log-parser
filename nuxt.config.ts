@@ -1,7 +1,7 @@
 import { resolve } from 'path'
+import type { NuxtConfig } from '@nuxt/types'
 
-/** @type {import('@nuxt/types').NuxtConfig} **/
-const configuration = {
+export default <NuxtConfig> {
     target: 'static',
     modern: true,
     ssr: false,
@@ -52,5 +52,3 @@ const configuration = {
         customVariables: ['~/assets/variables.scss'],
     },
 }
-
-export default configuration
