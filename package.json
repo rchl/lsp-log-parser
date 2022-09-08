@@ -27,7 +27,7 @@
   "dependencies": {
     "nuxt": "^2.15.8",
     "patch-package": "^6.4.7",
-    "vue-json-pretty": "1.8.3",
+    "vue-json-pretty": "1.9.2",
     "vue-shortkey": "^3.1.7"
   },
   "devDependencies": {
