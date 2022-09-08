@@ -16,12 +16,12 @@
     "postinstall": "patch-package"
   },
   "lint-staged": {
-    "*.{js,ts,vue}": "yarn jslint",
-    "*.{scss,vue}": "yarn csslint"
+    "*.{js,ts,vue}": "eslint --ext .js,.ts,.vue --ignore-path .gitignore",
+    "*.{scss,vue}": "stylelint"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged && yarn lint && yarn typecheck"
+      "pre-commit": "lint-staged && yarn typecheck"
     }
   },
   "dependencies": {
