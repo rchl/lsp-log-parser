@@ -3,11 +3,12 @@
         <app-bar />
         <app-drawer />
         <v-main>
-            <h1
+            <div
                 v-if="logModel.parsedLines.length === 0"
-                class="base-title text-center">
-                LSP Log Parser
-            </h1>
+                class="base-title text-center pa-8">
+                <h2 class="text-h2">LSP Log Parser</h2>
+                <h3 class="text-subtitle-1 mt-4">To establish connection to the local Sublime Text LSP instance, enable the <code>"log_server": ["panel", "remote"]</code> LSP setting, restart ST and press the Connect button.</h3>
+            </div>
             <log-view
                 v-else
                 class="height-100" />
@@ -56,8 +57,6 @@ const uiModel = reactive(useUiModel())
 .base-title {
   display: flex;
   flex-direction: column;
-  font-size: 3rem;
-  font-weight: 300;
   height: 100%;
   justify-content: center;
 }
