@@ -25,34 +25,34 @@
     }
   },
   "dependencies": {
-    "nuxt": "^2.15.3",
+    "nuxt": "^2.15.8",
     "patch-package": "^6.4.7",
     "vue-json-pretty": "1.8.3",
     "vue-shortkey": "^3.1.7"
   },
   "devDependencies": {
     "@nuxt/postcss8": "^1.1.3",
-    "@nuxt/types": "^2.15.4",
-    "@nuxt/typescript-build": "^2.0.3",
-    "@nuxtjs/stylelint-module": "^4.0.0",
+    "@nuxt/types": "^2.15.8",
+    "@nuxt/typescript-build": "^2.1.0",
+    "@nuxtjs/stylelint-module": "^4.1.0",
     "@nuxtjs/vuetify": "^1.12.3",
-    "@typescript-eslint/eslint-plugin": "^5.31.0",
-    "@typescript-eslint/parser": "^5.31.0",
-    "eslint": "^8.22.0",
-    "eslint-plugin-vue": "^9.3.0",
+    "@typescript-eslint/eslint-plugin": "^5.36.2",
+    "@typescript-eslint/parser": "^5.36.2",
+    "eslint": "^8.23.0",
+    "eslint-plugin-vue": "^9.4.0",
     "husky": "^4.3.0",
     "lint-staged": "^13.0.3",
     "postcss": "^8.4.16",
     "postcss-html": "^1.5.0",
-    "stylelint": "^14.5.3",
+    "stylelint": "^14.11.0",
     "stylelint-config-recommended-scss": "^6.0.0",
     "stylelint-config-recommended-vue": "^1.4.0",
     "stylelint-config-standard": "^25.0.0",
-    "typescript": "^4.8.2",
-    "vscode-languageserver-protocol": "^3.16.0",
+    "typescript": "^4.8.3",
+    "vscode-languageserver-protocol": "^3.17.2",
     "vuex": "3"
   },
   "resolutions": {
-    "@nuxt/typescript-build/typescript": "^4.8.2"
+    "@nuxt/typescript-build/typescript": "^4.8.3"
   }
 }
