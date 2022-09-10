@@ -37,6 +37,7 @@
                             <vue-json-pretty
                                 v-else
                                 :data="message.payload"
+                                show-icon
                                 :show-line="false"
                                 :show-double-quotes="false"
                                 :highlight-mouseover-node="false"
