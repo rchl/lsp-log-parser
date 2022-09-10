@@ -5052,7 +5052,7 @@ human-signals@^3.0.1:
   resolved "https://registry.yarnpkg.com/human-signals/-/human-signals-3.0.1.tgz#c740920859dafa50e5a3222da9d3bf4bb0e5eef5"
   integrity sha512-rQLskxnM/5OCldHo+wNXbpVgDn5A17CUoKX+7Sokwaknlq7CdSnphy0W39GU8dw59XiCXmFXDg4fRuckQRKewQ==
 
-husky@^4.3.0:
+husky@^4.3.8:
   version "4.3.8"
   resolved "https://registry.yarnpkg.com/husky/-/husky-4.3.8.tgz#31144060be963fd6850e5cc8f019a1dfe194296d"
   integrity sha512-LCqqsB0PzJQ/AlCgfrfzRe3e3+NvmefAdKQhRYpxS4u6clblBoDdzzvHi8fmxKRzvMxPY/1WZWzomPZww0Anow==
@@ -9658,10 +9658,10 @@ vue-hot-reload-api@^2.3.0:
   resolved "https://registry.yarnpkg.com/vue-hot-reload-api/-/vue-hot-reload-api-2.3.4.tgz#532955cc1eb208a3d990b3a9f9a70574657e08f2"
   integrity sha512-BXq3jwIagosjgNVae6tkHzzIk6a8MHFtzAdwhnV5VlvPTFxDCvIttgSiHWjdGoTJvXtmRu5HacExfdarRcFhog==
 
-vue-json-pretty@1.8.3:
-  version "1.8.3"
-  resolved "https://registry.yarnpkg.com/vue-json-pretty/-/vue-json-pretty-1.8.3.tgz#ee94fb111a8954d17442904e5ace6e45b2dc247d"
-  integrity sha512-rpsop8LMy6EybkjmlT8a2fB2mHe0EMvxoCuw6lXcNBDsVkRuD4+eDwzqjshfe5qEki8EVLqr1o6n+lSLkR/tgQ==
+vue-json-pretty@1.9.2:
+  version "1.9.2"
+  resolved "https://registry.yarnpkg.com/vue-json-pretty/-/vue-json-pretty-1.9.2.tgz#a84c438a6e20929fa162ca84d6e3b797bee6947e"
+  integrity sha512-FHAYmZAazhVC6Wi+Zi9DVYha+oZb9uylJPGkl/yTYLxlqLMxmnaVC2R8ZwaYzt6TBGvkLe3Y2D2vgyJCDBJy1w==
 
 vue-loader@^15.9.7:
   version "15.10.0"

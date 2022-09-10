@@ -27,7 +27,7 @@
   "dependencies": {
     "nuxt": "^2.15.8",
     "patch-package": "^6.4.7",
-    "vue-json-pretty": "1.8.3",
+    "vue-json-pretty": "1.9.2",
     "vue-shortkey": "^3.1.7"
   },
   "devDependencies": {
@@ -40,7 +40,7 @@
     "@typescript-eslint/parser": "^5.36.2",
     "eslint": "^8.23.0",
     "eslint-plugin-vue": "^9.4.0",
-    "husky": "^4.3.0",
+    "husky": "^4.3.8",
     "lint-staged": "^13.0.3",
     "postcss": "^8.4.16",
     "postcss-html": "^1.5.0",
