@@ -17,6 +17,7 @@
   "packageRules": [
     {
       "matchPackageNames": [
+        "husky",
         "node"
       ],
       "enabled": false
