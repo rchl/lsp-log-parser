@@ -9,7 +9,7 @@
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
-    "lint": "yarn csslint && yarn csslint",
+    "lint": "yarn jslint && yarn csslint",
     "jslint": "eslint --ext .js,.ts,.vue --ignore-path .gitignore .",
     "csslint": "stylelint '**/*.scss' '**/*.vue'",
     "typecheck": "npx tsc",
