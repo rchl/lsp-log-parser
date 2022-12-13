@@ -13,8 +13,7 @@
                 v-else
                 class="height-100" />
 
-            <v-dialog
-                v-model="uiModel.errorDialogVisible"
+            <v-dialog v-model="uiModel.errorDialogVisible"
                 max-width="290">
                 <v-card>
                     <v-card-title class="headline">
