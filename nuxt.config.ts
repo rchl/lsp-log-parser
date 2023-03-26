@@ -37,7 +37,6 @@ export default <NuxtConfig> {
     ],
     buildModules: [
         '@nuxt/typescript-build',
-        '@nuxt/postcss8',
         // Doc: https://github.com/nuxt-community/stylelint-module
         '@nuxtjs/stylelint-module',
         '@nuxtjs/vuetify',

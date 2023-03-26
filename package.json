@@ -12,8 +12,7 @@
     "lint": "yarn jslint && yarn csslint",
     "jslint": "eslint --ext .js,.ts,.vue --ignore-path .gitignore .",
     "csslint": "stylelint '**/*.scss' '**/*.vue'",
-    "typecheck": "npx tsc",
-    "postinstall": "patch-package"
+    "typecheck": "npx tsc"
   },
   "lint-staged": {
     "*.{js,ts,vue}": "eslint --ext .js,.ts,.vue --ignore-path .gitignore",
@@ -25,34 +24,34 @@
     }
   },
   "dependencies": {
-    "nuxt": "^2.15.8",
-    "patch-package": "^6.5.1",
-    "vue-json-pretty": "1.9.2",
+    "nuxt": "^2.16.3",
+    "vue-json-pretty": "1.9.4",
     "vue-shortkey": "^3.1.7"
   },
   "devDependencies": {
-    "@nuxt/postcss8": "^1.1.3",
-    "@nuxt/types": "^2.15.8",
+    "@nuxt/types": "^2.16.3",
     "@nuxt/typescript-build": "^2.1.0",
-    "@nuxtjs/stylelint-module": "^4.1.0",
+    "@nuxtjs/stylelint-module": "^4.2.1",
     "@nuxtjs/vuetify": "^1.12.3",
-    "@typescript-eslint/eslint-plugin": "^5.48.2",
-    "@typescript-eslint/parser": "^5.48.2",
-    "eslint": "^8.32.0",
-    "eslint-plugin-vue": "^9.9.0",
+    "@types/node": "^16.18.21",
+    "@typescript-eslint/eslint-plugin": "^5.56.0",
+    "@typescript-eslint/parser": "^5.56.0",
+    "eslint": "^8.36.0",
+    "eslint-plugin-vue": "^9.10.0",
     "husky": "^4.3.8",
-    "lint-staged": "^13.1.0",
+    "lint-staged": "^13.2.0",
     "postcss": "^8.4.21",
     "postcss-html": "^1.5.0",
+    "sass": "^1.60.0",
     "stylelint": "^14.16.1",
     "stylelint-config-recommended-scss": "^6.0.0",
     "stylelint-config-recommended-vue": "^1.4.0",
     "stylelint-config-standard": "^25.0.0",
-    "typescript": "^4.8.3",
-    "vscode-languageserver-protocol": "^3.17.2",
+    "typescript": "^4.9.5",
+    "vscode-languageserver-protocol": "^3.17.3",
     "vuex": "3"
   },
   "resolutions": {
-    "@nuxt/typescript-build/typescript": "^4.8.3"
+    "@nuxt/typescript-build/typescript": "^4.9.5"
   }
 }
