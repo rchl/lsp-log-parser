@@ -47,7 +47,7 @@
     "stylelint-config-recommended-scss": "^9.0.1",
     "stylelint-config-recommended-vue": "^1.4.0",
     "stylelint-config-standard": "^31.0.0",
-    "typescript": "^4.9.5",
+    "typescript": "^5.0.2",
     "vscode-languageserver-protocol": "^3.17.3",
     "vuex": "3"
   }
