@@ -71,14 +71,7 @@ module.exports = {
                 '@typescript-eslint/ban-ts-comment': 'off',
                 '@typescript-eslint/explicit-function-return-type': 'off',
                 '@typescript-eslint/explicit-module-boundary-types': 'off',
-                '@typescript-eslint/indent': [
-                    'error', 4, {
-                        SwitchCase: 1,
-                        FunctionDeclaration: { parameters: 'first' },
-                        FunctionExpression: { parameters: 'first' },
-                        CallExpression: { arguments: 'first' },
-                    },
-                ],
+                '@typescript-eslint/indent': 'off',
                 '@typescript-eslint/member-delimiter-style': 'error',
                 '@typescript-eslint/no-empty-interface': ['error', { allowSingleExtends: true }],
                 '@typescript-eslint/no-explicit-any': 'off',
