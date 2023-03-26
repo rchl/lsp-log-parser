@@ -44,9 +44,9 @@
     "postcss-html": "^1.5.0",
     "sass": "^1.60.0",
     "stylelint": "^14.16.1",
-    "stylelint-config-recommended-scss": "^6.0.0",
+    "stylelint-config-recommended-scss": "^8.0.0",
     "stylelint-config-recommended-vue": "^1.4.0",
-    "stylelint-config-standard": "^25.0.0",
+    "stylelint-config-standard": "^29.0.0",
     "typescript": "^4.9.5",
     "vscode-languageserver-protocol": "^3.17.3",
     "vuex": "3"

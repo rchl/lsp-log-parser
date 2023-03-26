@@ -111,7 +111,7 @@ export default defineComponent({
 </style>
 
 <style lang="scss">
-@import 'vue-json-pretty/lib/styles.css';
+@import url('vue-json-pretty/lib/styles.css');
 
 // Hack to max payload not overflow.
 .message {
