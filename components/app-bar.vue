@@ -1,45 +1,44 @@
 <template>
-    <v-app-bar app>
+    <v-app-bar>
         <v-app-bar-nav-icon
             class="mr-2"
             @click.stop="uiModel.toggleDrawer()" />
 
-        <v-tooltip bottom>
-            <template #activator="{ on }">
-                <v-btn
-                    v-shortkey="[cmdOrCtrl, 'o']"
-                    color="primary"
-                    class="mr-2"
-                    :disabled="remoteModel.enabled.value"
-                    @click="uiModel.logDialogVisible.value = true"
-                    @shortkey.native="uiModel.logDialogVisible.value = true"
-                    v-on="on"
-                >
-                    Open log
-                </v-btn>
-            </template>
-            <span>Open log text ({{ cmdOrCtrl }}-O)</span>
-        </v-tooltip>
+        <v-btn
+            vshortkey="[cmdOrCtrl, 'o']"
+            class="mr-2"
+            variant="elevated"
+            :disabled="remoteModel.enabled.value"
+            @click="uiModel.logDialogVisible.value = true"
+            @shortkey.native="uiModel.logDialogVisible.value = true"
+        >
+            Open log
+            <v-tooltip
+                activator="parent"
+                location="bottom"
+            >
+                Open log text (cmdOrCtrl-O)
+            </v-tooltip>
+        </v-btn>
         <open-log-dialog />
 
-        <v-tooltip bottom>
-            <template #activator="{ on }">
-                <v-btn
-                    v-shortkey="[cmdOrCtrl, 'd']"
-                    class="mr-2"
-                    :color="remoteModel.connected.value ? 'error' : 'primary'"
-                    :outlined="!remoteModel.connected.value"
-                    @shortkey.native="remoteModel.enabled.value = !remoteModel.enabled.value"
-                    @click="remoteModel.enabled.value = !remoteModel.enabled.value"
-                    v-on="on"
-                >
-                    <v-icon>
-                        {{ remoteModel.connected.value ? 'mdi-lan-disconnect' : 'mdi-lan-connect' }}
-                    </v-icon>
-                </v-btn>
-            </template>
-            <span>{{ remoteModel.connected.value ? 'Disconnect from remote' : 'Connect to remote websocket server' }} ({{ cmdOrCtrl }}-D)</span>
-        </v-tooltip>
+        <v-btn
+            vshortkey="[cmdOrCtrl, 'd']"
+            :prepend-icon="remoteModel.connected.value ? 'mdi-lan-disconnect' : 'mdi-lan-connect'"
+            class="mr-2"
+            color="primary"
+            :variant="remoteModel.connected.value ? 'elevated' : 'outlined'"
+            @shortkey.native="remoteModel.enabled.value = !remoteModel.enabled.value"
+            @click="remoteModel.enabled.value = !remoteModel.enabled.value"
+        >
+            Remote
+            <v-tooltip
+                activator="parent"
+                location="bottom"
+            >
+                {{ remoteModel.connected.value ? 'Disconnect from remote' : 'Connect to remote websocket server' }} (cmdOrCtrl-D)
+            </v-tooltip>
+        </v-btn>
         <remote-connection-dialog />
 
         <v-spacer />
@@ -47,54 +46,53 @@
         <v-text-field
             ref="filterField"
             v-model="uiModel.queryText.value"
-            v-shortkey="['/']"
+            vshortkey="['/']"
             class="mr-2"
             :disabled="!logModel.parsedLines.value.length"
             placeholder="Filter by text ('/' to focus)"
-            dense
-            solo
+            persistent-placeholder
+            density="compact"
             hide-details
             clearable
             prepend-inner-icon="mdi-magnify"
             @shortkey.native="focusSearchField()"
         />
 
-        <v-tooltip bottom>
-            <template #activator="{ on }">
-                <v-btn
-                    class="ml-2"
-                    ripple
-                    color="black"
-                    icon
-                    href="https://microsoft.github.io/language-server-protocol/specification"
-                    target="_blank"
-                    v-on="on"
-                >
-                    <v-icon>
-                        mdi-file-document-outline
-                    </v-icon>
-                </v-btn>
-            </template>
-            <span>LSP specification</span>
-        </v-tooltip>
-        <v-tooltip bottom>
-            <template #activator="{ on }">
-                <v-btn
-                    class="ml-2"
-                    ripple
-                    color="black"
-                    icon
-                    href="https://github.com/rchl/lsp-log-parser"
-                    target="_blank"
-                    v-on="on"
-                >
-                    <v-icon>
-                        mdi-github
-                    </v-icon>
-                </v-btn>
-            </template>
-            <span>Check out the source code</span>
-        </v-tooltip>
+        <v-btn
+            class="ml-2"
+            ripple
+            color="black"
+            icon
+            href="https://microsoft.github.io/language-server-protocol/specification"
+            target="_blank"
+        >
+            <v-icon>
+                mdi-file-document-outline
+            </v-icon>
+            <v-tooltip
+                activator="parent"
+                location="bottom"
+            >
+                LSP specification
+            </v-tooltip>
+        </v-btn>
+        <v-btn
+            class="ml-2"
+            ripple
+            color="black"
+            icon
+            href="https://github.com/rchl/lsp-log-parser"
+            target="_blank"
+        >
+            <v-icon>
+                mdi-github
+            </v-icon>
+            <v-tooltip
+                activator="parent"
+                location="bottom">
+                Check out the source code
+            </v-tooltip>
+        </v-btn>
     </v-app-bar>
 </template>
 

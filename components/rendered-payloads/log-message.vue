@@ -3,7 +3,8 @@
         :type="alertType"
         :icon="alertType ? null : 'mdi-console-line'"
         rounded="0"
-        class="ma-0">
+        class="ma-0"
+    >
         <span class="pre-wrap">{{ typeof payload === 'string' ? payload : payload.message }}</span>
     </v-alert>
 </template>
@@ -15,11 +16,11 @@ const props = defineProps<{
     payload: NonNullable<Message['payload']>
 }>()
 
-const mapping: Record<number, string> = {
+const mapping: Record<number, 'error' | 'warning' | 'info' | undefined> = {
     1: 'error',
     2: 'warning',
     3: 'info',
-    4: '',
+    4: undefined,
 }
 const messageType = typeof props.payload === 'string' ? '' : props.payload.type
 const alertType = mapping[messageType]

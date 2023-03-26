@@ -5,23 +5,22 @@
         <div class="rounded overflow-hidden">
             <div
                 v-if="!message.payload"
-                class="grey lighten-1 text-center">
+                class="bg-grey-lighten-1 text-center">
                 &lt;empty&gt;
             </div>
             <template v-else>
-                <v-tabs
-                    v-model="selectedTabIndex"
-                    light>
+                <v-tabs v-model="selectedTabIndex">
                     <v-tab
                         v-for="tab in messageTabs"
                         :key="tab">
                         {{ tab }}
                     </v-tab>
                 </v-tabs>
-                <v-tabs-items v-model="selectedTabIndex">
-                    <v-tab-item
+                <v-window v-model="selectedTabIndex">
+                    <v-window-item
                         v-for="tab in messageTabs"
-                        :key="tab">
+                        :key="tab"
+                    >
                         <div
                             :is="renderedComponent"
                             v-if="renderedComponent && tab === 'rendered'"
@@ -44,8 +43,8 @@
                                 class="payload"
                             />
                         </div>
-                    </v-tab-item>
-                </v-tabs-items>
+                    </v-window-item>
+                </v-window>
             </template>
         </div>
     </div>

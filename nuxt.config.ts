@@ -1,18 +1,27 @@
 import { resolve } from 'path'
-import type { NuxtConfig } from '@nuxt/types'
+import { defineNuxtConfig } from 'nuxt/config'
+import viteVuetify from 'vite-plugin-vuetify'
 
-export default <NuxtConfig> {
-    target: 'static',
-    modern: true,
+export default defineNuxtConfig({
+    css: [
+        'vuetify/styles',
+        '@mdi/font/css/materialdesignicons.css',
+    ],
     ssr: false,
     generate: {
-        fallback: true,
+        // fallback: true,
     },
     build: {
-        transpile: [
-            'vscode-jsonrpc',
-            'vscode-languageserver-protocol',
-        ],
+        transpile: ['vuetify'],
+        // transpile: [
+        //     'vscode-jsonrpc',
+        //     'vscode-languageserver-protocol',
+        // ],
+    },
+    vite: {
+      define: {
+        'process.env.DEBUG': false,
+      },
     },
     head: {
         title: 'LSP Log Parser',
@@ -31,17 +40,25 @@ export default <NuxtConfig> {
         color: '#3B8070',
         background: 'white',
     },
-    plugins: [
-        '~/plugins/vue-shortkey.client',
-        '~/plugins/vue-shortkey.server',
-    ],
+    googleFonts: {
+        download: true,
+        families: {
+            Roboto: [300, 400, 500],
+        },
+    },
     buildModules: [
-        '@nuxt/typescript-build',
-        // Doc: https://github.com/nuxt-community/stylelint-module
         '@nuxtjs/stylelint-module',
         '@nuxtjs/vuetify',
     ],
     modules: [
+        '@nuxtjs/google-fonts',
+        '@vueuse/nuxt',
+        (options, nuxt) => {
+            nuxt.hooks.hook('vite:extendConfig', config => {
+                config.plugins = config.plugins ?? []
+                config.plugins.push(viteVuetify())
+            })
+        },
     ],
     stylelint: {
         context: resolve(__dirname),
@@ -50,4 +67,4 @@ export default <NuxtConfig> {
     vuetify: {
         customVariables: ['~/assets/variables.scss'],
     },
-}
+})

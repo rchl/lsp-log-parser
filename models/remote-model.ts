@@ -1,4 +1,4 @@
-import * as lsp from 'vscode-languageserver-protocol'
+import type lsp from 'vscode-languageserver-protocol'
 import { ref, watch } from 'vue'
 import { Message, useLogModel, LogProvider } from '~/models/log-model'
 
@@ -174,7 +174,7 @@ class RemoteLogProvider implements LogProvider {
 
         if (message.timestamp) {
             const date = new Date(message.timestamp)
-            message.time = `${date.toLocaleTimeString()}.${date.getMilliseconds()}`
+            message.time = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}.${date.getMilliseconds()}`
         }
 
         if (data.params) {
@@ -254,12 +254,12 @@ class RemoteLogProvider implements LogProvider {
 }
 
 function toMessageTypeText(type: lsp.MessageType): string {
-    switch (type) {
-        case lsp.MessageType.Error:
+    switch (type as lsp.MessageType) {
+        case 1:
             return 'Error'
-        case lsp.MessageType.Info:
+        case 3:
             return 'Info'
-        case lsp.MessageType.Log:
+        case 4:
             return 'Log'
     }
     return 'Unknown Type'

@@ -1,7 +1,7 @@
 import { computed, ref } from 'vue'
 import { Message, useLogModel } from '~/models/log-model'
 
-type CategoryType = 'all' | 'general' | 'window' | 'telemetry' | 'client' | 'workspace' | 'text-synchronization' | 'diagnostics' | 'language-features'
+export type CategoryType = 'general' | 'window' | 'telemetry' | 'client' | 'workspace' | 'text-synchronization' | 'diagnostics' | 'language-features'
 
 type Category = {
     name: string;
@@ -9,7 +9,6 @@ type Category = {
 }
 
 const CATEGORIES: Category[] = [
-    { name: 'All', type: 'all' },
     { name: 'General', type: 'general' },
     { name: 'Window', type: 'window' },
     { name: 'Telemetry', type: 'telemetry' },
@@ -20,8 +19,7 @@ const CATEGORIES: Category[] = [
     { name: 'Language features', type: 'language-features' },
 ]
 
-const MESSAGE_TO_CATEGORY: { [key in CategoryType]: string[] } = {
-    all: [],
+const MESSAGE_TO_CATEGORIES: Record<CategoryType, string[]> = {
     general: ['initialize', 'initialized', 'shutdown', 'exit', '$/cancelRequest'],
     window: ['window/showMessage', 'window/showMessageRequest', 'window/logMessage'],
     telemetry: ['telemetry/event'],
@@ -82,7 +80,11 @@ const errorDialogText = ref('')
 const errorDialogVisible = ref(false)
 const logDialogVisible = ref(false)
 const queryText = ref('')
-const selectedCategoryType = ref<CategoryType>('all')
+const selectedCategoryTypes = ref<CategoryType[]>(CATEGORIES.map(c => c.type))
+
+function selectAllCategories() {
+    selectedCategoryTypes.value = CATEGORIES.map(c => c.type)
+}
 
 function toggleDrawer() {
     drawerVisible.value = !drawerVisible.value
@@ -95,7 +97,7 @@ function showError(message: string) {
 
 function resetState() {
     queryText.value = ''
-    selectedCategoryType.value = 'all'
+    selectAllCategories()
 }
 
 function messageMatchesSessionFilter(message: Message) {
@@ -103,11 +105,16 @@ function messageMatchesSessionFilter(message: Message) {
 }
 
 function messageMatchesCategoryFilter(message: Message) {
-    if (selectedCategoryType.value === 'all' || !message.name) {
+    if (!message.name) {
         return true
     }
-
-    return MESSAGE_TO_CATEGORY[selectedCategoryType.value].includes(message.name)
+    for (const category of selectedCategoryTypes.value) {
+        const categories = MESSAGE_TO_CATEGORIES[category]
+        if (categories.includes(message.name)) {
+            return true
+        }
+    }
+    return false
 }
 
 const logModel = useLogModel()
@@ -136,7 +143,8 @@ export function useUiModel() {
         logDialogVisible,
         queryText,
         resetState,
-        selectedCategoryType,
+        selectAllCategories,
+        selectedCategoryTypes,
         showError,
         toggleDrawer,
     }

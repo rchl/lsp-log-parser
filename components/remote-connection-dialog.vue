@@ -4,7 +4,7 @@
         max-width="500px"
         persistent>
         <v-card>
-            <v-card-title class="headline">
+            <v-card-title class="text-h5">
                 Remote mode
             </v-card-title>
 
@@ -14,9 +14,8 @@
                 </p>
                 <v-alert
                     v-if="remoteModel.hasConnectedAtLeastOnce.value && remoteModel.errorText.value"
-                    border="left"
-                    dense
-                    colored-border
+                    class="mt-2"
+                    density="compact"
                     type="error"
                     elevation="2"
                 >
@@ -27,7 +26,7 @@
             <v-card-actions>
                 <v-spacer />
                 <v-btn
-                    text
+                    variant="text"
                     @click="remoteModel.enabled.value = false">
                     Cancel
                 </v-btn>

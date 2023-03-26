@@ -4,17 +4,17 @@
             <v-alert
                 v-if="remoteModel.connected.value"
                 type="info"
-                outlined>
+                variant="outlined">
                 Log view is limited to {{ logModel.REMOTE_MESSAGE_COUNT_LIMIT }} latest messages
             </v-alert>
 
             <div
                 v-if="logModel.parsedLines.value.length"
                 class="d-flex justify-space-between mb-6">
-                <h2 class="headline">
+                <h2 class="text-h5">
                     Client
                 </h2>
-                <h2 class="headline">
+                <h2 class="text-h5">
                     Server
                 </h2>
             </div>
@@ -29,53 +29,60 @@
             >
                 <div
                     v-if="line.time || line.timeLatency !== undefined"
-                    class="caption"
+                    class="text-caption"
                 >
                     {{ line.time }}<span v-if="line.timeLatency !== undefined"> (self: {{ line.timeLatency }} ms)</span>
                 </div>
                 <v-alert
-                    :border="line.toServer ? 'left' : 'right'"
+                    :border="line.toServer ? 'start' : 'end'"
                     :class="getMessageClass(line)"
                     :color="getMessageColor(line)"
                     max-width="100%"
                     :min-width="line.isExpanded ? '100%' : '0'"
-                    dark
-                    dense
+                    density="compact"
                     @click.native="toggleExpand(line)"
                 >
                     <v-icon
                         v-if="line.type && line.toServer"
-                        color="blue darken-3">
+                        color="blue-darken-3"
+                        class="mr-2"
+                    >
                         {{ uiModel.ICON_TYPES[line.type] }}
                     </v-icon>
                     <v-chip
                         v-if="line.serverName && line.toServer"
-                        color="blue darken-3"
+                        color="blue-darken-3"
                         class="mr-2"
+                        variant="elevated"
+                        size="small"
                         label
-                        small>
+                    >
                         {{ line.serverName }}
                     </v-chip>
                     <span>{{ line.name }}</span>
                     <v-chip
                         v-if="line.serverName && !line.toServer"
-                        color="brown darken-3"
-                        class="ml-2"
+                        color="brown-darken-3"
+                        class="ml-2 mr-2"
+                        variant="elevated"
+                        size="small"
                         label
-                        small>
+                    >
                         {{ line.serverName }}
                     </v-chip>
                     <v-icon
                         v-if="line.type && !line.toServer"
                         class="h-reverse"
-                        color="brown darken-3">
+                        color="brown-darken-3"
+                    >
                         {{ uiModel.ICON_TYPES[line.type] }}
                     </v-icon>
                     <v-expand-transition>
                         <div v-if="!line.isExpanded">
                             <div
-                                class="caption text-truncate pa-1 mt-1 rounded"
-                                :class="getPayloadSummaryColor(line)">
+                                class="text-caption text-truncate pa-1 mt-1 rounded"
+                                :class="getPayloadSummaryColor(line)"
+                            >
                                 {{ line.payloadSummary || line.payload || '(empty)' }}
                             </div>
                         </div>
@@ -87,10 +94,9 @@
                                 v-if="line.payload"
                                 class="text-right">
                                 <v-btn
-                                    light
                                     @click.stop="line && copyToClipboard(line.payload)">
                                     <v-icon>mdi-content-copy</v-icon>
-                                    <span>Copy payload</span>
+                                    Copy payload
                                 </v-btn>
                             </div>
                         </div>
@@ -101,25 +107,24 @@
             <div id="log-bottom"></div>
         </v-container>
 
-        <v-tooltip left>
-            <template #activator="{ on }">
-                <v-btn
-                    v-shortkey="[cmdOrCtrl, 'x']"
-                    fixed
-                    :disabled="logModel.parsedLines.value.length === 0"
-                    fab
-                    bottom
-                    right
-                    color="primary"
-                    @click="logModel.clearMessages()"
-                    @shortkey.native="logModel.clearMessages()"
-                    v-on="on"
-                >
-                    <v-icon>mdi-playlist-remove</v-icon>
-                </v-btn>
-            </template>
-            <span>Clear log view ({{ cmdOrCtrl }}-X)</span>
-        </v-tooltip>
+        <v-btn
+            vshortkey="[cmdOrCtrl, 'x']"
+            class="clear-button"
+            :disabled="logModel.parsedLines.value.length === 0"
+            location="bottom right"
+            icon
+            color="primary"
+            @click="logModel.clearMessages()"
+            @shortkey.native="logModel.clearMessages()"
+        >
+            <v-icon>mdi-playlist-remove</v-icon>
+            <v-tooltip
+                activator="parent"
+                location="left"
+            >
+                Clear log view (cmdOrCtrl-X);
+            </v-tooltip>
+        </v-btn>
     </div>
 </template>
 
@@ -223,9 +228,9 @@ function getMessageColor(message: Message) {
     if (state.hoveredPairKey.value && state.hoveredPairKey.value === message.pairKey) {
         color = 'orange'
     } else if (message.isError) {
-        color = 'red lighten-2'
+        color = 'red-lighten-2'
     } else {
-        color = message.toServer ? 'blue lighten-1' : 'brown'
+        color = message.toServer ? 'blue' : 'brown'
     }
     return color
 }
@@ -233,12 +238,12 @@ function getMessageColor(message: Message) {
 function getPayloadSummaryColor(message: Message) {
     let color = ''
     if (message.isError) {
-        color = 'red'
+        color = 'bg-red-lighten-3'
     } else {
-        color = message.toServer ? 'blue' : 'brown'
+        color = message.toServer ? 'bg-blue-lighten-3' : 'bg-brown-lighten-3'
     }
 
-    return `${color} lighten-4 grey--text text--darken-3`
+    return `${color} text-grey-darken-3`
 }
 </script>
 
@@ -265,6 +270,11 @@ function getPayloadSummaryColor(message: Message) {
   color: #000;
   cursor: initial;
   text-align: left;
+}
+
+.clear-button {
+    margin: 0 1rem 1rem 0;
+    position: fixed;
 }
 
 #log-bottom {

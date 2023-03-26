@@ -1,55 +1,54 @@
 <template>
-    <v-navigation-drawer
-        v-model="uiModel.drawerVisible.value"
-        app
-        fixed>
+    <v-navigation-drawer v-model="uiModel.drawerVisible.value">
         <v-list
             v-if="logModel.selectedFilters.value.length"
-            dense>
-            <v-subheader>Sessions</v-subheader>
+            density="compact"
+            nav
+        >
+            <v-list-subheader>Sessions</v-list-subheader>
             <v-list-item
                 v-for="filter in logModel.selectedFilters.value"
                 :key="filter.name"
-                link
+                :title="filter.name"
                 @click="filter.enabled = !filter.enabled"
             >
-                <v-list-item-content>
-                    <v-list-item-title>
-                        {{ filter.name }}
-                    </v-list-item-title>
-                </v-list-item-content>
-                <v-list-item-icon>
-                    <v-icon :color="filter.enabled ? 'primary' : 'grey'">
+                <template #append>
+                    <v-icon color="primary">
                         {{ filter.enabled ? 'mdi-checkbox-marked' : 'mdi-checkbox-blank-outline' }}
                     </v-icon>
-                </v-list-item-icon>
+                </template>
             </v-list-item>
         </v-list>
 
         <v-divider />
 
-        <v-list dense>
-            <v-subheader>Filter by category</v-subheader>
-            <v-list-item-group
-                v-model="uiModel.selectedCategoryType.value"
-                color="primary"
-                mandatory>
-                <v-list-item
-                    v-for="category in uiModel.CATEGORIES"
-                    :key="category.type"
-                    :value="category.type">
-                    <v-list-item-content>
-                        <v-list-item-title>
-                            {{ category.name }}
-                        </v-list-item-title>
-                    </v-list-item-content>
-                    <v-list-item-icon>
-                        <v-icon :color=" uiModel.selectedCategoryType.value !== category.type ? 'grey' : ''">
-                            {{ uiModel.selectedCategoryType.value === category.type ? 'mdi-radiobox-marked' : 'mdi-radiobox-blank' }}
-                        </v-icon>
-                    </v-list-item-icon>
-                </v-list-item>
-            </v-list-item-group>
+        <v-list
+            density="compact"
+            nav
+            select-strategy="classic"
+            :selected="uiModel.selectedCategoryTypes.value"
+            @update:selected="val => onCategoryChanged(val as CategoryType[])"
+        >
+            <v-list-subheader>Filter by category</v-list-subheader>
+            <v-list>
+                <v-btn
+                    variant="text"
+                    @click="toggleAllCategories">
+                    Toggle all
+                </v-btn>
+            </v-list>
+            <v-list-item
+                v-for="category in uiModel.CATEGORIES"
+                :key="category.name"
+                :value="category.type"
+                :title="category.name"
+            >
+                <template #append="{ isSelected }">
+                    <v-list-item-action>
+                        <v-checkbox-btn :model-value="isSelected" />
+                    </v-list-item-action>
+                </template>
+            </v-list-item>
         </v-list>
     </v-navigation-drawer>
 </template>
@@ -57,7 +56,20 @@
 <script setup lang="ts">
 import { useLogModel } from '~/models/log-model'
 import { useUiModel } from '~/models/ui-model'
+import type { CategoryType } from '~/models/ui-model'
 
 const logModel = useLogModel()
 const uiModel = useUiModel()
+
+function onCategoryChanged(selected: CategoryType[]) {
+    uiModel.selectedCategoryTypes.value = selected
+}
+
+function toggleAllCategories() {
+    if (uiModel.selectedCategoryTypes.value.length) {
+        uiModel.selectedCategoryTypes.value = []
+    } else {
+        uiModel.selectAllCategories()
+    }
+}
 </script>

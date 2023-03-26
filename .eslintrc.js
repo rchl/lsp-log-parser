@@ -6,7 +6,9 @@ module.exports = {
         es2020: true,
         node: true,
     },
-    extends: 'eslint:recommended',
+    extends: [
+        'eslint:recommended',
+    ],
     parserOptions: {
         sourceType: 'module',
     },
@@ -90,6 +92,7 @@ module.exports = {
             extends: [
                 'plugin:vue/recommended',
                 'plugin:@typescript-eslint/recommended',
+                'plugin:vuetify/base',
             ],
             parser: 'vue-eslint-parser',
             parserOptions: {

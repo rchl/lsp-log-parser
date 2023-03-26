@@ -1,7 +1,7 @@
 <template>
     <v-app>
-        <app-bar />
         <app-drawer />
+        <app-bar />
         <v-main>
             <div
                 v-if="logModel.parsedLines.length === 0"
@@ -17,21 +17,18 @@
                 v-model="uiModel.errorDialogVisible"
                 max-width="290">
                 <v-card>
-                    <v-card-title class="headline">
-                        Error
-                    </v-card-title>
+                    <v-card-title class="text-h5">Error</v-card-title>
 
-                    <v-card-text>
-                        {{ uiModel.errorDialogText }}
-                    </v-card-text>
+                    <v-card-text>{{ uiModel.errorDialogText }}</v-card-text>
 
                     <v-card-actions>
                         <v-spacer />
 
                         <v-btn
                             color="primary"
-                            text
-                            @click="uiModel.errorDialogVisible = false">
+                            variant="text"
+                            @click="uiModel.errorDialogVisible = false"
+                        >
                             Close
                         </v-btn>
                     </v-card-actions>

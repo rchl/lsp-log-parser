@@ -3,7 +3,7 @@
         v-model="uiModel.logDialogVisible.value"
         max-width="600px">
         <v-card>
-            <v-card-title class="headline">
+            <v-card-title class="text-h5">
                 Paste the log and press the button to parse
             </v-card-title>
 
@@ -12,7 +12,6 @@
                     v-model="state.logContent"
                     autofocus
                     no-resize
-                    filled
                     spellcheck="false"
                     data-gramm_editor="false"
                 />
@@ -22,25 +21,26 @@
                     label="Log type"
                     :hint="state.selectedParserHint"
                     persistent-hint
-                    solo
                 />
             </v-card-text>
             <v-card-actions>
                 <v-spacer />
-                <v-tooltip left>
-                    <template #activator="{ on }">
-                        <v-btn
-                            v-shortkey="[cmdOrCtrl, 'enter']"
-                            color="primary"
-                            @shortkey.native="uiModel.logDialogVisible.value ? parseLog() : null"
-                            @click="parseLog"
-                            v-on="on"
-                        >
-                            Parse
-                        </v-btn>
-                    </template>
-                    <span>Parse log text ({{ cmdOrCtrl }}-ENTER)</span>
-                </v-tooltip>
+                <v-btn @click="uiModel.logDialogVisible.value = false">
+                    Cancel
+                </v-btn>
+                <v-btn
+                    vshortkey="[cmdOrCtrl, 'enter']"
+                    color="primary"
+                    @shortkey.native="uiModel.logDialogVisible.value ? parseLog() : null"
+                    @click="parseLog"
+                >
+                    Parse
+                    <v-tooltip
+                        activator="parent"
+                        location="left">
+                        Parse log text (cmdOrCtrl-ENTER)
+                    </v-tooltip>
+                </v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
