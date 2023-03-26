@@ -24,7 +24,7 @@
     }
   },
   "dependencies": {
-    "nuxt": "^2.16.3",
+    "nuxt": "^3.3.2",
     "vue-json-pretty": "1.9.4",
     "vue-shortkey": "^3.1.7"
   },
