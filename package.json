@@ -35,7 +35,7 @@
     "@mdi/font": "^7.2.96",
     "@nuxtjs/google-fonts": "^3.0.0",
     "@nuxtjs/stylelint-module": "^5.0.1",
-    "@types/node": "^16.18.21",
+    "@types/node": "^16.18.23",
     "@typescript-eslint/eslint-plugin": "^5.57.0",
     "@typescript-eslint/parser": "^5.57.0",
     "eslint": "^8.37.0",
