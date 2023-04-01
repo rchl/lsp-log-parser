@@ -52,7 +52,6 @@
     "stylelint-config-standard": "^32.0.0",
     "typescript": "^5.0.3",
     "vite-plugin-vuetify": "^1.0.2",
-    "vscode-languageserver-protocol": "^3.17.3",
-    "vuex": "4"
+    "vscode-languageserver-protocol": "^3.17.3"
   }
 }
