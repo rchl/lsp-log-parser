@@ -22,32 +22,41 @@
 
         <v-divider />
 
+        <v-switch
+            v-model="uiModel.categoriesFilter.enabled"
+            density="compact"
+            class="px-4"
+            hide-details
+            label="Filter messages"
+        />
+
         <v-list
+            v-if="uiModel.categoriesFilter.enabled"
             density="compact"
             nav
             select-strategy="classic"
-            :selected="uiModel.selectedCategoryTypes.value"
+            :selected="uiModel.categoriesFilter.selectedCategories"
             @update:selected="val => onCategoryChanged(val as CategoryType[])"
         >
-            <v-list-subheader>Filter by category</v-list-subheader>
-            <v-list>
+            <v-list-subheader>Categories</v-list-subheader>
+            <v-list-item
+                v-for="category in uiModel.categoriesFilter.getCategories()"
+                :key="category.name"
+                :value="category.type"
+                :title="category.name"
+            >
+                <template #prepend="{ isSelected }">
+                    <v-list-item-action>
+                        <v-checkbox-btn :model-value="isSelected" />
+                    </v-list-item-action>
+                </template>
+            </v-list-item>
+            <v-list-item>
                 <v-btn
                     variant="text"
                     @click="toggleAllCategories">
                     Toggle all
                 </v-btn>
-            </v-list>
-            <v-list-item
-                v-for="category in uiModel.CATEGORIES"
-                :key="category.name"
-                :value="category.type"
-                :title="category.name"
-            >
-                <template #append="{ isSelected }">
-                    <v-list-item-action>
-                        <v-checkbox-btn :model-value="isSelected" />
-                    </v-list-item-action>
-                </template>
             </v-list-item>
         </v-list>
     </v-navigation-drawer>
@@ -62,14 +71,14 @@ const logModel = useLogModel()
 const uiModel = useUiModel()
 
 function onCategoryChanged(selected: CategoryType[]) {
-    uiModel.selectedCategoryTypes.value = selected
+    uiModel.categoriesFilter.selectedCategories = selected
 }
 
 function toggleAllCategories() {
-    if (uiModel.selectedCategoryTypes.value.length) {
-        uiModel.selectedCategoryTypes.value = []
+    if (uiModel.categoriesFilter.selectedCategories.length) {
+        uiModel.categoriesFilter.selectedCategories = []
     } else {
-        uiModel.selectAllCategories()
+        uiModel.categoriesFilter.selectAllCategories()
     }
 }
 </script>

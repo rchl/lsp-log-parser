@@ -1,7 +1,7 @@
 import { computed, ref } from 'vue'
 import { Message, useLogModel } from '~/models/log-model'
 
-export type CategoryType = 'general' | 'window' | 'telemetry' | 'client' | 'workspace' | 'text-synchronization' | 'diagnostics' | 'language-features'
+export type CategoryType = 'general' | 'window' | 'client' | 'workspace' | 'text-synchronization' | 'diagnostics' | 'language-features'
 
 type Category = {
     name: string;
@@ -9,20 +9,18 @@ type Category = {
 }
 
 const CATEGORIES: Category[] = [
-    { name: 'General', type: 'general' },
-    { name: 'Window', type: 'window' },
-    { name: 'Telemetry', type: 'telemetry' },
     { name: 'Client', type: 'client' },
-    { name: 'Workspace', type: 'workspace' },
-    { name: 'Text synchronization', type: 'text-synchronization' },
     { name: 'Diagnostics', type: 'diagnostics' },
+    { name: 'General', type: 'general' },
     { name: 'Language features', type: 'language-features' },
+    { name: 'Text synchronization', type: 'text-synchronization' },
+    { name: 'Window', type: 'window' },
+    { name: 'Workspace', type: 'workspace' },
 ]
 
 const MESSAGE_TO_CATEGORIES: Record<CategoryType, string[]> = {
     general: ['initialize', 'initialized', 'shutdown', 'exit', '$/cancelRequest'],
     window: ['window/showMessage', 'window/showMessageRequest', 'window/logMessage'],
-    telemetry: ['telemetry/event'],
     client: ['client/registerCapability', 'client/unregisterCapability'],
     workspace: [
         'workspace/applyEdit',
@@ -42,7 +40,12 @@ const MESSAGE_TO_CATEGORIES: Record<CategoryType, string[]> = {
         'textDocument/willSave',
         'textDocument/willSaveWaitUntil',
     ],
-    diagnostics: ['textDocument/publishDiagnostics'],
+    diagnostics: [
+        'textDocument/publishDiagnostics',
+        'textDocument/diagnostic',
+        'workspace/diagnostic',
+        'workspace/diagnostic/refresh',
+    ],
     'language-features': [
         'codeLens/resolve',
         'completionItem/resolve',
@@ -80,10 +83,18 @@ const errorDialogText = ref('')
 const errorDialogVisible = ref(false)
 const logDialogVisible = ref(false)
 const queryText = ref('')
-const selectedCategoryTypes = ref<CategoryType[]>(CATEGORIES.map(c => c.type))
+const categoriesFilter = reactive({
+    enabled: false,
+    getCategories() {
+        return CATEGORIES
+    },
+    selectAllCategories,
+    selectedCategories: [] as CategoryType[],
+})
 
 function selectAllCategories() {
-    selectedCategoryTypes.value = CATEGORIES.map(c => c.type)
+    categoriesFilter.enabled = false
+    categoriesFilter.selectedCategories = CATEGORIES.map(c => c.type)
 }
 
 function toggleDrawer() {
@@ -105,10 +116,10 @@ function messageMatchesSessionFilter(message: Message) {
 }
 
 function messageMatchesCategoryFilter(message: Message) {
-    if (!message.name) {
+    if (!message.name || !categoriesFilter.enabled) {
         return true
     }
-    for (const category of selectedCategoryTypes.value) {
+    for (const category of categoriesFilter.selectedCategories) {
         const categories = MESSAGE_TO_CATEGORIES[category]
         if (categories.includes(message.name)) {
             return true
@@ -128,13 +139,13 @@ const filteredLines = computed(() => {
             return false
         }
 
-        return !queryText.value || line.name && line.name.toLowerCase().includes(queryText.value.toLowerCase())
+        return !queryText.value || line.name?.toLowerCase().includes(queryText.value.toLowerCase())
     })
 })
 
 export function useUiModel() {
     return {
-        CATEGORIES,
+        categoriesFilter,
         drawerVisible,
         errorDialogText,
         errorDialogVisible,
@@ -143,8 +154,6 @@ export function useUiModel() {
         logDialogVisible,
         queryText,
         resetState,
-        selectAllCategories,
-        selectedCategoryTypes,
         showError,
         toggleDrawer,
     }
