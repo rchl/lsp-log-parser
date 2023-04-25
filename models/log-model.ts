@@ -7,7 +7,7 @@ export interface LogProvider {
 export interface Message {
     id: number;
     isExpanded?: boolean;
-    requestId?: number;
+    requestId?: string | number;
     // A key that is equal for two related request-response calls.
     pairKey?: string;
     name?: string;

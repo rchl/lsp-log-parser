@@ -41,7 +41,7 @@ interface IncomingStderrMessage extends Base<Incoming> {
 }
 
 interface RequestOrResponse<Dir extends Direction> extends Base<Dir> {
-    id: any;
+    id: string | number;
 }
 
 interface Notification<Dir extends Direction> extends Base<Dir> {
@@ -52,7 +52,7 @@ interface IncomingNotification extends Notification<Outgoing> {
     error?: 'Unhandled notification!';
 }
 
-interface OutgoingNotification extends Notification<Outgoing> {}
+type OutgoingNotification = Notification<Outgoing>
 
 interface IncomingRequest extends RequestOrResponse<Incoming> {
     method: string;
@@ -66,7 +66,7 @@ interface OutgoingRequest extends RequestOrResponse<Outgoing> {
     method: string;
 }
 
-interface OutgoingResponse extends RequestOrResponse<Outgoing> {}
+type OutgoingResponse = RequestOrResponse<Outgoing>
 
 interface OutgoingErrorResponse extends RequestOrResponse<Outgoing> {
     isError: true;

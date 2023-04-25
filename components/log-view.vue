@@ -59,7 +59,7 @@
                     >
                         {{ line.serverName }}
                     </v-chip>
-                    <span>{{ line.name }}</span>
+                    <span>{{ line.name }}</span> <small v-if="line.requestId !== undefined">{{ `[${line.requestId}]` }}</small>
                     <v-chip
                         v-if="line.serverName && !line.toServer"
                         color="brown-darken-3"
