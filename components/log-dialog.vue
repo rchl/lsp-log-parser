@@ -29,9 +29,7 @@
                     Cancel
                 </v-btn>
                 <v-btn
-                    vshortkey="[cmdOrCtrl, 'enter']"
                     color="primary"
-                    @shortkey.native="uiModel.logDialogVisible.value ? parseLog() : null"
                     @click="parseLog"
                 >
                     Parse
@@ -48,10 +46,23 @@
 
 <script setup lang="ts">
 import { nextTick, reactive, toRef, watch, watchEffect } from 'vue'
+import { useMagicKeys } from '@vueuse/core'
 import { ParseResults, useLogModel } from '~/models/log-model'
 import { useParserModel } from '~/models/parser-model'
 import { useUiModel } from '~/models/ui-model'
 import parsers from '~/models/parsers'
+
+useMagicKeys({
+    passive: false,
+    onEventFired(e) {
+        if (e.metaKey && e.key === 'Enter' && e.type === 'keydown') {
+            e.preventDefault()
+            if (uiModel.logDialogVisible.value) {
+                parseLog()
+            }
+        }
+    },
+})
 
 const state = reactive({
     logContent: '',

@@ -5,12 +5,10 @@
             @click.stop="uiModel.toggleDrawer()" />
 
         <v-btn
-            vshortkey="[cmdOrCtrl, 'o']"
             class="mr-2"
             variant="elevated"
             :disabled="remoteModel.enabled.value"
-            @click="uiModel.logDialogVisible.value = true"
-            @shortkey.native="uiModel.logDialogVisible.value = true"
+            @click="openLogDialog"
         >
             Open log
             <v-tooltip
@@ -20,16 +18,14 @@
                 Open log text (cmdOrCtrl-O)
             </v-tooltip>
         </v-btn>
-        <open-log-dialog />
+        <log-dialog />
 
         <v-btn
-            vshortkey="[cmdOrCtrl, 'd']"
             :prepend-icon="remoteModel.connected.value ? 'mdi-lan-disconnect' : 'mdi-lan-connect'"
             class="mr-2"
             color="primary"
             :variant="remoteModel.connected.value ? 'elevated' : 'outlined'"
-            @shortkey.native="remoteModel.enabled.value = !remoteModel.enabled.value"
-            @click="remoteModel.enabled.value = !remoteModel.enabled.value"
+            @click="toggleRemoteConnection"
         >
             Remote
             <v-tooltip
@@ -42,14 +38,12 @@
         <remote-connection-dialog />
 
         <v-btn
-            vshortkey="[cmdOrCtrl, 'x']"
             class="mr-2"
             :disabled="logModel.parsedLines.value.length === 0"
             location="bottom right"
             color="primary"
             variant="outlined"
-            @click="logModel.clearMessages()"
-            @shortkey.native="logModel.clearMessages()"
+            @click="clearLogMessages"
         >
             <v-icon>mdi-playlist-remove</v-icon>
             <v-tooltip
@@ -65,7 +59,6 @@
         <v-text-field
             ref="filterField"
             v-model="uiModel.queryText.value"
-            vshortkey="['/']"
             class="mr-2"
             :disabled="!logModel.parsedLines.value.length"
             placeholder="Filter by text ('/' to focus)"
@@ -74,7 +67,6 @@
             hide-details
             clearable
             prepend-inner-icon="mdi-magnify"
-            @shortkey.native="focusSearchField()"
         />
 
         <v-btn
@@ -117,11 +109,44 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useMagicKeys } from '@vueuse/core'
 import { useRemoteModel } from '~/models/remote-model'
 import { useLogModel } from '~/models/log-model'
 import { useUiModel } from '~/models/ui-model'
-import RemoteConnectionDialog from '~/components/remote-connection-dialog.vue'
-import OpenLogDialog from '~/components/open-log-dialog.vue'
+
+useMagicKeys({
+    passive: false,
+    onEventFired(e) {
+        if (e.key === '/' && e.type === 'keydown') {
+            if ((e.target as HTMLElement).tagName === 'INPUT') {
+                return
+            }
+            e.preventDefault()
+            focusSearchField()
+        } else if (e.metaKey && ['x', 'd', 'o'].includes(e.key) && e.type === 'keydown') {
+            e.preventDefault()
+            if (e.key === 'x') {
+                clearLogMessages()
+            } else if (e.key === 'd') {
+                toggleRemoteConnection()
+            } else if (e.key === 'o') {
+                openLogDialog()
+            }
+        }
+    },
+})
+
+function openLogDialog() {
+    uiModel.logDialogVisible.value = true
+}
+
+function clearLogMessages() {
+    logModel.clearMessages()
+}
+
+function toggleRemoteConnection() {
+    remoteModel.enabled.value = !remoteModel.enabled.value
+}
 
 const filterField = ref<HTMLElement | null>(null)
 

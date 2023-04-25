@@ -8,10 +8,5 @@
     // ],
     "esModuleInterop": true,
     "experimentalDecorators": true,
-    "types": [
-    ]
   },
-  // "include": [
-  //   "./app.vue"
-  // ]
 }

@@ -114,7 +114,6 @@ import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { useLogModel, Message } from '~/models/log-model'
 import { useRemoteModel } from '~/models/remote-model'
 import { useUiModel } from '~/models/ui-model'
-import MessagePayload from '~/components/message-payload.vue'
 
 const logModel = useLogModel()
 const uiModel = useUiModel()
