@@ -10,7 +10,7 @@
 
             <v-card-text>
                 <p>
-                    Attempting to connect to server at port 9981...
+                    Attempting to connect to server on port 9981...
                 </p>
                 <v-alert
                     v-if="remoteModel.hasConnectedAtLeastOnce.value && remoteModel.errorText.value"

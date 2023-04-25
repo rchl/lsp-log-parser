@@ -102,7 +102,7 @@ class RemoteLogProvider implements LogProvider {
 
     _createWebSocket() {
         if (!enabled.value) {
-            console.info('Not enabled, not creating new connection')
+            console.info('WebSocket: not enabled, not creating new connection')
             return
         }
 
@@ -114,7 +114,7 @@ class RemoteLogProvider implements LogProvider {
     }
 
     _closeConnection() {
-        console.info('Triggered manual close')
+        console.info('WebSocket: triggered manual close')
         connected.value = false
         errorText.value = ''
 
@@ -125,17 +125,18 @@ class RemoteLogProvider implements LogProvider {
     }
 
     _onOpen() {
-        console.info('Connection opened')
+        console.info('WebSocket: connection opened')
         errorText.value = ''
         connected.value = true
         hasConnectedAtLeastOnce.value = true
     }
 
     _onError(event: Event) {
-        console.info('Got error event', event)
+        console.info('WebSocket: error event')
     }
 
     _onClose(event: CloseEvent) {
+        console.info('WebSocket: connection closed')
         if (!event.wasClean) {
             connected.value = false
             this.socket = null
@@ -144,7 +145,7 @@ class RemoteLogProvider implements LogProvider {
                 const reason = event.reason ? event.reason : `code: ${event.code}`
                 errorText.value = `Error connecting to remote (${reason})`
                 console.info('Unclean shutdown, retrying...')
-                setTimeout(this._createWebSocket, 2000)
+                setTimeout(() => this._createWebSocket(), 2000)
             }
         }
     }
