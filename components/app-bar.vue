@@ -41,6 +41,25 @@
         </v-btn>
         <remote-connection-dialog />
 
+        <v-btn
+            vshortkey="[cmdOrCtrl, 'x']"
+            class="mr-2"
+            :disabled="logModel.parsedLines.value.length === 0"
+            location="bottom right"
+            color="primary"
+            variant="outlined"
+            @click="logModel.clearMessages()"
+            @shortkey.native="logModel.clearMessages()"
+        >
+            <v-icon>mdi-playlist-remove</v-icon>
+            <v-tooltip
+                activator="parent"
+                location="bottom"
+            >
+                Clear log view (cmdOrCtrl-X);
+            </v-tooltip>
+        </v-btn>
+
         <v-spacer />
 
         <v-text-field

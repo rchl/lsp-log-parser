@@ -106,25 +106,6 @@
 
             <div id="log-bottom"></div>
         </v-container>
-
-        <v-btn
-            vshortkey="[cmdOrCtrl, 'x']"
-            class="clear-button"
-            :disabled="logModel.parsedLines.value.length === 0"
-            location="bottom right"
-            icon
-            color="primary"
-            @click="logModel.clearMessages()"
-            @shortkey.native="logModel.clearMessages()"
-        >
-            <v-icon>mdi-playlist-remove</v-icon>
-            <v-tooltip
-                activator="parent"
-                location="left"
-            >
-                Clear log view (cmdOrCtrl-X);
-            </v-tooltip>
-        </v-btn>
     </div>
 </template>
 
@@ -270,11 +251,6 @@ function getPayloadSummaryColor(message: Message) {
   color: #000;
   cursor: initial;
   text-align: left;
-}
-
-.clear-button {
-    margin: 0 1rem 1rem 0;
-    position: fixed;
 }
 
 #log-bottom {
