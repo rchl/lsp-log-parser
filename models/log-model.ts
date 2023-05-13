@@ -32,7 +32,7 @@ type SelectedFilter = {
     enabled: boolean;
 }
 
-const REMOTE_MESSAGE_COUNT_LIMIT = 220
+const REMOTE_MESSAGE_COUNT_LIMIT = 2000
 
 const logProviders: LogProvider[] = []
 const parsedFilters = ref<ParseResults['filters']>([])
