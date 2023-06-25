@@ -28,6 +28,10 @@
                             <payload-formatter-text-document-formatting-message
                                 v-if="payloadFormatter === 'payload-formatter-text-document-formatting-message'"
                                 :payload="message.payload" />
+                            <payload-formatter-semantic-tokens
+                                v-if="payloadFormatter === 'payload-formatter-semantic-tokens'"
+                                :payload="message.payload"
+                                :token-legend="message.extraData" />
                         </template>
                         <div
                             v-else
@@ -78,6 +82,9 @@ const payloadFormatter = computed((): string | undefined => {
     if (message.name === 'textDocument/formatting') {
         return 'payload-formatter-text-document-formatting-message'
     }
+    if (message.name === 'textDocument/semanticTokens/full') {
+        return 'payload-formatter-semantic-tokens'
+    }
     return undefined
 })
 const selectedTabIndex = ref(0)
@@ -93,11 +100,13 @@ const messageTabs = computed(() => {
 import { defineComponent } from 'vue'
 import PayloadFormatterLogMessage from '~/components/payload-formatter/log-message.vue'
 import PayloadFormatterTextDocumentFormattingMessage from '~/components/payload-formatter/text-document-formatting.vue'
+import PayloadFormatterSemanticTokens from '~/components/payload-formatter/semantic-tokens.vue'
 
 export default defineComponent({
     components: {
         PayloadFormatterLogMessage,
         PayloadFormatterTextDocumentFormattingMessage,
+        PayloadFormatterSemanticTokens,
     },
 })
 </script>

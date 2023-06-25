@@ -13,6 +13,7 @@ export interface Message {
     name?: string;
     payload?: string | Record<string, any>;
     payloadSummary?: string;
+    extraData?: any;
     toServer: boolean;
     isError?: boolean;
     time?: string;

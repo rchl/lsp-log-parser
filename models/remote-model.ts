@@ -78,6 +78,7 @@ class RemoteLogProvider implements LogProvider {
     lastId = 0
     socket: WebSocket | null = null
     messageMapping: Record<string, Message> = {}
+    semanticLegend: Record<string, lsp.SemanticTokensLegend | undefined> = {}
 
     constructor() {
         watch(enabled, (isEnabled) => {
@@ -181,7 +182,7 @@ class RemoteLogProvider implements LogProvider {
         if (data.params) {
             message.payload = data.params
             if (!message.isError && message.name) {
-                message.payloadSummary = this._createPayloadSummary(message.name, message.payload, isRequestOrResponse(data) && isRequest(data))
+                message.payloadSummary = this._createPayloadSummary(message.name, message.payload, message, isRequestOrResponse(data) && isRequest(data))
             }
         }
 
@@ -211,7 +212,7 @@ class RemoteLogProvider implements LogProvider {
         }
     }
 
-    _createPayloadSummary(method: string, payload: any, isRequest: boolean): string {
+    _createPayloadSummary(method: string, payload: any, message: Message, isRequest: boolean): string {
         let result = ''
         if (method.startsWith('textDocument')) {
             const textDocumentMethod = method.slice('textDocument'.length + 1)
@@ -240,6 +241,11 @@ class RemoteLogProvider implements LogProvider {
                     result += `${(payload as lsp.DocumentHighlight[]).length} highlights`
                 } else if (textDocumentMethod === 'codeAction') {
                     result += `${(payload as lsp.CodeAction[]).length} code actions`
+                } else if (textDocumentMethod === 'semanticTokens/full') {
+                    if (message.serverName) {
+                        message.extraData = this.semanticLegend[message.serverName]
+                    }
+                    result += `${(payload as lsp.SemanticTokens).data.length / 5} tokens`
                 }
             }
             if (textDocumentMethod === 'publishDiagnostics') {
@@ -249,6 +255,10 @@ class RemoteLogProvider implements LogProvider {
         } else if (method === 'window/logMessage') {
             const params = payload as lsp.LogMessageParams
             result += `(${toMessageTypeText(params.type)}) ${params.message}`
+        } else if (!isRequest && method === 'initialize') {
+            if (message.serverName) {
+                this.semanticLegend[message.serverName] = payload.capabilities?.semanticTokensProvider?.legend
+            }
         }
         return result
     }
