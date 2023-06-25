@@ -82,7 +82,7 @@ const payloadFormatter = computed((): string | undefined => {
     if (message.name === 'textDocument/formatting') {
         return 'payload-formatter-text-document-formatting-message'
     }
-    if (message.name === 'textDocument/semanticTokens/full') {
+    if (message.name === 'textDocument/semanticTokens/full' || message.name === 'textDocument/semanticTokens/range') {
         return 'payload-formatter-semantic-tokens'
     }
     return undefined
