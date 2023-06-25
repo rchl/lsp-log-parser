@@ -9,4 +9,7 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
   },
+  "vueCompilerOptions": {
+    "strictTemplates": true
+  }
 }
