@@ -3,7 +3,7 @@ import { Parser } from '../parser-model'
 
 const parser: Parser = {
     name: 'VSCode',
-    lineRegex: /^\[(Trace|Info|Error)\s+-\s+([0-9:APM ]+)\] (?:(Sending|Received) (\w+) |)(.+)/,
+    lineRegex: /^\[(Trace|Info|Error)\s+-\s+([0-9:APM. ]+)\] (?:(Sending|Received) (\w+) |)(.+)/,
     parse(inputLines) {
         const lines = []
         let id = 1
