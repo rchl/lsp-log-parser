@@ -241,7 +241,7 @@ class RemoteLogProvider implements LogProvider {
                     result += `${(payload as lsp.DocumentHighlight[]).length} highlights`
                 } else if (textDocumentMethod === 'codeAction') {
                     result += `${(payload as lsp.CodeAction[]).length} code actions`
-                } else if (textDocumentMethod === 'semanticTokens/full') {
+                } else if (textDocumentMethod === 'semanticTokens/full' || textDocumentMethod === 'semanticTokens/range') {
                     if (message.serverName) {
                         message.extraData = this.semanticLegend[message.serverName]
                     }

@@ -46,17 +46,20 @@ while (tokens.length) {
     const col = prevLine === 0 ? prevCol + deltaCol : deltaCol
     prevCol = col
 
-    const decodedModifiers: string = Array.from(encodedModifiers.toString(2))
-        .reverse()
-        .map((modifier, i) => {
-            if (modifier === '1') {
-                return props.tokenLegend?.tokenModifiers[i] ?? modifier
-            } else {
-                return null
-            }
-        })
-        .filter(v => v !== null)
-        .join(', ')
+    let decodedModifiers: string = encodedModifiers.toString(2)
+    if (props.tokenLegend?.tokenModifiers) {
+        decodedModifiers = Array.from(decodedModifiers)
+            .reverse()
+            .map((modifier, i) => {
+                if (modifier === '1') {
+                    return props.tokenLegend?.tokenModifiers[i] ?? modifier
+                } else {
+                    return null
+                }
+            })
+            .filter(v => v !== null)
+            .join(', ')
+    }
 
     formattedTokens.push({
         line,

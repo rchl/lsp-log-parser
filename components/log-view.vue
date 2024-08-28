@@ -265,8 +265,7 @@ function getPayloadSummaryColor(message: Message) {
   font-size: 12px;
 }
 
-.vjs-value__string {
-  color: #298613 !important;
-  white-space: pre-wrap !important;
+.vjs-value-string {
+  white-space: pre-wrap;
 }
 </style>
