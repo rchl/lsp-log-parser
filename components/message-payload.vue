@@ -60,7 +60,6 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-// @ts-ignore
 import VueJsonPretty from 'vue-json-pretty'
 import { Message } from '~/models/log-model'
 
