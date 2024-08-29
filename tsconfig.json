@@ -1,12 +1,6 @@
 {
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
-    // "lib": [
-    //   "esnext",
-    //   "esnext.asynciterable",
-    //   "dom"
-    // ],
-    "esModuleInterop": true,
     "experimentalDecorators": true,
   },
   "vueCompilerOptions": {

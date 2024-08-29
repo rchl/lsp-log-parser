@@ -1,6 +1,6 @@
 import type lsp from 'vscode-languageserver-protocol'
 import { ref, watch } from 'vue'
-import { Message, useLogModel, LogProvider } from '~/models/log-model'
+import { type Message, useLogModel, type LogProvider } from '~/models/log-model'
 
 const connected = ref(false)
 const enabled = ref(false)
@@ -132,7 +132,7 @@ class RemoteLogProvider implements LogProvider {
         hasConnectedAtLeastOnce.value = true
     }
 
-    _onError(event: Event) {
+    _onError(_event: Event) {
         console.info('WebSocket: error event')
     }
 

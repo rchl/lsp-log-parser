@@ -61,7 +61,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import VueJsonPretty from 'vue-json-pretty'
-import { Message } from '~/models/log-model'
+import { type Message } from '~/models/log-model'
 
 const props = defineProps<{
     message: Message

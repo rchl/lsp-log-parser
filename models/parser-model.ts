@@ -1,4 +1,4 @@
-import { ParseResults } from '~/models/log-model'
+import { type ParseResults } from '~/models/log-model'
 import parsers from '~/models/parsers'
 
 export interface Parser {

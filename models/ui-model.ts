@@ -1,5 +1,5 @@
 import { computed, ref } from 'vue'
-import { Message, useLogModel } from '~/models/log-model'
+import { type Message, useLogModel } from '~/models/log-model'
 
 export type CategoryType = 'general' | 'window' | 'client' | 'workspace' | 'text-synchronization' | 'diagnostics' | 'language-features'
 

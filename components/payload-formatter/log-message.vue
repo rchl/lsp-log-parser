@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { Message } from '~/models/log-model'
+import { type Message } from '~/models/log-model'
 
 const props = defineProps<{
     payload: NonNullable<Message['payload']>

@@ -1,5 +1,5 @@
 import type { Message } from '../log-model'
-import { Parser } from '../parser-model'
+import type { Parser } from '../parser-model'
 
 const parser: Parser = {
     name: 'VSCode or coc.nvim',
