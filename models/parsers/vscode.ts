@@ -1,11 +1,11 @@
-import { Message } from '../log-model'
+import type { Message } from '../log-model'
 import { Parser } from '../parser-model'
 
 const parser: Parser = {
-    name: 'VSCode',
-    lineRegex: /^\[(Trace|Info|Error)\s+-\s+([0-9:APM ]+)\] (?:(Sending|Received) (\w+) |)(.+)/,
+    name: 'VSCode or coc.nvim',
+    lineRegex: /^\[(Trace|Info|Error)\s+-\s+([0-9:.APM ]+)\] (?:(Sending|Received) (\w+) |)(.+)/,
     parse(inputLines) {
-        const lines = []
+        const lines: Message[] = []
         let id = 1
         let message: Message = {
             id,
