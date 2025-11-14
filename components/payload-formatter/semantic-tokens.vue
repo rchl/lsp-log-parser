@@ -42,8 +42,8 @@ let prevCol = 0
 while (tokens.length) {
     const [deltaLine, deltaCol, length, type, encodedModifiers] = tokens.splice(0, 5)
     const line = prevLine + deltaLine
+    const col = prevLine === line ? prevCol + deltaCol : deltaCol
     prevLine = line
-    const col = prevLine === 0 ? prevCol + deltaCol : deltaCol
     prevCol = col
 
     let decodedModifiers: string = encodedModifiers.toString(2)
