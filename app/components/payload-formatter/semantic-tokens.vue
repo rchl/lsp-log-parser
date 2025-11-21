@@ -41,6 +41,10 @@ let prevLine = 0
 let prevCol = 0
 while (tokens.length) {
     const [deltaLine, deltaCol, length, type, encodedModifiers] = tokens.splice(0, 5)
+    if (deltaLine === undefined || deltaCol === undefined || length === undefined || type === undefined || encodedModifiers === undefined) {
+        console.error(`Invalid semantic tokens [${deltaLine}, ${deltaCol}, ${length}, ${type}, ${encodedModifiers}]`)
+        continue
+    }
     const line = prevLine + deltaLine
     const col = prevLine === line ? prevCol + deltaCol : deltaCol
     prevLine = line

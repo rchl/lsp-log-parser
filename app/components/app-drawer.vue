@@ -54,7 +54,8 @@
             <v-list-item>
                 <v-btn
                     variant="text"
-                    @click="toggleAllCategories">
+                    @click="toggleAllCategories"
+                >
                     Toggle all
                 </v-btn>
             </v-list-item>

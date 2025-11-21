@@ -1,5 +1,5 @@
-import { type ParseResults } from '~/models/log-model'
-import parsers from '~/models/parsers'
+import type { ParseResults } from '~/models/log-model'
+import { parsers } from '~/models/parsers'
 
 export interface Parser {
     name: string;
@@ -7,7 +7,7 @@ export interface Parser {
     parse(inputLines: string[]): ParseResults;
 }
 
-function contentSniffParser(lines: string[]): Parser | null {
+function contentSniffParser(lines: string[]): Parser | undefined {
     let highestHits = 0
     let highestParserIndex = -1
 
@@ -19,7 +19,7 @@ function contentSniffParser(lines: string[]): Parser | null {
         }
     }
 
-    let parser = null
+    let parser = undefined
 
     if (highestParserIndex !== -1) {
         parser = parsers[highestParserIndex]

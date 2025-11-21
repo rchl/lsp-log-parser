@@ -4,13 +4,15 @@
             <v-alert
                 v-if="remoteModel.connected.value"
                 type="info"
-                variant="outlined">
+                variant="outlined"
+            >
                 Log view is limited to {{ logModel.REMOTE_MESSAGE_COUNT_LIMIT }} latest messages
             </v-alert>
 
             <div
                 v-if="logModel.parsedLines.value.length"
-                class="d-flex justify-space-between mb-6">
+                class="d-flex justify-space-between mb-6"
+            >
                 <h2 class="text-h5">
                     Client
                 </h2>
@@ -40,7 +42,7 @@
                     max-width="100%"
                     :min-width="line.isExpanded ? '100%' : '0'"
                     density="compact"
-                    @click.native="toggleExpand(line)"
+                    @click="toggleExpand(line)"
                 >
                     <v-icon
                         v-if="line.type && line.toServer"
@@ -92,9 +94,11 @@
                             <message-payload :message="line" />
                             <div
                                 v-if="line.payload"
-                                class="text-right">
+                                class="text-right"
+                            >
                                 <v-btn
-                                    @click.stop="line && copyToClipboard(line.payload)">
+                                    @click.stop="line && copyToClipboard(line.payload)"
+                                >
                                     <v-icon>mdi-content-copy</v-icon>
                                     Copy payload
                                 </v-btn>
@@ -104,7 +108,7 @@
                 </v-alert>
             </div>
 
-            <div id="log-bottom"></div>
+            <div id="log-bottom" />
         </v-container>
     </div>
 </template>
@@ -135,9 +139,7 @@ async function copyToClipboard(data: unknown) {
 }
 
 class ScrollTracker {
-    // eslint-disable-next-line no-undef
     _timeout: NodeJS.Timeout | null
-    // eslint-disable-next-line no-undef
     _onScrollBound: EventListener
     isScrolledToBottom: boolean
 
@@ -230,7 +232,7 @@ function getPayloadSummaryColor(message: Message) {
 <style lang="scss" scoped>
 .main {
   max-width: 800px !important;
-  scroll-padding: 80px 0 0 0;
+  scroll-padding: 80px 0 0;
 }
 
 .message {

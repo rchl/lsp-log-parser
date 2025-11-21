@@ -3,4 +3,4 @@ import VSCodeParser from './vscode'
 
 export { SublimeParser, VSCodeParser }
 
-export default [SublimeParser, VSCodeParser]
+export const parsers: [typeof SublimeParser, typeof VSCodeParser] = [SublimeParser, VSCodeParser]

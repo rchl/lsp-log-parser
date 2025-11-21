@@ -1,18 +1,21 @@
 <template>
     <div
         class="mt-2 mb-1 payload-container rounded"
-        @click.stop>
+        @click.stop
+    >
         <div class="rounded overflow-hidden">
             <div
                 v-if="!message.payload"
-                class="bg-grey-lighten-1 text-center">
+                class="bg-grey-lighten-1 text-center"
+            >
                 &lt;empty&gt;
             </div>
             <template v-else>
                 <v-tabs v-model="selectedTabIndex">
                     <v-tab
                         v-for="tab in messageTabs"
-                        :key="tab">
+                        :key="tab"
+                    >
                         {{ tab }}
                     </v-tab>
                 </v-tabs>
@@ -24,21 +27,26 @@
                         <template v-if="tab === 'rendered'">
                             <payload-formatter-log-message
                                 v-if="payloadFormatter === 'payload-formatter-log-message'"
-                                :payload="message.payload" />
+                                :payload="message.payload"
+                            />
                             <payload-formatter-text-document-formatting-message
                                 v-if="payloadFormatter === 'payload-formatter-text-document-formatting-message'"
-                                :payload="message.payload" />
+                                :payload="message.payload"
+                            />
                             <payload-formatter-semantic-tokens
                                 v-if="payloadFormatter === 'payload-formatter-semantic-tokens'"
                                 :payload="message.payload"
-                                :token-legend="message.extraData" />
+                                :token-legend="message.extraData"
+                            />
                         </template>
                         <div
                             v-else
-                            class="pa-2">
+                            class="pa-2"
+                        >
                             <span
                                 v-if="typeof(message.payload) === 'string'"
-                                class="payload payload--text">
+                                class="payload payload--text"
+                            >
                                 {{ message.payload }}
                             </span>
                             <vue-json-pretty

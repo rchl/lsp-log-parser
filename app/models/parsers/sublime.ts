@@ -18,10 +18,10 @@ const parser: Parser = {
             const lspMatch = line.match(this.lineRegex)
 
             if (lspMatch) {
-                const direction = lspMatch[1]
+                const direction = lspMatch[1] as string
                 const toServer = direction.includes('>')
-                const serverName = lspMatch[2]
-                const type = lspMatch[3]
+                const serverName = lspMatch[2] as string
+                const type = lspMatch[3] as string
                 const params = lspMatch[4]
                 message = {
                     id: ++id,

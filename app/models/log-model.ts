@@ -65,7 +65,7 @@ function appendLogMessage(message: Message) {
     if (message.type === 'error') {
         const previousMessage = parsedLines.value[parsedLines.value.length - 1]
         if (previousMessage && previousMessage.type === message.type && previousMessage.serverName === message.serverName) {
-            previousMessage.payload += `\n${message.payload}`
+            (previousMessage.payload as string) += `\n${message.payload as string}`
             return
         }
     }

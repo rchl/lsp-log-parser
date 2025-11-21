@@ -1,6 +1,16 @@
 {
-  "extends": "./.nuxt/tsconfig.json",
+  "files": [
+    "eslint.config.mts",
+    "stylelint.config.mjs"
+  ],
+  "references": [
+    { "path": "./.nuxt/tsconfig.app.json" },
+    { "path": "./.nuxt/tsconfig.server.json" },
+    { "path": "./.nuxt/tsconfig.shared.json" },
+    { "path": "./.nuxt/tsconfig.node.json" }
+  ],
   "compilerOptions": {
+    "allowJs": true,
     "experimentalDecorators": true,
   },
   "vueCompilerOptions": {

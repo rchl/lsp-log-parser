@@ -1,7 +1,7 @@
 <template>
     <v-alert
         :type="alertType"
-        :icon="alertType ? null : 'mdi-console-line'"
+        :icon="alertType ? undefined : 'mdi-console-line'"
         rounded="0"
         class="ma-0"
     >
@@ -22,7 +22,7 @@ const mapping: Record<number, 'error' | 'warning' | 'info' | undefined> = {
     3: 'info',
     4: undefined,
 }
-const messageType = typeof props.payload === 'string' ? '' : props.payload.type
+const messageType = typeof props.payload === 'string' ? -1 : (props.payload.type as number)
 const alertType = mapping[messageType]
 </script>
 

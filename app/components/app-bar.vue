@@ -2,7 +2,8 @@
     <v-app-bar>
         <v-app-bar-nav-icon
             class="mr-2"
-            @click.stop="uiModel.toggleDrawer()" />
+            @click.stop="uiModel.toggleDrawer()"
+        />
 
         <v-btn
             class="mr-2"
@@ -100,7 +101,8 @@
             </v-icon>
             <v-tooltip
                 activator="parent"
-                location="bottom">
+                location="bottom"
+            >
                 Check out the source code
             </v-tooltip>
         </v-btn>

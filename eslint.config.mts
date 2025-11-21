@@ -1,0 +1,147 @@
+import * as js from '@eslint/js'
+import { defineConfig, globalIgnores } from 'eslint/config'
+import * as pluginVue from 'eslint-plugin-vue'
+import * as globals from 'globals'
+import tseslint from 'typescript-eslint'
+import stylistic from '@stylistic/eslint-plugin'
+
+export default defineConfig([
+    globalIgnores([
+        '.nuxt/',
+    ]),
+    {
+        languageOptions: {
+            globals: globals.browser,
+            parserOptions: {
+                extraFileExtensions: ['.vue'],
+                projectService: true,
+            },
+        },
+    },
+    {
+        files: ['**/*.{js,mjs,cjs,ts,mts,cts}'],
+        plugins: {
+            js,
+            '@stylistic': stylistic,
+        },
+        extends: ['js/recommended'],
+        rules: {
+            '@stylistic/semi': ['error', 'never'],
+            '@stylistic/member-delimiter-style': 'error',
+            '@stylistic/no-extra-parens': 'error',
+            '@stylistic/no-extra-semi': 'error',
+            '@stylistic/quotes': ['error', 'single', { avoidEscape: true }],
+            'array-bracket-spacing': 'error',
+            'brace-style': 'error',
+            'comma-dangle': ['error', 'always-multiline'],
+            'comma-spacing': 'error',
+            'computed-property-spacing': 'error',
+            curly: 'error',
+            'dot-notation': 'error',
+            'eol-last': 'error',
+            eqeqeq: 'error',
+            'func-call-spacing': 'error',
+            indent: [
+                'error', 4, {
+                    SwitchCase: 1,
+                },
+            ],
+            'keyword-spacing': 'error',
+            'linebreak-style': 'error',
+            'no-console': [
+                'error', {
+                    allow: ['assert', 'warn', 'error', 'info', 'time', 'timeEnd'],
+                },
+            ],
+            'no-constructor-return': 'error',
+            'no-multi-spaces': ['error', { ignoreEOLComments: true }],
+            'no-multiple-empty-lines': ['error', { max: 1 }],
+            'no-tabs': 'error',
+            'no-template-curly-in-string': 'error',
+            'no-trailing-spaces': 'error',
+            'no-var': 'error',
+            'no-whitespace-before-property': 'error',
+            'object-curly-spacing': ['error', 'always'],
+            'one-var-declaration-per-line': ['error', 'always'],
+            'prefer-const': 'error',
+            'quote-props': ['error', 'as-needed'],
+            'padded-blocks': ['error', 'never'],
+            'space-before-blocks': 'error',
+            'space-before-function-paren': ['error', 'never'],
+            'space-in-parens': 'error',
+            'space-infix-ops': 'error',
+        },
+    },
+    tseslint.configs.recommended,
+    tseslint.configs.recommendedTypeChecked,
+    {
+        files: ['**/*.{ts,mts,cts}'],
+        rules: {
+            indent: 'off',
+            'no-unused-vars': 'off',
+            quotes: 'off',
+            '@typescript-eslint/ban-ts-comment': 'off',
+            '@typescript-eslint/explicit-function-return-type': 'off',
+            '@typescript-eslint/explicit-module-boundary-types': 'off',
+            '@typescript-eslint/indent': 'off',
+            '@typescript-eslint/no-empty-interface': ['error', { allowSingleExtends: true }],
+            '@typescript-eslint/no-explicit-any': 'off',
+            '@typescript-eslint/no-require-imports': 'error',
+            '@typescript-eslint/no-unnecessary-qualifier': 'error',
+            '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+            '@typescript-eslint/no-useless-constructor': 'error',
+            '@typescript-eslint/restrict-plus-operands': 'error',
+        },
+    },
+    pluginVue.configs['flat/recommended'],
+    {
+        files: ['**/*.vue'],
+        languageOptions: {
+            parserOptions: {
+                parser: tseslint.parser,
+            },
+        },
+        rules: {
+            'array-bracket-spacing': 'error',
+            'brace-style': 'error',
+            'comma-dangle': ['error', 'always-multiline'],
+            'comma-spacing': 'error',
+            'computed-property-spacing': 'error',
+            curly: 'error',
+            'dot-notation': 'error',
+            'eol-last': 'error',
+            eqeqeq: 'error',
+            'func-call-spacing': 'error',
+            'vue/html-indent': [
+                'error', 4,
+            ],
+            'vue/multi-word-component-names': 'off',
+            'keyword-spacing': 'error',
+            'linebreak-style': 'error',
+            'no-console': [
+                'error', {
+                    allow: ['assert', 'warn', 'error', 'info', 'time', 'timeEnd'],
+                },
+            ],
+            'no-constructor-return': 'error',
+            'no-multi-spaces': ['error', { ignoreEOLComments: true }],
+            'no-multiple-empty-lines': ['error', { max: 1 }],
+            'no-tabs': 'error',
+            'no-template-curly-in-string': 'error',
+            'no-trailing-spaces': 'error',
+            'no-var': 'error',
+            'no-whitespace-before-property': 'error',
+            'object-curly-spacing': ['error', 'always'],
+            'one-var-declaration-per-line': ['error', 'always'],
+            'prefer-const': 'error',
+            'quote-props': ['error', 'as-needed'],
+            quotes: ['error', 'single'],
+            'padded-blocks': ['error', 'never'],
+            semi: ['error', 'never'],
+            'space-before-blocks': 'error',
+            'space-before-function-paren': ['error', 'never'],
+            'space-in-parens': 'error',
+            'space-infix-ops': 'error',
+        },
+    },
+])

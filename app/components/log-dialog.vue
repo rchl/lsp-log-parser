@@ -1,7 +1,8 @@
 <template>
     <v-dialog
         v-model="uiModel.logDialogVisible.value"
-        max-width="600px">
+        max-width="600px"
+    >
         <v-card>
             <v-card-title class="text-h5">
                 Paste the log and press the button to parse
@@ -35,7 +36,8 @@
                     Parse
                     <v-tooltip
                         activator="parent"
-                        location="left">
+                        location="left"
+                    >
                         Parse log text (cmdOrCtrl-ENTER)
                     </v-tooltip>
                 </v-btn>
@@ -50,7 +52,7 @@ import { useMagicKeys } from '@vueuse/core'
 import { type ParseResults, useLogModel } from '~/models/log-model'
 import { useParserModel } from '~/models/parser-model'
 import { useUiModel } from '~/models/ui-model'
-import parsers from '~/models/parsers'
+import { parsers } from '~/models/parsers'
 
 useMagicKeys({
     passive: false,
@@ -106,7 +108,7 @@ watchEffect(() => {
         state.selectedParser = parser.name
     }
 
-    nextTick(() => (state.selectedParserHint = parser ? 'auto-detected from log content' : ''))
+    nextTick(() => (state.selectedParserHint = parser ? 'auto-detected from log content' : '')).catch(() => {})
 })
 
 watch(toRef(state, 'selectedParser'), () => {

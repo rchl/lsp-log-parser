@@ -37,12 +37,12 @@ const parser: Parser = {
                     }
                 }
 
-                const direction = newHeaderMatch[3] ? newHeaderMatch[3].toLowerCase() : null
+                const direction = newHeaderMatch[3]?.toLowerCase() ?? null
                 // const messageType = newHeaderMatch[4]
-                const messageText = newHeaderMatch[5].trim().replace(/(^'|'\.?$)/g, '')
+                const messageText = (newHeaderMatch[5] as string).trim().replace(/(^'|'\.?$)/g, '')
                 message.name = messageText
                 message.time = newHeaderMatch[2]
-                message.type = newHeaderMatch[1].toLowerCase() as Message['type']
+                message.type = (newHeaderMatch[1] as string).toLowerCase() as Message['type']
                 message.toServer = direction === 'sending'
             } else {
                 if (!message.name) {
@@ -53,7 +53,7 @@ const parser: Parser = {
                     tempChildren[id] = []
                 }
 
-                tempChildren[id].push(line)
+                tempChildren[id]?.push(line)
             }
         }
 

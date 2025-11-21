@@ -2,7 +2,8 @@
     <v-dialog
         v-model="state.open"
         max-width="500px"
-        persistent>
+        persistent
+    >
         <v-card>
             <v-card-title class="text-h5">
                 Remote mode
@@ -27,7 +28,8 @@
                 <v-spacer />
                 <v-btn
                     variant="text"
-                    @click="remoteModel.enabled.value = false">
+                    @click="remoteModel.enabled.value = false"
+                >
                     Cancel
                 </v-btn>
                 <v-spacer />

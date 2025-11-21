@@ -11,47 +11,48 @@
     "start": "nuxi preview",
     "generate": "nuxi generate",
     "lint": "yarn jslint && yarn csslint",
-    "jslint": "eslint --ext .js,.ts,.vue --ignore-path .gitignore .",
-    "csslint": "stylelint '**/*.scss' '**/*.vue'",
-    "typecheck": "npx tsc"
-  },
-  "lint-staged": {
-    "*.{js,ts,vue}": "eslint --ext .js,.ts,.vue --ignore-path .gitignore",
-    "*.{scss,vue}": "stylelint"
+    "jslint": "eslint",
+    "csslint": "stylelint '**/*.scss' '**/*.vue'"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged && yarn typecheck"
+      "pre-commit": "lint-staged && eslint"
     }
   },
+  "lint-staged": {
+    "*.{js,mjs,cjs,ts,mts,cts,vue}": "eslint"
+  },
   "dependencies": {
-    "@vueuse/core": "^11.0.3",
-    "@vueuse/nuxt": "^11.0.3",
-    "nuxt": "^3.13.0",
-    "vue-json-pretty": "^2.4.0",
-    "vuetify": "^3.7.1"
+    "@vueuse/core": "^14.0.0",
+    "@vueuse/nuxt": "^14.0.0",
+    "nuxt": "^4.2.1",
+    "vue-json-pretty": "^2.6.0",
+    "vuetify": "^3.10.11"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.1",
     "@mdi/font": "^7.4.47",
     "@nuxtjs/google-fonts": "^3.2.0",
-    "@nuxtjs/stylelint-module": "^5.2.0",
-    "@types/node": "^20.16.2",
-    "@typescript-eslint/eslint-plugin": "^5.62.0",
-    "@typescript-eslint/parser": "^5.62.0",
-    "eslint": "^8.57.0",
-    "eslint-plugin-vue": "^9.27.0",
-    "eslint-plugin-vuetify": "^2.4.0",
+    "@nuxtjs/stylelint-module": "^5.2.1",
+    "@stylistic/eslint-plugin": "^5.6.1",
+    "@types/node": "^24.10.1",
+    "eslint": "^9.39.1",
+    "eslint-plugin-vue": "^10.5.1",
+    "eslint-plugin-vuetify": "^2.5.3",
+    "globals": "^16.5.0",
     "husky": "^4.3.8",
-    "lint-staged": "^15.2.9",
-    "postcss": "^8.4.41",
-    "postcss-html": "^1.7.0",
-    "sass": "^1.77.8",
-    "stylelint": "^15.11.0",
-    "stylelint-config-recommended-scss": "^14.1.0",
-    "stylelint-config-recommended-vue": "^1.5.0",
-    "stylelint-config-standard": "^32.0.0",
-    "typescript": "^5.5.4",
-    "vite-plugin-vuetify": "^2.0.4",
-    "vscode-languageserver-protocol": "^3.17.5"
+    "lint-staged": "^16.2.7",
+    "postcss": "^8.5.6",
+    "postcss-html": "^1.8.0",
+    "sass": "^1.94.2",
+    "stylelint": "^16.26.0",
+    "stylelint-config-recommended-scss": "^16.0.2",
+    "stylelint-config-recommended-vue": "^1.6.1",
+    "stylelint-config-standard": "^39.0.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.47.0",
+    "vite-plugin-vuetify": "^2.1.2",
+    "vscode-languageserver-protocol": "^3.17.5",
+    "vue-eslint-parser": "^10.2.0"
   }
 }

@@ -30,7 +30,7 @@ function isStderrMessage(message: RemoteMessage): message is IncomingStderrMessa
 
 interface Base<Dir extends Direction> {
     direction: Dir;
-    params: any;
+    params: unknown;
     server: string;
     time: number;
 }
@@ -109,7 +109,7 @@ class RemoteLogProvider implements LogProvider {
 
         this.socket = new WebSocket('ws://localhost:9981')
         this.socket.onopen = () => this._onOpen()
-        this.socket.onmessage = event => this._onMessage(event)
+        this.socket.onmessage = (event: MessageEvent<string>) => this._onMessage(event)
         this.socket.onclose = event => this._onClose(event)
         this.socket.onerror = event => this._onError(event)
     }
@@ -151,7 +151,7 @@ class RemoteLogProvider implements LogProvider {
         }
     }
 
-    _onMessage(event: MessageEvent) {
+    _onMessage(event: MessageEvent<string>) {
         const data = this._parseMessage(event.data)
         if (!data) {
             return
@@ -189,10 +189,10 @@ class RemoteLogProvider implements LogProvider {
         logModel.appendLogMessage(message)
     }
 
-    _parseMessage(data: any): RemoteMessage | null {
+    _parseMessage(data: string): RemoteMessage | null {
         try {
-            return JSON.parse(data)
-        } catch (error) {
+            return JSON.parse(data) as RemoteMessage
+        } catch {
             console.error('Error parsing the message data', data)
             return null
         }
@@ -212,13 +212,14 @@ class RemoteLogProvider implements LogProvider {
         }
     }
 
-    _createPayloadSummary(method: string, payload: any, message: Message, isRequest: boolean): string {
+    _createPayloadSummary(method: string, payload: Record<string, any>, message: Message, isRequest: boolean): string {
         let result = ''
         if (method.startsWith('textDocument')) {
             const textDocumentMethod = method.slice('textDocument'.length + 1)
             if (isRequest) {
                 if (['completion', 'hover', 'documentHighlight', 'signatureHelp'].includes(textDocumentMethod)) {
-                    result += `at (${payload.position.line}, ${payload.position.character}) for `
+                    const { position } = payload as lsp.TextDocumentPositionParams
+                    result += `at (${position.line}, ${position.character}) for `
                 }
                 if (textDocumentMethod === 'didOpen') {
                     result += `langugageId: ${(payload as lsp.DidOpenTextDocumentParams).textDocument.languageId}, `
@@ -228,7 +229,7 @@ class RemoteLogProvider implements LogProvider {
                 }
             } else {
                 if (textDocumentMethod === 'completion') {
-                    const completions: lsp.CompletionItem[] | lsp.CompletionList = payload
+                    const completions = payload as lsp.CompletionItem[] | lsp.CompletionList
                     if (Array.isArray(completions)) {
                         result += `${completions.length} completions`
                     } else {
@@ -249,7 +250,7 @@ class RemoteLogProvider implements LogProvider {
                 }
             }
             if (textDocumentMethod === 'publishDiagnostics') {
-                const params: lsp.PublishDiagnosticsParams = payload
+                const params = payload as lsp.PublishDiagnosticsParams
                 result += `${params.diagnostics.length} diagnostics for uri: ${params.uri}`
             }
         } else if (method === 'window/logMessage') {
@@ -257,7 +258,7 @@ class RemoteLogProvider implements LogProvider {
             result += `(${toMessageTypeText(params.type)}) ${params.message}`
         } else if (!isRequest && method === 'initialize') {
             if (message.serverName) {
-                this.semanticLegend[message.serverName] = payload.capabilities?.semanticTokensProvider?.legend
+                this.semanticLegend[message.serverName] = (payload as lsp.InitializeResult).capabilities.semanticTokensProvider?.legend
             }
         }
         return result
@@ -265,7 +266,7 @@ class RemoteLogProvider implements LogProvider {
 }
 
 function toMessageTypeText(type: lsp.MessageType): string {
-    switch (type as lsp.MessageType) {
+    switch (type) {
         case 1:
             return 'Error'
         case 3:
