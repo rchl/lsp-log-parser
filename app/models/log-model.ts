@@ -4,14 +4,14 @@ export interface LogProvider {
     clear(): void;
 }
 
-export interface Message {
+export interface Message<P extends string | Record<string, any> = string | Record<string, any>> {
     id: number;
     isExpanded?: boolean;
     requestId?: string | number;
     // A key that is equal for two related request-response calls.
     pairKey?: string;
     name?: string;
-    payload?: string | Record<string, any>;
+    payload?: P;
     payloadSummary?: string;
     extraData?: any;
     toServer: boolean;

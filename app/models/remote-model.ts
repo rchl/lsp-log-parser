@@ -8,77 +8,132 @@ const hasConnectedAtLeastOnce = ref(false)
 const errorText = ref('')
 const logModel = useLogModel()
 
-type Outgoing = 1
-type Incoming = 2
-type Direction = Outgoing | Incoming
+enum Direction {
+    Outgoing = 1,
+    Incoming = 2
+}
 
-function isRequestOrResponse(message: Base<Outgoing | Incoming>): message is RequestOrResponse<Outgoing | Incoming> {
+enum MessageType {
+    IncomingNotification,
+    OutgoingNotification,
+    IncomingRequest,
+    IncomingResponse,
+    OutgoingRequest,
+    OutgoingResponse,
+    OutgoingErrorResponse,
+    IncomingStderrMessage
+}
+
+function getMessageType(message: RemoteMessage): MessageType {
+    if ('id' in message) {
+        if ('method' in message) {
+            if (message.direction === Direction.Incoming) {
+                return MessageType.IncomingRequest
+            } else {
+                return MessageType.OutgoingRequest
+            }
+        } else {
+            if (message.direction === Direction.Incoming) {
+                return MessageType.IncomingResponse
+            } else {
+                if ('isError' in message) {
+                    return MessageType.OutgoingErrorResponse
+                }
+                return MessageType.OutgoingResponse
+            }
+        }
+    } else {
+        if (message.direction === Direction.Incoming) {
+            if ('isError' in message) {
+                return MessageType.IncomingStderrMessage
+            }
+            return MessageType.IncomingNotification
+        } else {
+            return MessageType.OutgoingNotification
+        }
+    }
+}
+
+function isRequestOrResponse(message: BaseMessage<Direction.Outgoing | Direction.Incoming>): message is RequestOrResponse<Direction.Outgoing | Direction.Incoming> {
     return 'id' in message
 }
 
-function isRequest(message: RemoteMessage): message is OutgoingRequest | IncomingRequest {
-    return 'method' in message
+function isIncoming(messageType: MessageType): messageType is MessageType.IncomingRequest | MessageType.IncomingResponse | MessageType.IncomingNotification {
+    return [MessageType.IncomingRequest, MessageType.IncomingResponse, MessageType.IncomingNotification].includes(messageType)
 }
 
-function isIncoming(message: RequestOrResponse<Outgoing | Incoming> | Notification<Outgoing | Incoming>): message is RequestOrResponse<Incoming> | Notification<Incoming> {
-    return message.direction === 1
+function isOutgoing(messageType: MessageType): messageType is MessageType.OutgoingRequest | MessageType.OutgoingNotification {
+    return [MessageType.OutgoingRequest, MessageType.OutgoingNotification].includes(messageType)
 }
 
 function isStderrMessage(message: RemoteMessage): message is IncomingStderrMessage {
     return 'method' in message && message.method === 'stderr'
 }
 
-interface Base<Dir extends Direction> {
-    direction: Dir;
+interface BaseMessage<D extends Direction> {
+    type: MessageType;
+    direction: D;
     params: unknown;
     server: string;
     time: number;
 }
 
-interface IncomingStderrMessage extends Base<Incoming> {
+interface IncomingStderrMessage extends BaseMessage<Direction.Incoming> {
+    type: MessageType.IncomingStderrMessage;
     method: 'stderr';
     isError: true;
 }
 
-interface RequestOrResponse<Dir extends Direction> extends Base<Dir> {
+interface RequestOrResponse<D extends Direction> extends BaseMessage<D> {
+    type: MessageType.IncomingRequest | MessageType.IncomingResponse | MessageType.OutgoingRequest | MessageType.OutgoingResponse | MessageType.OutgoingErrorResponse;
     id: string | number;
 }
 
-interface Notification<Dir extends Direction> extends Base<Dir> {
+interface IncomingRequest extends RequestOrResponse<Direction.Incoming> {
+    type: MessageType.IncomingRequest;
     method: string;
 }
 
-interface IncomingNotification extends Notification<Outgoing> {
-    error?: 'Unhandled notification!';
-}
-
-type OutgoingNotification = Notification<Outgoing>
-
-interface IncomingRequest extends RequestOrResponse<Incoming> {
-    method: string;
-}
-
-interface IncomingResponse extends RequestOrResponse<Incoming> {
+interface IncomingResponse extends RequestOrResponse<Direction.Incoming> {
+    type: MessageType.IncomingResponse;
     isError: boolean;
 }
 
-interface OutgoingRequest extends RequestOrResponse<Outgoing> {
+interface OutgoingRequest extends RequestOrResponse<Direction.Outgoing> {
+    type: MessageType.OutgoingRequest;
     method: string;
 }
 
-type OutgoingResponse = RequestOrResponse<Outgoing>
+interface OutgoingResponse extends RequestOrResponse<Direction.Outgoing> {
+    type: MessageType.OutgoingResponse;
+}
 
-interface OutgoingErrorResponse extends RequestOrResponse<Outgoing> {
+interface OutgoingErrorResponse extends RequestOrResponse<Direction.Outgoing> {
+    type: MessageType.OutgoingErrorResponse;
     isError: true;
+}
+
+interface Notification<D extends Direction> extends BaseMessage<D> {
+    type: MessageType.IncomingNotification | MessageType.OutgoingNotification;
+    method: string;
+}
+
+interface IncomingNotification extends Notification<Direction.Incoming> {
+    type: MessageType.IncomingNotification;
+    error?: 'Unhandled notification!';
+}
+
+interface OutgoingNotification extends Notification<Direction.Outgoing> {
+    type: MessageType.OutgoingNotification;
 }
 
 type RemoteMessage = IncomingNotification | OutgoingNotification | IncomingRequest | IncomingResponse | OutgoingRequest | OutgoingResponse | OutgoingErrorResponse | IncomingStderrMessage
 
 class RemoteLogProvider implements LogProvider {
-    lastId = 0
-    socket: WebSocket | null = null
-    messageMapping: Record<string, Message> = {}
-    semanticLegend: Record<string, lsp.SemanticTokensLegend | undefined> = {}
+    private lastId = 0
+    private socket: WebSocket | null = null
+    private messageMapping: Record<string, Message> = {}
+    private semanticLegend: Record<string, lsp.SemanticTokensLegend | undefined> = {}
 
     constructor() {
         watch(enabled, (isEnabled) => {
@@ -91,7 +146,7 @@ class RemoteLogProvider implements LogProvider {
         })
     }
 
-    clear() {
+    public clear() {
         this.messageMapping = {}
         this.lastId = 0
     }
@@ -157,20 +212,26 @@ class RemoteLogProvider implements LogProvider {
             return
         }
 
-        const message: Message = {
+        const messageType = getMessageType(data)
+        const message: Message<Record<string, any>> = {
             id: ++this.lastId,
             isExpanded: false,
             name: 'method' in data ? data.method : undefined,
             type: isRequestOrResponse(data) ? 'reqres' : isStderrMessage(data) ? 'error' : 'notification',
             isError: Boolean('isError' in data && data.isError || 'error' in data && data.error),
             timestamp: data.time,
-            toServer: data.direction === 1,
+            toServer: data.direction === Direction.Outgoing,
             serverName: data.server,
+            payload: data.params || undefined,
         }
 
         if (isRequestOrResponse(data)) {
             message.requestId = data.id
-            message.pairKey = `${data.server}-${isRequest(data) && isIncoming(data) || !isRequest(data) && !isIncoming(data) ? 's' : 'c'}-${data.id}`
+            const isServerInitiatedRequest = messageType === MessageType.IncomingRequest || messageType === MessageType.OutgoingResponse
+            message.pairKey = `${data.server}-${isServerInitiatedRequest ? 's' : 'c'}-${data.id}`
+            this._updateRelatedMessage(message.pairKey, message)
+        } else if (isOutgoing(messageType) && message.name === '$/cancelRequest' && message.payload && 'id' in message.payload) {
+            message.pairKey = `${data.server}-c-${message.payload.id}`
             this._updateRelatedMessage(message.pairKey, message)
         }
 
@@ -179,11 +240,8 @@ class RemoteLogProvider implements LogProvider {
             message.time = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}.${date.getMilliseconds()}`
         }
 
-        if (data.params) {
-            message.payload = data.params
-            if (!message.isError && message.name) {
-                message.payloadSummary = this._createPayloadSummary(message.name, message.payload, message, isRequestOrResponse(data) && isRequest(data))
-            }
+        if (message.payload && !message.isError && message.name) {
+            message.payloadSummary = this._createPayloadSummary(message.name, message.payload, message, messageType)
         }
 
         logModel.appendLogMessage(message)
@@ -212,23 +270,42 @@ class RemoteLogProvider implements LogProvider {
         }
     }
 
-    _createPayloadSummary(method: string, payload: Record<string, any>, message: Message, isRequest: boolean): string {
+    _createPayloadSummary(method: string, payload: Record<string, any>, message: Message, messageType: MessageType): string {
         let result = ''
-        if (method.startsWith('textDocument')) {
-            const textDocumentMethod = method.slice('textDocument'.length + 1)
-            if (isRequest) {
-                if (['completion', 'hover', 'documentHighlight', 'signatureHelp'].includes(textDocumentMethod)) {
+        if (isOutgoing(messageType)) {
+            if (messageType === MessageType.OutgoingRequest) {
+                if ('position' in payload) {
                     const { position } = payload as lsp.TextDocumentPositionParams
                     result += `at (${position.line}, ${position.character}) for `
                 }
-                if (textDocumentMethod === 'didOpen') {
+            }
+
+            if ('textDocument' in payload) {
+                if ('languageId' in payload.textDocument) {
                     result += `langugageId: ${(payload as lsp.DidOpenTextDocumentParams).textDocument.languageId}, `
                 }
-                if (['didOpen', 'didClose', 'didChange', 'didSave', 'codeAction', 'completion', 'documentColor', 'documentHighlight', 'hover', 'signatureHelp'].includes(textDocumentMethod)) {
-                    result += `uri: ${(payload as lsp.DidOpenTextDocumentParams).textDocument.uri}`
+                if ('version' in payload.textDocument) {
+                    result += `version: ${(payload.textDocument as lsp.VersionedTextDocumentIdentifier).version}, `
                 }
-            } else {
-                if (textDocumentMethod === 'completion') {
+                result += `uri: ${(payload.textDocument as lsp.TextDocumentIdentifier).uri}`
+            }
+        } else if (isIncoming(messageType)) {
+            if (messageType === MessageType.IncomingNotification) {
+                if (method === 'window/logMessage') {
+                    const params = payload as lsp.LogMessageParams
+                    result += `(${toMessageTypeText(params.type)}) ${params.message}`
+                }
+
+                if (method === 'textDocument/publishDiagnostics') {
+                    const params = payload as lsp.PublishDiagnosticsParams
+                    result += `${params.diagnostics.length} diagnostics for uri: ${params.uri}`
+                }
+            } else if (messageType === MessageType.IncomingResponse) {
+                if (method === 'initialize') {
+                    if (message.serverName) {
+                        this.semanticLegend[message.serverName] = (payload as lsp.InitializeResult).capabilities.semanticTokensProvider?.legend
+                    }
+                } else if (method === 'textDocument/completion') {
                     const completions = payload as lsp.CompletionItem[] | lsp.CompletionList
                     if (Array.isArray(completions)) {
                         result += `${completions.length} completions`
@@ -238,29 +315,19 @@ class RemoteLogProvider implements LogProvider {
                             result += ' (incomplete)'
                         }
                     }
-                } else if (textDocumentMethod === 'documentHighlight') {
+                } else if (method === 'textDocument/documentHighlight') {
                     result += `${(payload as lsp.DocumentHighlight[]).length} highlights`
-                } else if (textDocumentMethod === 'codeAction') {
+                } else if (method === 'textDocument/codeAction') {
                     result += `${(payload as lsp.CodeAction[]).length} code actions`
-                } else if (textDocumentMethod === 'semanticTokens/full' || textDocumentMethod === 'semanticTokens/range') {
+                } else if (method === 'textDocument/semanticTokens/full' || method === 'textDocument/semanticTokens/range') {
                     if (message.serverName) {
                         message.extraData = this.semanticLegend[message.serverName]
                     }
                     result += `${(payload as lsp.SemanticTokens).data.length / 5} tokens`
                 }
             }
-            if (textDocumentMethod === 'publishDiagnostics') {
-                const params = payload as lsp.PublishDiagnosticsParams
-                result += `${params.diagnostics.length} diagnostics for uri: ${params.uri}`
-            }
-        } else if (method === 'window/logMessage') {
-            const params = payload as lsp.LogMessageParams
-            result += `(${toMessageTypeText(params.type)}) ${params.message}`
-        } else if (!isRequest && method === 'initialize') {
-            if (message.serverName) {
-                this.semanticLegend[message.serverName] = (payload as lsp.InitializeResult).capabilities.semanticTokensProvider?.legend
-            }
         }
+
         return result
     }
 }

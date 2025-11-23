@@ -26,6 +26,7 @@ export default defineConfig([
         },
         extends: ['js/recommended'],
         rules: {
+            '@stylistic/indent': ['error', 4, { SwitchCase: 1 }],
             '@stylistic/semi': ['error', 'never'],
             '@stylistic/member-delimiter-style': 'error',
             '@stylistic/no-extra-parens': 'error',
@@ -41,11 +42,6 @@ export default defineConfig([
             'eol-last': 'error',
             eqeqeq: 'error',
             'func-call-spacing': 'error',
-            indent: [
-                'error', 4, {
-                    SwitchCase: 1,
-                },
-            ],
             'keyword-spacing': 'error',
             'linebreak-style': 'error',
             'no-console': [
@@ -77,13 +73,10 @@ export default defineConfig([
     {
         files: ['**/*.{ts,mts,cts}'],
         rules: {
-            indent: 'off',
             'no-unused-vars': 'off',
-            quotes: 'off',
             '@typescript-eslint/ban-ts-comment': 'off',
             '@typescript-eslint/explicit-function-return-type': 'off',
             '@typescript-eslint/explicit-module-boundary-types': 'off',
-            '@typescript-eslint/indent': 'off',
             '@typescript-eslint/no-empty-interface': ['error', { allowSingleExtends: true }],
             '@typescript-eslint/no-explicit-any': 'off',
             '@typescript-eslint/no-require-imports': 'error',
@@ -112,10 +105,6 @@ export default defineConfig([
             'eol-last': 'error',
             eqeqeq: 'error',
             'func-call-spacing': 'error',
-            'vue/html-indent': [
-                'error', 4,
-            ],
-            'vue/multi-word-component-names': 'off',
             'keyword-spacing': 'error',
             'linebreak-style': 'error',
             'no-console': [
@@ -142,6 +131,8 @@ export default defineConfig([
             'space-before-function-paren': ['error', 'never'],
             'space-in-parens': 'error',
             'space-infix-ops': 'error',
+            'vue/html-indent': ['error', 4],
+            'vue/multi-word-component-names': 'off',
         },
     },
 ])
