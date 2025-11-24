@@ -16,7 +16,7 @@ jobs:
       CI: true
     strategy:
       matrix:
-        node-version: [20]
+        node-version: [24]
     name: Use Node.js ${{ matrix.node-version }}
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
@@ -28,5 +28,5 @@ jobs:
         run: yarn
       - name: Lint
         run: yarn lint
-      - name: Type check
-        run: yarn typecheck
+      - name: Build
+        run: yarn build
