@@ -3,7 +3,7 @@ import type { Parser } from '../parser-model'
 
 const parser: Parser = {
     name: 'Sublime LSP',
-    lineRegex: /^::\s+(?:\[(?<time>[0-9:.]+)\])\s+(?<direction>[^ ]+)\s+(?<serverName>[^ ]+)(?<type>\s+[a-zA-Z0-9/$]+)?(?:\s+\((?<requestId>\d+)\))?(?:\s+\(duration: (?<duration>\d+)ms\))?:\s*(?<params>.*)/,
+    lineRegex: /^::\s+(?:\[(?<time>[0-9:.]+)\])\s+(?<direction>[^ ]+)\s+(?<serverName>[^ ]+)(?<type>\s+[a-zA-Z0-9/$]+)?(?:\s+\((?<requestId>\d+)\))?(?:\s+\(duration: (?:(?<duration>\d+)ms|-)\))?:\s*(?<params>.*)/,
     parse(inputLines) {
         const messageMapping: Record<string, Message> = {}
 
