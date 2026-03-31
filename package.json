@@ -45,7 +45,7 @@
     "postcss": "^8.5.8",
     "postcss-html": "^1.8.1",
     "sass": "^1.98.0",
-    "stylelint": "^16.26.1",
+    "stylelint": "^17.6.0",
     "stylelint-config-recommended-scss": "^16.0.2",
     "stylelint-config-recommended-vue": "^1.6.1",
     "stylelint-config-standard": "^40.0.0",
