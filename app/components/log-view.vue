@@ -13,10 +13,10 @@
                 v-if="logModel.parsedLines.value.length"
                 class="d-flex justify-space-between mb-6"
             >
-                <h2 class="text-h5">
+                <h2 class="text-headline-small">
                     Client
                 </h2>
-                <h2 class="text-h5">
+                <h2 class="text-headline-small">
                     Server
                 </h2>
             </div>
@@ -31,7 +31,7 @@
             >
                 <div
                     v-if="line.time || line.timeLatency !== undefined"
-                    class="text-caption"
+                    class="text-body-small"
                 >
                     {{ line.time }}<span v-if="line.timeLatency !== undefined"> (self: {{ line.timeLatency }} ms)</span>
                 </div>
@@ -82,7 +82,7 @@
                     <v-expand-transition>
                         <div v-if="!line.isExpanded">
                             <div
-                                class="text-caption text-truncate pa-1 mt-1 rounded"
+                                class="text-body-small text-truncate pa-1 mt-1 rounded"
                                 :class="getPayloadSummaryColor(line)"
                             >
                                 {{ line.payloadSummary || line.payload || '(empty)' }}
