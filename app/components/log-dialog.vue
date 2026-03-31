@@ -4,7 +4,7 @@
         max-width="600px"
     >
         <v-card>
-            <v-card-title class="text-h5">
+            <v-card-title class="text-headline-small">
                 Paste the log and press the button to parse
             </v-card-title>
 

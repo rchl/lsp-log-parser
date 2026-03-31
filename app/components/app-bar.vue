@@ -73,7 +73,6 @@
         <v-btn
             class="ml-2"
             ripple
-            color="black"
             icon
             href="https://microsoft.github.io/language-server-protocol/specification"
             target="_blank"
@@ -91,7 +90,6 @@
         <v-btn
             class="ml-2"
             ripple
-            color="black"
             icon
             href="https://github.com/rchl/lsp-log-parser"
             target="_blank"

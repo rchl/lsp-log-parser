@@ -7,10 +7,10 @@
                 v-if="logModel.parsedLines.length === 0"
                 class="base-title text-center pa-8"
             >
-                <h2 class="text-h2">
+                <h2 class="text-display-large">
                     LSP Log Parser
                 </h2>
-                <h3 class="text-subtitle-1 mt-4">
+                <h3 class="text-body-large mt-4">
                     To establish connection to the local Sublime Text LSP instance, enable the <code>"log_server": ["panel", "remote"]</code> LSP setting, restart ST and press the Connect button.
                 </h3>
             </div>
@@ -24,7 +24,7 @@
                 max-width="290"
             >
                 <v-card>
-                    <v-card-title class="text-h5">
+                    <v-card-title class="text-headline-small">
                         Error
                     </v-card-title>
 

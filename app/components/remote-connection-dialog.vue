@@ -5,7 +5,7 @@
         persistent
     >
         <v-card>
-            <v-card-title class="text-h5">
+            <v-card-title class="text-headline-small">
                 Remote mode
             </v-card-title>
 
