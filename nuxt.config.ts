@@ -27,6 +27,13 @@ export default defineNuxtConfig({
                 transformAssetUrls,
             },
         },
+        optimizeDeps: {
+            include: [
+                '@vue/devtools-core',
+                '@vue/devtools-kit',
+                'vue-json-pretty',
+            ],
+        },
     },
     // head: {
     //     title: 'LSP Log Parser',
