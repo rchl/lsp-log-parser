@@ -30,11 +30,6 @@ const parser: Parser = {
         const lines = []
         const filters: string[] = []
         let id = 1
-        let message: Message = {
-            id,
-            name: '',
-            toServer: false,
-        }
 
         for (const line of inputLines) {
             const match = line.match(this.lineRegex)
@@ -49,7 +44,7 @@ const parser: Parser = {
                 const duration = match.groups?.duration as number | undefined
                 const type = match.groups?.type as string
                 const params = match.groups?.params
-                message = {
+                const message: Message = {
                     id: ++id,
                     isExpanded: false,
                     name: type,
