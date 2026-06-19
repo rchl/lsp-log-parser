@@ -1,6 +1,7 @@
 {
   "files": [
     "eslint.config.mts",
+    "nuxt.config.ts",
     "stylelint.config.mjs"
   ],
   "references": [

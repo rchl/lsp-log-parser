@@ -16,6 +16,9 @@ export default defineNuxtConfig({
         transpile: ['vuetify'],
     },
     vite: {
+        build: {
+            cssMinify: 'lightningcss',
+        },
         define: {
             'process.env.DEBUG': false,
         },

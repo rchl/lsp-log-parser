@@ -8,6 +8,8 @@ import stylistic from '@stylistic/eslint-plugin'
 export default defineConfig([
     globalIgnores([
         '.nuxt/',
+        '.output/',
+        'dist/',
     ]),
     {
         languageOptions: {
