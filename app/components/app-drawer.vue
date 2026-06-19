@@ -2,7 +2,6 @@
     <v-navigation-drawer v-model="uiModel.drawerVisible.value">
         <v-list
             v-if="logModel.selectedFilters.value.length"
-            density="compact"
             nav
         >
             <v-list-subheader>Sessions</v-list-subheader>
@@ -24,7 +23,6 @@
 
         <v-switch
             v-model="uiModel.categoriesFilter.enabled"
-            density="compact"
             class="px-4"
             hide-details
             label="Filter messages"
@@ -32,7 +30,6 @@
 
         <v-list
             v-if="uiModel.categoriesFilter.enabled"
-            density="compact"
             nav
             select-strategy="classic"
             :selected="uiModel.categoriesFilter.selectedCategories"

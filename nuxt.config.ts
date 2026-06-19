@@ -6,6 +6,7 @@ export default defineNuxtConfig({
     css: [
         'vuetify/styles',
         '@mdi/font/css/materialdesignicons.css',
+        '~/assets/main.scss',
     ],
     ssr: false,
     nitro: {

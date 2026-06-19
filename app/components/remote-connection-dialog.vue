@@ -16,7 +16,6 @@
                 <v-alert
                     v-if="remoteModel.hasConnectedAtLeastOnce.value && remoteModel.errorText.value"
                     class="mt-2"
-                    density="compact"
                     type="error"
                     elevation="2"
                 >

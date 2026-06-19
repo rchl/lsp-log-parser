@@ -64,7 +64,6 @@
             :disabled="!logModel.parsedLines.value.length"
             placeholder="Filter by text ('/' to focus)"
             persistent-placeholder
-            density="compact"
             hide-details
             clearable
             prepend-inner-icon="mdi-magnify"

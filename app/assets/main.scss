@@ -1,0 +1,6 @@
+// Scale the whole UI down a notch. Vuetify sizes text, buttons, paddings,
+// icons, etc. in rem, so lowering the root font size shrinks everything
+// proportionally. 16px is the browser default; 14px is ~one notch smaller.
+html {
+  font-size: 14px;
+}

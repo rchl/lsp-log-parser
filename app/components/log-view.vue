@@ -41,7 +41,6 @@
                     :color="getMessageColor(line)"
                     max-width="100%"
                     :min-width="line.isExpanded ? '100%' : '0'"
-                    density="compact"
                     @click="toggleExpand(line)"
                 >
                     <v-icon

@@ -7,7 +7,7 @@
         >
             Offsets are 1-based
         </v-alert>
-        <v-table density="compact">
+        <v-table>
             <thead>
                 <tr><th>Line</th><th>Column </th><th>Token Type</th><th>Token Modifiers</th></tr>
             </thead>
