@@ -7,6 +7,7 @@
   "packageManager": "pnpm@11.5.3",
   "scripts": {
     "prepare": "husky",
+    "postinstall": "nuxi prepare",
     "dev": "nuxi dev",
     "build": "nuxi build",
     "start": "nuxi preview",
