@@ -4,20 +4,16 @@
   "description": "Parser for LSP server logs",
   "author": "Rafał Chłodnicki",
   "private": true,
+  "packageManager": "pnpm@11.5.3",
   "scripts": {
-    "prepare": "nuxi prepare",
+    "prepare": "husky",
     "dev": "nuxi dev",
     "build": "nuxi build",
     "start": "nuxi preview",
     "generate": "nuxi generate",
-    "lint": "yarn jslint && yarn csslint",
+    "lint": "pnpm jslint && pnpm csslint",
     "jslint": "eslint",
     "csslint": "stylelint '**/*.scss' '**/*.vue'"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged && eslint"
-    }
   },
   "lint-staged": {
     "*.{js,mjs,cjs,ts,mts,cts,vue}": "eslint"
@@ -40,7 +36,7 @@
     "eslint-plugin-vue": "^10.9.2",
     "eslint-plugin-vuetify": "^2.7.2",
     "globals": "^17.6.0",
-    "husky": "^4.3.8",
+    "husky": "^9.1.7",
     "lint-staged": "^17.0.7",
     "postcss": "^8.5.15",
     "postcss-html": "^1.8.1",
