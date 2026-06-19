@@ -1,11 +1,11 @@
 {
   "extends": [
-    "config:base",
+    "config:recommended",
     ":prHourlyLimit4",
     ":semanticCommitTypeAll(chore)"
   ],
   "schedule": [
-    "after 10am every monday"
+    "after 10am on monday"
   ],
   "meteor": {
     "enabled": false
@@ -24,7 +24,9 @@
     {
       "groupName": "all non-major dependencies",
       "groupSlug": "all-minor-patch",
-      "matchFiles": ["package.json"],
+      "matchFileNames": [
+        "package.json"
+      ],
       "matchUpdateTypes": [
         "minor",
         "patch"
