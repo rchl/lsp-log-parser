@@ -1,42 +1,5 @@
 {
   "extends": [
-    "config:recommended",
-    ":prHourlyLimit4",
-    ":semanticCommitTypeAll(chore)"
-  ],
-  "schedule": [
-    "after 10am on monday"
-  ],
-  "meteor": {
-    "enabled": false
-  },
-  "rangeStrategy": "bump",
-  "npm": {
-    "commitMessageTopic": "{{prettyDepType}} {{depName}}"
-  },
-  "packageRules": [
-    {
-      "matchPackageNames": [
-        "node"
-      ],
-      "enabled": false
-    },
-    {
-      "groupName": "all non-major dependencies",
-      "groupSlug": "all-minor-patch",
-      "matchFileNames": [
-        "package.json"
-      ],
-      "matchUpdateTypes": [
-        "minor",
-        "patch"
-      ],
-      "lockFileMaintenance": {
-        "enabled": true,
-        "extends": [
-          "schedule:weekly"
-        ]
-      }
-    }
+    "github>rchl/renovate-config"
   ]
 }
