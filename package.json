@@ -4,7 +4,7 @@
   "description": "Parser for LSP server logs",
   "author": "Rafał Chłodnicki",
   "private": true,
-  "packageManager": "pnpm@11.22.0",
+  "packageManager": "pnpm@12.4.0",
   "scripts": {
     "prepare": "husky",
     "postinstall": "nuxi prepare",
