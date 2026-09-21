@@ -20,8 +20,8 @@
     "*.{js,mjs,cjs,ts,mts,cts,vue}": "eslint"
   },
   "dependencies": {
-    "@vueuse/core": "^14.4.0",
-    "@vueuse/nuxt": "^14.4.0",
+    "@vueuse/core": "^15.0.0",
+    "@vueuse/nuxt": "^15.0.0",
     "nuxt": "^4.5.2",
     "vue-json-pretty": "^2.6.0",
     "vuetify": "^4.2.1"
