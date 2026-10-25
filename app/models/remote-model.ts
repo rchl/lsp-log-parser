@@ -209,7 +209,7 @@ class RemoteLogProvider implements LogProvider {
         // Without connection parameters, fall back to the server of older LSP versions.
         const url = params
             ? `ws://127.0.0.1:${params.port}/?token=${encodeURIComponent(params.token)}`
-            : `ws://localhost:${LEGACY_PORT}`
+            : `ws://127.0.0.1:${LEGACY_PORT}`
         this.socket = new WebSocket(url)
         this.socket.onopen = () => this._onOpen()
         this.socket.onmessage = (event: MessageEvent<string>) => this._onMessage(event)
