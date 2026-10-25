@@ -11,7 +11,10 @@
 
             <v-card-text>
                 <p>
-                    Attempting to connect to server on port 9981...
+                    Attempting to connect to server on port {{ remoteModel.connectionParams.value?.port }}...
+                </p>
+                <p class="mt-2">
+                    If the connection doesn't succeed, choose <em>Open Remote Log Viewer</em> from the context menu of the LSP Log Panel in Sublime Text again.
                 </p>
                 <v-alert
                     v-if="remoteModel.hasConnectedAtLeastOnce.value && remoteModel.errorText.value"

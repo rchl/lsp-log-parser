@@ -10,8 +10,17 @@
                 <h2 class="text-display-large">
                     LSP Log Parser
                 </h2>
-                <h3 class="text-body-large mt-4">
-                    To establish connection to the local Sublime Text LSP instance, enable the <code>"log_server": ["panel", "remote"]</code> LSP setting, restart ST and press the Connect button.
+                <h3
+                    v-if="remoteModel.connected"
+                    class="text-body-large mt-4"
+                >
+                    Connected to Sublime Text. Waiting for messages...
+                </h3>
+                <h3
+                    v-else
+                    class="text-body-large mt-4"
+                >
+                    To establish connection to the local Sublime Text LSP instance, choose <em>Open Remote Log Viewer</em> from the context menu of the LSP Log Panel in Sublime Text.
                 </h3>
             </div>
             <log-view
@@ -53,9 +62,11 @@ import appBar from '~/components/app-bar.vue'
 import appDrawer from '~/components/app-drawer.vue'
 import logView from '~/components/log-view.vue'
 import { useLogModel } from '~/models/log-model'
+import { useRemoteModel } from '~/models/remote-model'
 import { useUiModel } from '~/models/ui-model'
 
 const logModel = reactive(useLogModel())
+const remoteModel = reactive(useRemoteModel())
 const uiModel = reactive(useUiModel())
 </script>
 

@@ -26,6 +26,7 @@
             class="mr-2"
             color="primary"
             :variant="remoteModel.connected.value ? 'elevated' : 'outlined'"
+            :disabled="!remoteModel.connectionParams.value"
             @click="toggleRemoteConnection"
         >
             Remote
@@ -37,6 +38,23 @@
             </v-tooltip>
         </v-btn>
         <remote-connection-dialog />
+
+        <v-btn
+            :prepend-icon="remoteModel.paused.value ? 'mdi-play' : 'mdi-pause'"
+            class="mr-2"
+            color="primary"
+            :variant="remoteModel.paused.value ? 'elevated' : 'outlined'"
+            :disabled="!remoteModel.connected.value"
+            @click="remoteModel.paused.value = !remoteModel.paused.value"
+        >
+            {{ remoteModel.paused.value ? 'Resume' : 'Pause' }}
+            <v-tooltip
+                activator="parent"
+                location="bottom"
+            >
+                {{ remoteModel.paused.value ? 'Resume processing incoming messages' : 'Pause processing incoming messages (messages received while paused are discarded)' }}
+            </v-tooltip>
+        </v-btn>
 
         <v-btn
             class="mr-2"
@@ -107,7 +125,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useMagicKeys } from '@vueuse/core'
 import { useRemoteModel } from '~/models/remote-model'
 import { useLogModel } from '~/models/log-model'
@@ -144,6 +162,9 @@ function clearLogMessages() {
 }
 
 function toggleRemoteConnection() {
+    if (!remoteModel.connectionParams.value) {
+        return
+    }
     remoteModel.enabled.value = !remoteModel.enabled.value
 }
 
@@ -159,4 +180,12 @@ function focusSearchField() {
 const logModel = useLogModel()
 const remoteModel = useRemoteModel()
 const uiModel = useUiModel()
+const route = useRoute()
+const router = useRouter()
+
+onMounted(() => {
+    if (remoteModel.isConnectionParamsInUrl(route.hash)) {
+        void router.replace({ hash: '' })
+    }
+})
 </script>

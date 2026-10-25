@@ -2,11 +2,50 @@ import type lsp from 'vscode-languageserver-protocol'
 import { ref, watch } from 'vue'
 import { type Message, useLogModel, type LogProvider } from '~/models/log-model'
 
+const CONNECTION_STORAGE_KEY = 'remote-connection'
+
+interface ConnectionParams {
+    port: number;
+    token: string;
+}
+
+const connectionParams = ref<ConnectionParams | null>(readConnectionParams())
 const connected = ref(false)
 const enabled = ref(false)
+// When paused, incoming messages are dropped rather than buffered.
+const paused = ref(false)
 const hasConnectedAtLeastOnce = ref(false)
 const errorText = ref('')
 const logModel = useLogModel()
+
+/**
+ * Reads the connection parameters passed by Sublime Text in the URL fragment (it's not sent to the server hosting the
+ * page). The parameters are stored in the session storage so that the connection still works after reloading the page
+ * once the fragment is removed from the URL (see `isConnectionParamsInUrl`).
+ */
+function readConnectionParams(): ConnectionParams | null {
+    const hashParams = new URLSearchParams(window.location.hash.slice(1))
+    const port = hashParams.get('port')
+    const token = hashParams.get('token')
+    if (port && token) {
+        const params: ConnectionParams = { port: Number(port), token }
+        try {
+            sessionStorage.setItem(CONNECTION_STORAGE_KEY, JSON.stringify(params))
+        } catch {
+            // Storage not available.
+        }
+        return params
+    }
+    try {
+        const stored = sessionStorage.getItem(CONNECTION_STORAGE_KEY)
+        if (stored) {
+            return JSON.parse(stored) as ConnectionParams
+        }
+    } catch {
+        // Storage not available or invalid data.
+    }
+    return null
+}
 
 enum Direction {
     Outgoing = 1,
@@ -141,6 +180,7 @@ class RemoteLogProvider implements LogProvider {
                 hasConnectedAtLeastOnce.value = false
                 this._initializeConnection()
             } else {
+                paused.value = false
                 this._closeConnection()
             }
         })
@@ -162,7 +202,13 @@ class RemoteLogProvider implements LogProvider {
             return
         }
 
-        this.socket = new WebSocket('ws://localhost:9981')
+        const params = connectionParams.value
+        if (!params) {
+            console.info('WebSocket: no connection parameters, not creating new connection')
+            return
+        }
+
+        this.socket = new WebSocket(`ws://127.0.0.1:${params.port}/?token=${encodeURIComponent(params.token)}`)
         this.socket.onopen = () => this._onOpen()
         this.socket.onmessage = (event: MessageEvent<string>) => this._onMessage(event)
         this.socket.onclose = event => this._onClose(event)
@@ -207,6 +253,10 @@ class RemoteLogProvider implements LogProvider {
     }
 
     _onMessage(event: MessageEvent<string>) {
+        if (paused.value) {
+            return
+        }
+
         const data = this._parseMessage(event.data)
         if (!data) {
             return
@@ -346,11 +396,26 @@ function toMessageTypeText(type: lsp.MessageType): string {
 
 logModel.registerLogProvider(new RemoteLogProvider())
 
+if (connectionParams.value) {
+    enabled.value = true
+}
+
+/**
+ * Whether the URL fragment contains the connection parameters and should be cleared so that the token doesn't stay in
+ * the address bar and the browser history.
+ */
+function isConnectionParamsInUrl(hash: string): boolean {
+    return new URLSearchParams(hash.slice(1)).has('token')
+}
+
 export function useRemoteModel() {
     return {
+        isConnectionParamsInUrl,
+        connectionParams,
         connected,
         enabled,
         errorText,
         hasConnectedAtLeastOnce,
+        paused,
     }
 }

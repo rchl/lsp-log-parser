@@ -3,14 +3,7 @@
 
 Parser for LSP server logs from Sublime Text, VSCode and coc.nvim.
 
-Also supports connecting to currently running Sublime LSP instance and displaying live view of all the server <-> client communication. To be able to connect to the LSP instance, set the following LSP setting:
-
-```json
-    "log_server": [
-        "panel",
-        "remote"
-    ],
-```
+Also supports connecting to currently running Sublime LSP instance and displaying live view of all the server <-> client communication. To connect to the LSP instance, choose `Open Remote Log Viewer` from the context menu of the LSP Log Panel in Sublime Text. That starts a local websocket server and opens this page with the server port and a random token in the URL fragment. The server only accepts connections that pass that token.
 
 Deployed automatically on commit to https://lsp-log-parser.netlify.app/
 
