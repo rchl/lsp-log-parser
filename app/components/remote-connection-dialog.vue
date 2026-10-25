@@ -11,10 +11,19 @@
 
             <v-card-text>
                 <p>
-                    Attempting to connect to server on port {{ remoteModel.connectionParams.value?.port }}...
+                    Attempting to connect to server on port {{ remoteModel.port.value }}...
                 </p>
-                <p class="mt-2">
-                    If the connection doesn't succeed, choose <em>Open Remote Log Viewer</em> from the context menu of the LSP Log Panel in Sublime Text again.
+                <p
+                    v-if="remoteModel.connectionParams.value"
+                    class="mt-2"
+                >
+                    If the connection doesn't succeed, run <em>LSP: Open Remote Log Viewer</em> in Sublime Text again.
+                </p>
+                <p
+                    v-else
+                    class="mt-2"
+                >
+                    With LSP versions that support it, run <em>LSP: Open Remote Log Viewer</em> in Sublime Text instead. Older versions require the <code>"log_server": ["panel", "remote"]</code> LSP setting.
                 </p>
                 <v-alert
                     v-if="remoteModel.hasConnectedAtLeastOnce.value && remoteModel.errorText.value"

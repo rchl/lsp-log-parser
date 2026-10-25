@@ -26,7 +26,6 @@
             class="mr-2"
             color="primary"
             :variant="remoteModel.connected.value ? 'elevated' : 'outlined'"
-            :disabled="!remoteModel.connectionParams.value"
             @click="toggleRemoteConnection"
         >
             Remote
@@ -162,9 +161,6 @@ function clearLogMessages() {
 }
 
 function toggleRemoteConnection() {
-    if (!remoteModel.connectionParams.value) {
-        return
-    }
     remoteModel.enabled.value = !remoteModel.enabled.value
 }
 
