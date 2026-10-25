@@ -1,8 +1,10 @@
 import type lsp from 'vscode-languageserver-protocol'
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { type Message, useLogModel, type LogProvider } from '~/models/log-model'
 
 const CONNECTION_STORAGE_KEY = 'remote-connection'
+// Port of the always-running server of LSP versions that don't support token authentication.
+const LEGACY_PORT = 9981
 
 interface ConnectionParams {
     port: number;
@@ -10,6 +12,7 @@ interface ConnectionParams {
 }
 
 const connectionParams = ref<ConnectionParams | null>(readConnectionParams())
+const port = computed(() => connectionParams.value?.port ?? LEGACY_PORT)
 const connected = ref(false)
 const enabled = ref(false)
 // When paused, incoming messages are dropped rather than buffered.
@@ -203,12 +206,11 @@ class RemoteLogProvider implements LogProvider {
         }
 
         const params = connectionParams.value
-        if (!params) {
-            console.info('WebSocket: no connection parameters, not creating new connection')
-            return
-        }
-
-        this.socket = new WebSocket(`ws://127.0.0.1:${params.port}/?token=${encodeURIComponent(params.token)}`)
+        // Without connection parameters, fall back to the server of older LSP versions.
+        const url = params
+            ? `ws://127.0.0.1:${params.port}/?token=${encodeURIComponent(params.token)}`
+            : `ws://localhost:${LEGACY_PORT}`
+        this.socket = new WebSocket(url)
         this.socket.onopen = () => this._onOpen()
         this.socket.onmessage = (event: MessageEvent<string>) => this._onMessage(event)
         this.socket.onclose = event => this._onClose(event)
@@ -417,5 +419,6 @@ export function useRemoteModel() {
         errorText,
         hasConnectedAtLeastOnce,
         paused,
+        port,
     }
 }

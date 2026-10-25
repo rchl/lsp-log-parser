@@ -20,7 +20,13 @@
                     v-else
                     class="text-body-large mt-4"
                 >
-                    To establish connection to the local Sublime Text LSP instance, choose <em>Open Remote Log Viewer</em> from the context menu of the LSP Log Panel in Sublime Text.
+                    To establish connection to the local Sublime Text LSP instance, run <em>LSP: Open Remote Log Viewer</em> from the Command Palette or choose <em>Open Remote Log Viewer</em> from the context menu of the LSP Log Panel in Sublime Text.
+                </h3>
+                <h3
+                    v-if="!remoteModel.connected"
+                    class="text-body-large mt-2"
+                >
+                    With older LSP versions, enable the <code>"log_server": ["panel", "remote"]</code> LSP setting, restart ST and press the Remote button.
                 </h3>
             </div>
             <log-view
