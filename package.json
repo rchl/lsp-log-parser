@@ -32,7 +32,7 @@
     "@nuxtjs/google-fonts": "^3.2.0",
     "@nuxtjs/stylelint-module": "^5.2.1",
     "@stylistic/eslint-plugin": "^5.10.0",
-    "@types/node": "^24.19.2",
+    "@types/node": "^26.6.6",
     "eslint": "^10.13.0",
     "eslint-plugin-vue": "^10.11.1",
     "eslint-plugin-vuetify": "^2.7.3",
