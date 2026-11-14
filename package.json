@@ -4,7 +4,7 @@
   "description": "Parser for LSP server logs",
   "author": "Rafał Chłodnicki",
   "private": true,
-  "packageManager": "pnpm@12.15.0",
+  "packageManager": "pnpm@12.18.0",
   "scripts": {
     "prepare": "husky",
     "postinstall": "nuxi prepare",
@@ -22,9 +22,9 @@
   "dependencies": {
     "@vueuse/core": "^15.0.0",
     "@vueuse/nuxt": "^15.0.0",
-    "nuxt": "^4.6.2",
+    "nuxt": "^4.6.4",
     "vue-json-pretty": "^2.6.0",
-    "vuetify": "^4.3.0"
+    "vuetify": "^4.3.3"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -33,24 +33,24 @@
     "@nuxtjs/stylelint-module": "^5.2.1",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@types/node": "^24.19.2",
-    "eslint": "^10.13.0",
-    "eslint-plugin-vue": "^10.11.1",
+    "eslint": "^10.14.0",
+    "eslint-plugin-vue": "^10.12.1",
     "eslint-plugin-vuetify": "^2.7.3",
-    "globals": "^17.13.0",
+    "globals": "^17.14.0",
     "husky": "^9.1.7",
     "lightningcss": "^1.33.0",
     "lint-staged": "^17.6.0",
-    "postcss": "^8.5.31",
+    "postcss": "^8.5.32",
     "postcss-html": "^2.0.0",
-    "sass": "^1.106.1",
+    "sass": "^1.108.2",
     "stylelint": "^17.16.0",
     "stylelint-config-recommended-scss": "^17.0.1",
     "stylelint-config-recommended-vue": "^2.0.0",
     "stylelint-config-standard": "^40.0.0",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.72.0",
+    "typescript-eslint": "^8.72.2",
     "vite-plugin-vuetify": "^2.1.3",
     "vscode-languageserver-protocol": "^3.18.5",
-    "vue-eslint-parser": "^10.4.1"
+    "vue-eslint-parser": "^10.4.2"
   }
 }
