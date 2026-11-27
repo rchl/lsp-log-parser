@@ -40,9 +40,9 @@ const parser: Parser = {
                 const toServer = direction.includes('>')
                 const isRequest = direction === '-->' || direction === '<--'
                 const serverName = match.groups?.serverName as string
-                const requestId = match.groups?.requestId as number | undefined
-                const duration = match.groups?.duration as number | undefined
-                const type = match.groups?.type as string
+                const requestId = match.groups?.requestId !== undefined ? Number(match.groups.requestId) : undefined
+                const duration = match.groups?.duration !== undefined ? Number(match.groups.duration) : undefined
+                const type = match.groups?.type?.trim() as string
                 const params = match.groups?.params
                 const message: Message = {
                     id: ++id,

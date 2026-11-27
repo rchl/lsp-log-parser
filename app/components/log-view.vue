@@ -96,7 +96,7 @@
                                 class="text-right"
                             >
                                 <v-btn
-                                    @click.stop="line && copyToClipboard(line.payload)"
+                                    @click.stop="line && uiModel.copyToClipboard(line.payload)"
                                 >
                                     <v-icon>mdi-content-copy</v-icon>
                                     Copy payload
@@ -124,17 +124,6 @@ const remoteModel = useRemoteModel()
 
 const state = {
     hoveredPairKey: ref(''),
-}
-
-async function copyToClipboard(data: unknown) {
-    try {
-        const text = typeof (data) === 'string' ? data : JSON.stringify(data, null, 2)
-        await navigator.clipboard.writeText(text)
-    } catch (error) {
-        if (error instanceof Error) {
-            uiModel.showError(error.message)
-        }
-    }
 }
 
 class ScrollTracker {

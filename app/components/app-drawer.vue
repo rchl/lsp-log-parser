@@ -12,6 +12,13 @@
                 @click="filter.enabled = !filter.enabled"
             >
                 <template #append>
+                    <v-btn
+                        v-tooltip="'Copy session log as JSONL'"
+                        icon="mdi-content-copy"
+                        size="small"
+                        variant="text"
+                        @click.stop="copySessionAsJsonl(filter.name)"
+                    />
                     <v-icon color="primary">
                         {{ filter.enabled ? 'mdi-checkbox-marked' : 'mdi-checkbox-blank-outline' }}
                     </v-icon>
@@ -70,6 +77,10 @@ const uiModel = useUiModel()
 
 function onCategoryChanged(selected: CategoryType[]) {
     uiModel.categoriesFilter.selectedCategories = selected
+}
+
+async function copySessionAsJsonl(serverName: string) {
+    await uiModel.copyToClipboard(logModel.getSessionAsJsonl(serverName))
 }
 
 function toggleAllCategories() {

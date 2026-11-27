@@ -81,6 +81,35 @@ function appendLogMessage(message: Message) {
     }
 }
 
+function parsePayload(payload: Message['payload']): unknown {
+    if (typeof payload !== 'string') {
+        return payload
+    }
+    try {
+        return JSON.parse(payload)
+    } catch {
+        return payload
+    }
+}
+
+// Serializes all messages of the given session as JSON Lines (one JSON object per message).
+function getSessionAsJsonl(serverName: string): string {
+    return parsedLines.value
+        .filter(message => message.serverName === serverName)
+        .map(message => JSON.stringify({
+            time: message.time,
+            timestamp: message.timestamp,
+            direction: message.toServer ? 'client->server' : 'server->client',
+            type: message.type,
+            method: message.name,
+            id: message.requestId,
+            isError: message.isError || undefined,
+            durationMs: message.timeLatency,
+            payload: parsePayload(message.payload),
+        }))
+        .join('\n')
+}
+
 function clearMessages() {
     parsedFilters.value = []
     parsedLines.value = []
@@ -94,6 +123,7 @@ export function useLogModel() {
     return {
         appendLogMessage,
         clearMessages,
+        getSessionAsJsonl,
         parsedFilters,
         parsedLines,
         registerLogProvider,

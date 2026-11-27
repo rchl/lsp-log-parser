@@ -106,6 +106,17 @@ function showError(message: string) {
     errorDialogVisible.value = true
 }
 
+async function copyToClipboard(data: unknown) {
+    try {
+        const text = typeof data === 'string' ? data : JSON.stringify(data, null, 2)
+        await navigator.clipboard.writeText(text)
+    } catch (error) {
+        if (error instanceof Error) {
+            showError(error.message)
+        }
+    }
+}
+
 function resetState() {
     queryText.value = ''
     selectAllCategories()
@@ -146,6 +157,7 @@ const filteredLines = computed(() => {
 export function useUiModel() {
     return {
         categoriesFilter,
+        copyToClipboard,
         drawerVisible,
         errorDialogText,
         errorDialogVisible,
